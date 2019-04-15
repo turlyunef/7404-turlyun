@@ -1,30 +1,30 @@
 package ru.cft.focusstart.turlyun.core;
 
 /**
- * Cells can be separated in any way.
- * For cells, there should be horizontal, vertical, and intersection separators
+ * Cells can be separated any String symbol.
+ * For cells, there should be horizontal, vertical, and intersection element of separators.
  *
  * @see Table
  */
 public interface CellSeparatorStrategy {
     /**
-     * Creates the separator between cells in a table row.
+     * Creates the element of a separator between cells in a table row.
      *
-     * @return the column separator
+     * @return the element of column separator
      */
-    String getCellColumnSeparator();
+    String getHorizontalElementOfCellSeparator();
 
     /**
-     * Creates the separator between cells in a table column
+     * Creates the element of a separator between cells in a table column.
      *
-     * @return the row separator
+     * @return the element of a row separator
      */
-    String getCellRowSeparator();
+    String getVerticalElementOfCellSeparator();
 
     /**
-     * Creates the separator between cells in a table intersection
+     * Creates the element of a table intersection.
      *
      * @return the intersection separator
      */
-    String getIntersectionSeparator();
+    String getIntersectionSeparatorElement();
 }
