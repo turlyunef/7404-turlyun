@@ -8,16 +8,12 @@ import ru.cft.focusstart.turlyun.core.Table;
 /**
  * The program displays multiplication tables with a user-defined maximum multiplier.
  * If the user enters a number out of range, or not a number, the program uses the default value.
- * The constants of the positions of the maximum multiplier when entered by the user are configured in enum ValuesOfMaximumMultiplier
- * Constants value of the separators elements for cell separator strategy are configured in enum SeparatorElements
  *
  * @author Turlyun Evgeny Fedorovich
  * @see Table
  * @see CellSeparatorStrategy
  * @see CellValueStrategy
  * @see MultiplicationConsoleTable
- * @see ValuesOfMaximumMultiplier
- * @see SeparatorElements
  */
 class Application {
     public static void main(String[] args) {

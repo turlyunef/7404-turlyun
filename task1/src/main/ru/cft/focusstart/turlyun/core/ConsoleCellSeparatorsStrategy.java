@@ -1,6 +1,5 @@
 package ru.cft.focusstart.turlyun.core;
 
-import ru.cft.focusstart.turlyun.SeparatorElements;
 
 /**
  * The strategy of creating elements of a table separators. The table is intended for output to the console.
@@ -8,29 +7,34 @@ import ru.cft.focusstart.turlyun.SeparatorElements;
  * @see CellSeparatorStrategy
  */
 public class ConsoleCellSeparatorsStrategy implements CellSeparatorStrategy {
-    private final String horizontalSeparatorElement = SeparatorElements.HORIZONTAL.getValue();
-    private final String verticalSeparatorElement = SeparatorElements.VERTICAL.getValue();
-    private final String intersectionSeparatorElement = SeparatorElements.INTERSECTION.getValue();
+    private static final String HORIZONTAL_ELEMENT_SEPARATOR = "-";
+    private static final String VERTICAL_ELEMENT_SEPARATOR = "|";
+    private static final String INTERSECTION_ELEMENT_SEPARATOR = "+";
 
     /**
-     * Separator element values are set through this constructor.
+     * {@inheritDoc}
      */
-
     @Override
     public String getHorizontalElementOfCellSeparator() {
 
-        return this.verticalSeparatorElement;
+        return VERTICAL_ELEMENT_SEPARATOR;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getVerticalElementOfCellSeparator() {
 
-        return this.horizontalSeparatorElement;
+        return HORIZONTAL_ELEMENT_SEPARATOR;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getIntersectionSeparatorElement() {
 
-        return this.intersectionSeparatorElement;
+        return INTERSECTION_ELEMENT_SEPARATOR;
     }
 }

@@ -11,6 +11,7 @@ public class MultiplicationConsoleTable implements Table {
     private final int maxMultiplier;
     private final int rowElementCount;
 
+
     /**
      * Constructor with required parameters for creating multiplication table, designed to display in console form.
      *
@@ -23,6 +24,9 @@ public class MultiplicationConsoleTable implements Table {
         this.rowElementCount = (String.valueOf(maxMultiplier * maxMultiplier)).length();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String generateTable() {
         StringBuilder table = new StringBuilder();

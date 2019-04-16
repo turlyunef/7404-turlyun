@@ -7,6 +7,9 @@ package ru.cft.focusstart.turlyun.core;
  */
 public class MultiplicationCellValueStrategy implements CellValueStrategy {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCellValue(int rowIndex, int columnIndex) {
 
