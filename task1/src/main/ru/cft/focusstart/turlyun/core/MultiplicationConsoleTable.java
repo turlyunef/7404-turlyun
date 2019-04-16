@@ -1,27 +1,26 @@
 package ru.cft.focusstart.turlyun.core;
 
 /**
- * Multiplication table, designed to display in console form.
+ * Multiplication table, designed to display in console.
  * The table is automatically formatted for straight line columns.
- * The width of the cells is set under the maximum possible value of the multipliers.
+ * The width of the cells is set to the maximum possible value of the result of multiplying the maximum factors.
  */
 public class MultiplicationConsoleTable implements Table {
     private final CellValueStrategy cellValueStrategy;
-    private final CellSeparatorStrategy cellSeparatorStrategy;
+    private final CellSeparatorsStrategy cellSeparatorsStrategy;
     private final int maxMultiplier;
-    private final int rowElementCount;
-
+    private final int rowElementsCount;
 
     /**
-     * Constructor with required parameters for creating multiplication table, designed to display in console form.
+     * The constructor with the necessary maximum multiplier parameter to create a multiplication table for display in the form of a console.
      *
      * @param maxMultiplier the maximum table multiplier
      */
     public MultiplicationConsoleTable(int maxMultiplier) {
         this.cellValueStrategy = new MultiplicationCellValueStrategy();
-        this.cellSeparatorStrategy = new ConsoleCellSeparatorsStrategy();
+        this.cellSeparatorsStrategy = new ConsoleCellSeparatorsStrategy();
         this.maxMultiplier = maxMultiplier;
-        this.rowElementCount = (String.valueOf(maxMultiplier * maxMultiplier)).length();
+        this.rowElementsCount = (String.valueOf(maxMultiplier * maxMultiplier)).length();
     }
 
     /**
@@ -31,7 +30,7 @@ public class MultiplicationConsoleTable implements Table {
     public String generateTable() {
         StringBuilder table = new StringBuilder();
         for (int i = 1; i <= maxMultiplier; i++) {
-            table.append(generateRowWithValue(i));
+            table.append(generateRowWithValues(i));
             table.append(generateSeparatorsRow());
         }
 
@@ -42,32 +41,32 @@ public class MultiplicationConsoleTable implements Table {
      * Creates a row of table values and separators between them.
      *
      * @param rowIndex the line index counting down
-     * @return string of values and vertical delimiters as StringBuilder
+     * @return string of values and vertical separators as StringBuilder
      */
-    private StringBuilder generateRowWithValue(int rowIndex) {
-        StringBuilder rowWithValue = new StringBuilder();
+    private StringBuilder generateRowWithValues(int rowIndex) {
+        StringBuilder rowWithValues = new StringBuilder();
         for (int j = 1; j < maxMultiplier; j++) {
-            rowWithValue.append(getCellFormattedValue(cellValueStrategy.getCellValue(rowIndex, j)));
-            rowWithValue.append(cellSeparatorStrategy.getHorizontalElementOfCellSeparator());
+            rowWithValues.append(getCellFormattedValue(cellValueStrategy.getCellValue(rowIndex, j)));
+            rowWithValues.append(cellSeparatorsStrategy.getVerticalElementOfCellSeparator());
         }
-        rowWithValue.append(getCellFormattedValue(cellValueStrategy.getCellValue(rowIndex, maxMultiplier)));
-        rowWithValue.append("\n");
+        rowWithValues.append(getCellFormattedValue(cellValueStrategy.getCellValue(rowIndex, maxMultiplier)));
+        rowWithValues.append("\n");
 
-        return rowWithValue;
+        return rowWithValues;
     }
 
     /**
-     * Creates the string as StringBuilder of linear separators between values, as well as cell intersections.
+     * Creates the string as StringBuilder of linear separators between cells, as well as cell intersections.
      *
-     * @return the row of the linear separators and the cell intersections
+     * @return the row of the linear separators and the cells intersections
      */
     private StringBuilder generateSeparatorsRow() {
         StringBuilder separatorsRow = new StringBuilder();
         for (int j = 1; j < maxMultiplier; j++) {
-            separatorsRow.append(generateCellRowSeparator());
-            separatorsRow.append(cellSeparatorStrategy.getIntersectionSeparatorElement());
+            separatorsRow.append(generateHorizontalOneCellSeparator());
+            separatorsRow.append(cellSeparatorsStrategy.getIntersectionSeparatorElement());
         }
-        separatorsRow.append(generateCellRowSeparator());
+        separatorsRow.append(generateHorizontalOneCellSeparator());
         separatorsRow.append("\n");
 
         return separatorsRow;
@@ -75,18 +74,18 @@ public class MultiplicationConsoleTable implements Table {
 
     /**
      * Creates the horizontal separators row of a single cell.
-     * Based on the number of elements in one cell rowElementCount.
-     * Intersection separators not included.
+     * Based on the number of elements in one cell rowElementsCount.
+     * Intersection separator not included.
      *
      * @return the separators row of a single cell
      */
-    private StringBuilder generateCellRowSeparator() {
-        StringBuilder cellRowSeparator = new StringBuilder();
-        for (int i = 0; i < rowElementCount; i++) {
-            cellRowSeparator.append(cellSeparatorStrategy.getVerticalElementOfCellSeparator());
+    private StringBuilder generateHorizontalOneCellSeparator() {
+        StringBuilder horizontalOneCellSeparator = new StringBuilder();
+        for (int i = 0; i < rowElementsCount; i++) {
+            horizontalOneCellSeparator.append(cellSeparatorsStrategy.getHorizontalElementOfCellSeparator());
         }
 
-        return cellRowSeparator;
+        return horizontalOneCellSeparator;
     }
 
     /**
@@ -97,7 +96,7 @@ public class MultiplicationConsoleTable implements Table {
      */
     private String getCellFormattedValue(String cellValue) {
         StringBuilder spacesBuilder = new StringBuilder();
-        for (int i = 0; i < rowElementCount - cellValue.length(); i++) {
+        for (int i = 0; i < rowElementsCount - cellValue.length(); i++) {
             spacesBuilder.append(" ");
         }
 

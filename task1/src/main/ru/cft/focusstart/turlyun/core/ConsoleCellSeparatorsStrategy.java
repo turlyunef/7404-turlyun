@@ -4,9 +4,9 @@ package ru.cft.focusstart.turlyun.core;
 /**
  * The strategy of creating elements of a table separators. The table is intended for output to the console.
  *
- * @see CellSeparatorStrategy
+ * @see CellSeparatorsStrategy
  */
-public class ConsoleCellSeparatorsStrategy implements CellSeparatorStrategy {
+public class ConsoleCellSeparatorsStrategy implements CellSeparatorsStrategy {
     private static final String HORIZONTAL_ELEMENT_SEPARATOR = "-";
     private static final String VERTICAL_ELEMENT_SEPARATOR = "|";
     private static final String INTERSECTION_ELEMENT_SEPARATOR = "+";
@@ -17,7 +17,7 @@ public class ConsoleCellSeparatorsStrategy implements CellSeparatorStrategy {
     @Override
     public String getHorizontalElementOfCellSeparator() {
 
-        return VERTICAL_ELEMENT_SEPARATOR;
+        return HORIZONTAL_ELEMENT_SEPARATOR;
     }
 
     /**
@@ -26,7 +26,7 @@ public class ConsoleCellSeparatorsStrategy implements CellSeparatorStrategy {
     @Override
     public String getVerticalElementOfCellSeparator() {
 
-        return HORIZONTAL_ELEMENT_SEPARATOR;
+        return VERTICAL_ELEMENT_SEPARATOR;
     }
 
     /**

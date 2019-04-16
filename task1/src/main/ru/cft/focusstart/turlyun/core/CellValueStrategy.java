@@ -1,8 +1,7 @@
 package ru.cft.focusstart.turlyun.core;
 
 /**
- * A table type (a cell value generation algorithm) is set by this strategy.
- * A strategy can generate multiplication, division, addition, subtraction or any other value derived from row and column element.
+ * A strategy can generate multiplication, division, addition, subtraction or any other value derived from row and column elements.
  *
  * @see Table
  */
