@@ -1,4 +1,4 @@
-package ru.cft.focusstart.turlyun;
+package ru.cft.focusstart.turlyun.Shapes;
 
 import java.util.LinkedHashMap;
 

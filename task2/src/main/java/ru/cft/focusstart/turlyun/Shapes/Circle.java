@@ -1,12 +1,16 @@
-package ru.cft.focusstart.turlyun;
+package ru.cft.focusstart.turlyun.Shapes;
 
 import java.util.LinkedHashMap;
 
 public class Circle extends SomeShape {
     private int radius;
 
-    public Circle(int radius) {
-        this.radius = radius;
+    public Circle() {
+        this.radius = 5;
+    }
+
+    public Circle(int[] radius) {
+        this.radius = radius[0];
     }
 
     @Override
@@ -21,7 +25,7 @@ public class Circle extends SomeShape {
     @Override
     public LinkedHashMap<String, String> getShapeName() {
         LinkedHashMap<String, String> circleName = new LinkedHashMap<>();
-        circleName.put("Название", "Круг");
+        circleName.put("Name", "Circle");
 
         return circleName;
     }
@@ -29,7 +33,7 @@ public class Circle extends SomeShape {
     @Override
     public LinkedHashMap<String, String> getShapeArea() {
         LinkedHashMap<String, String> circleArea = new LinkedHashMap<>();
-        circleArea.put("Площадь", String.format("%.2f", Math.PI * radius * radius));
+        circleArea.put("Area", String.format("%.2f", Math.PI * radius * radius));
 
         return circleArea;
     }
@@ -37,21 +41,21 @@ public class Circle extends SomeShape {
     @Override
     public LinkedHashMap<String, String> getPerimeterOfTheFigure() {
         LinkedHashMap<String, String> perimeterOfTheCircle = new LinkedHashMap<>();
-        perimeterOfTheCircle.put("Периметр", String.format("%.2f", 2 * Math.PI * radius));
+        perimeterOfTheCircle.put("Perimeter", String.format("%.2f", 2 * Math.PI * radius));
 
         return perimeterOfTheCircle;
     }
 
     public LinkedHashMap<String, String> getRadius() {
         LinkedHashMap<String, String> circleRadius = new LinkedHashMap<>();
-        circleRadius.put("Радиус", String.valueOf(radius));
+        circleRadius.put("Radius", String.valueOf(radius));
 
         return circleRadius;
     }
 
     public LinkedHashMap<String, String> getDiameter() {
         LinkedHashMap<String, String> circleDiameter = new LinkedHashMap<>();
-        circleDiameter.put("Диаметр", String.valueOf(2 * radius));
+        circleDiameter.put("Diameter", String.valueOf(2 * radius));
 
         return circleDiameter;
     }
