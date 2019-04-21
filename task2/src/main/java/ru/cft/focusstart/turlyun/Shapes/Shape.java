@@ -4,4 +4,6 @@ import java.util.LinkedHashMap;
 
 public interface Shape {
     LinkedHashMap<String, String> getShapeSpecifications();
+
+    LinkedHashMap<String, String> getShapeName();
 }

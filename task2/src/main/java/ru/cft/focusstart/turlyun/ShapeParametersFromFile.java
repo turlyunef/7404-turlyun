@@ -8,6 +8,11 @@ public class ShapeParametersFromFile {
     private String shapeName;
     private int[] shapeParameters;
 
+    public ShapeParametersFromFile(){
+        this.shapeName = null;
+        this.shapeParameters = null;
+    }
+
     public ShapeParametersFromFile(String shapeName, int[] shapeParameters) {
         this.shapeName = shapeName;
         this.shapeParameters = shapeParameters;
@@ -21,18 +26,24 @@ public class ShapeParametersFromFile {
         return shapeParameters;
     }
 
-    public Shape getShape() {
+    public void setShapeName(String shapeName) {
+        this.shapeName = shapeName;
+    }
+
+    public void setShapeParameters(int[] shapeParameters) {
+        this.shapeParameters = shapeParameters;
+    }
+
+    public Shape getShape() throws ShapeSpecificationsException {
         Shape myClass = null;
         try {
             Class clazz = Class.forName("ru.cft.focusstart.turlyun.Shapes." + this.shapeName);
             myClass = (Shape) clazz.getDeclaredConstructor(int[].class).newInstance(shapeParameters);
             return myClass;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            System.out.printf("Shape %s is not found, check first row in the input file/n", this.shapeName);
-            return null;
+            throw new ShapeSpecificationsException("Shape " + this.shapeName + " is not found, check first row in the input file\n");
         } catch (IllegalArgumentException e) {
-            System.out.printf("Shape %s and entered parameters is not compatible\n", this.shapeName);
-            return null;
+            throw new ShapeSpecificationsException("Shape " + this.shapeName + "and entered parameters is not compatible\n");
         }
     }
 }

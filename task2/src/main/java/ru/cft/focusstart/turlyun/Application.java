@@ -2,17 +2,22 @@ package ru.cft.focusstart.turlyun;
 
 import ru.cft.focusstart.turlyun.Shapes.Shape;
 
-import java.util.Map;
-
 public class Application {
     public static void main(String[] args) {
-        int[] shapeParameters = {6};
-        ShapeParametersFromFile shapeParametersFromFile = new ShapeParametersFromFile("Circle", shapeParameters);
-        Shape circle = shapeParametersFromFile.getShape();
-        if (circle != null) {
-            for (Map.Entry entry : circle.getShapeSpecifications().entrySet()
-            ) {
-                System.out.printf("%s: %s\n", entry.getKey(), entry.getValue());
+        if (args.length == 0) {
+            System.out.println("You must enter at least one file name!");
+        } else {
+            try {
+                ShapeParametersFromFile shapeParametersFromFile = InputFromFileOperator.getShapeParametersFromFile(args[0]);
+                Shape shape = shapeParametersFromFile.getShape();
+
+                if (args.length == 1) {
+                    GeneratorOfSpec.generateShapeSpecifications(shape);
+                } else {
+                    GeneratorOfSpec.generateShapeSpecifications(shape, args[1]);
+                }
+            } catch (ShapeSpecificationsException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
