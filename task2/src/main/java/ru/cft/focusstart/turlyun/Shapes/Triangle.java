@@ -60,8 +60,6 @@ public class Triangle extends SomeShape {
     }
 
     private double countAngel(int side1, int side2, int side3) {
-        double a = (Math.pow(side1, 2) + Math.pow(side2, 2) - Math.pow(side3, 2)) / 2 * side1 * side2;
-        System.out.println(Math.acos(a));
-        return Math.acos((Math.pow(side1, 2) + Math.pow(side2, 2) - Math.pow(side3, 2)) / 2 * side1 * side2);
+        return Math.toDegrees(Math.acos((Math.pow(side1, 2) + Math.pow(side2, 2) - Math.pow(side3, 2)) / (2 * side1 * side2)));
     }
 }
