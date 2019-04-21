@@ -1,16 +1,27 @@
-package ru.cft.focusstart.turlyun.Shapes;
+package ru.cft.focusstart.turlyun.shapes;
 
 import java.util.LinkedHashMap;
 
+/**
+ * The class to create the specification of a rectangle
+ */
 public class Rectangle extends SomeShape {
     private int side1;
     private int side2;
 
+    /**
+     * Constructor to create a rectangle instance based on its sides.
+     *
+     * @param numbers for a rectangle, the parameters contain only two sides for it
+     */
     public Rectangle(int[] numbers) {
         this.side1 = numbers[0];
         this.side2 = numbers[1];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LinkedHashMap<String, String> getShapeSpecifications() {
         LinkedHashMap<String, String> shapeSpecifications = new LinkedHashMap<>(super.getShapeSpecifications());
@@ -21,6 +32,9 @@ public class Rectangle extends SomeShape {
         return shapeSpecifications;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LinkedHashMap<String, String> getShapeName() {
         LinkedHashMap<String, String> shapeName = new LinkedHashMap<>();
@@ -29,6 +43,9 @@ public class Rectangle extends SomeShape {
         return shapeName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LinkedHashMap<String, String> getShapeArea() {
         LinkedHashMap<String, String> shapeArea = new LinkedHashMap<>();
@@ -37,6 +54,9 @@ public class Rectangle extends SomeShape {
         return shapeArea;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LinkedHashMap<String, String> getPerimeterOfTheFigure() {
         LinkedHashMap<String, String> perimeterOfTheFigure = new LinkedHashMap<>();
@@ -45,6 +65,11 @@ public class Rectangle extends SomeShape {
         return perimeterOfTheFigure;
     }
 
+    /**
+     * Returns a LinkedHashMap with a rectangle diagonal length.
+     *
+     * @return a LinkedHashMap with a rectangle diagonal length
+     */
     public LinkedHashMap<String, String> getDiagonalLength() {
         LinkedHashMap<String, String> rectangleDiagonalLength = new LinkedHashMap<>();
         rectangleDiagonalLength.put("Diagonal Length", String.format("%.2f", Math.sqrt(Math.pow(side1, 2) + Math.pow(side2, 2))));
@@ -52,6 +77,11 @@ public class Rectangle extends SomeShape {
         return rectangleDiagonalLength;
     }
 
+    /**
+     * Returns a LinkedHashMap with a rectangle length.
+     *
+     * @return a LinkedHashMap with a rectangle length
+     */
     public LinkedHashMap<String, String> getRectangleLength() {
         LinkedHashMap<String, String> rectangleLength = new LinkedHashMap<>();
         if (side2 > side1) {
@@ -62,6 +92,11 @@ public class Rectangle extends SomeShape {
         return rectangleLength;
     }
 
+    /**
+     * Returns a LinkedHashMap with a rectangle width.
+     *
+     * @return a LinkedHashMap with a rectangle width
+     */
     public LinkedHashMap<String, String> getRectangleWidth() {
         LinkedHashMap<String, String> rectangleWidth = new LinkedHashMap<>();
         if (side2 > side1) {

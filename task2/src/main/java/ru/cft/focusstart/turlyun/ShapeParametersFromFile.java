@@ -1,59 +1,45 @@
 package ru.cft.focusstart.turlyun;
 
-import ru.cft.focusstart.turlyun.Shapes.Shape;
-
-import java.lang.reflect.InvocationTargetException;
-
+/**
+ * The class is designed to store the shape parameters necessary to generate its specification.
+ */
 public class ShapeParametersFromFile {
     private String shapeName;
     private int[] shapeParameters;
 
-    public ShapeParametersFromFile() {
-        this.shapeName = null;
-        this.shapeParameters = null;
-    }
-
-    public ShapeParametersFromFile(String shapeName, int[] shapeParameters) {
-        this.shapeName = shapeName;
-        this.shapeParameters = shapeParameters;
-    }
-
+    /**
+     * Gets the name of the shape
+     *
+     * @return the name of the shape
+     */
     public String getShapeName() {
         return shapeName;
     }
 
+    /**
+     * Gets the parameters of the shape
+     *
+     * @return the parameters of the shape
+     */
     public int[] getShapeParameters() {
         return shapeParameters;
     }
 
+    /**
+     * Sets the name of the shape
+     *
+     * @param shapeName the name of the shape
+     */
     public void setShapeName(String shapeName) {
         this.shapeName = shapeName;
     }
 
+    /**
+     * Sets the parameters of the shape
+     *
+     * @param shapeParameters the parameters of the shape
+     */
     public void setShapeParameters(int[] shapeParameters) {
         this.shapeParameters = shapeParameters;
-    }
-
-    public Shape getShape() throws ShapeSpecificationsException {
-        Shape myClass = null;
-        try {
-            Class clazz = Class.forName("ru.cft.focusstart.turlyun.Shapes." + changeCaseToCamelCase(this.shapeName));
-            myClass = (Shape) clazz.getDeclaredConstructor(int[].class).newInstance(shapeParameters);
-            return myClass;
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            throw new ShapeSpecificationsException("Shape " + this.shapeName + " is not found, check first row in the input file\n");
-        } catch (IllegalArgumentException e) {
-            throw new ShapeSpecificationsException("Shape " + this.shapeName + "and entered parameters is not compatible\n");
-        }
-    }
-
-    private String changeCaseToCamelCase(String str) {
-        StringBuilder newStr = new StringBuilder();
-        newStr.append(Character.toUpperCase(str.charAt(0)));
-        for (int i = 1; i < str.length(); i++) {
-            newStr.append(Character.toLowerCase(str.charAt(i)));
-        }
-
-        return String.valueOf(newStr);
     }
 }
