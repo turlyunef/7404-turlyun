@@ -8,7 +8,7 @@ public class ShapeParametersFromFile {
     private String shapeName;
     private int[] shapeParameters;
 
-    public ShapeParametersFromFile(){
+    public ShapeParametersFromFile() {
         this.shapeName = null;
         this.shapeParameters = null;
     }
@@ -37,7 +37,7 @@ public class ShapeParametersFromFile {
     public Shape getShape() throws ShapeSpecificationsException {
         Shape myClass = null;
         try {
-            Class clazz = Class.forName("ru.cft.focusstart.turlyun.Shapes." + this.shapeName);
+            Class clazz = Class.forName("ru.cft.focusstart.turlyun.Shapes." + changeCaseToCamelCase(this.shapeName));
             myClass = (Shape) clazz.getDeclaredConstructor(int[].class).newInstance(shapeParameters);
             return myClass;
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -45,5 +45,15 @@ public class ShapeParametersFromFile {
         } catch (IllegalArgumentException e) {
             throw new ShapeSpecificationsException("Shape " + this.shapeName + "and entered parameters is not compatible\n");
         }
+    }
+
+    private String changeCaseToCamelCase(String str) {
+        StringBuilder newStr = new StringBuilder();
+        newStr.append(Character.toUpperCase(str.charAt(0)));
+        for (int i = 1; i < str.length(); i++) {
+            newStr.append(Character.toLowerCase(str.charAt(i)));
+        }
+
+        return String.valueOf(newStr);
     }
 }

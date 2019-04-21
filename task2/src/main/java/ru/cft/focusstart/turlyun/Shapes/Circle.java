@@ -5,12 +5,8 @@ import java.util.LinkedHashMap;
 public class Circle extends SomeShape {
     private int radius;
 
-    public Circle() {
-        this.radius = 5;
-    }
-
-    public Circle(int[] radius) {
-        this.radius = radius[0];
+    public Circle(int[] numbers) {
+        this.radius = numbers[0];
     }
 
     @Override
@@ -24,26 +20,26 @@ public class Circle extends SomeShape {
 
     @Override
     public LinkedHashMap<String, String> getShapeName() {
-        LinkedHashMap<String, String> circleName = new LinkedHashMap<>();
-        circleName.put("Name", "Circle");
+        LinkedHashMap<String, String> shapeName = new LinkedHashMap<>();
+        shapeName.put("Name", "Circle");
 
-        return circleName;
+        return shapeName;
     }
 
     @Override
     public LinkedHashMap<String, String> getShapeArea() {
-        LinkedHashMap<String, String> circleArea = new LinkedHashMap<>();
-        circleArea.put("Area", String.format("%.2f", Math.PI * radius * radius));
+        LinkedHashMap<String, String> shapeArea = new LinkedHashMap<>();
+        shapeArea.put("Area", String.format("%.2f", Math.PI * radius * radius));
 
-        return circleArea;
+        return shapeArea;
     }
 
     @Override
     public LinkedHashMap<String, String> getPerimeterOfTheFigure() {
-        LinkedHashMap<String, String> perimeterOfTheCircle = new LinkedHashMap<>();
-        perimeterOfTheCircle.put("Perimeter", String.format("%.2f", 2 * Math.PI * radius));
+        LinkedHashMap<String, String> perimeterOfTheFigure = new LinkedHashMap<>();
+        perimeterOfTheFigure.put("Perimeter", String.format("%.2f", 2 * Math.PI * radius));
 
-        return perimeterOfTheCircle;
+        return perimeterOfTheFigure;
     }
 
     public LinkedHashMap<String, String> getRadius() {
