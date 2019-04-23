@@ -17,7 +17,7 @@ public class InputFromFileOperator {
     public static ShapeParametersFromFile getShapeParametersFromFile(String fileName) throws ShapeSpecificationsException {
         ShapeParametersFromFile shapeParametersFromFile = new ShapeParametersFromFile();
         try (FileInputStream fileInputStream = new FileInputStream(fileName);
-             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));) {
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream))) {
             shapeParametersFromFile.setShapeName(bufferedReader.readLine());
             int[] shapeParameters = parseStringToIntArray(bufferedReader.readLine(), " ");
             shapeParametersFromFile.setShapeParameters(shapeParameters);

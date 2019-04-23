@@ -27,11 +27,11 @@ public class ShapeCreator {
             shapeClass = (Shape) clazz.getDeclaredConstructor(int[].class).newInstance(shapeParametersFromFile.getShapeParameters());
             return shapeClass;
         } catch (ClassNotFoundException | NoSuchMethodException  e) {
-            throw new ShapeSpecificationsException("Shape " + shapeParametersFromFile.getShapeName() + " is not found, check first row in the input file\n");
+            throw new ShapeSpecificationsException("Shape " + shapeParametersFromFile.getShapeName() + " is not found, check first row in the input file");
         }catch (InvocationTargetException | InstantiationException e){
-            throw new ShapeSpecificationsException("Shape " + shapeParametersFromFile.getShapeName() + " and entered parameters is not compatible, check second row in the input file\n");
+            throw new ShapeSpecificationsException("Shape " + shapeParametersFromFile.getShapeName() + " and entered parameters is not compatible, check second row in the input file");
         }catch (IllegalAccessException e){
-            throw new ShapeSpecificationsException("Class of the shape " + shapeParametersFromFile.getShapeName() + " has't access for creating its instance\n");
+            throw new ShapeSpecificationsException("Class of the shape " + shapeParametersFromFile.getShapeName() + " has't access for creating its instance");
         }
     }
 

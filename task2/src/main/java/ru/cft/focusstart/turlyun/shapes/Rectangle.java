@@ -6,8 +6,8 @@ import java.util.LinkedHashMap;
  * The class to create the specification of a rectangle
  */
 public class Rectangle extends SomeShape {
-    private int side1;
-    private int side2;
+    private final int side1;
+    private final int side2;
 
     /**
      * Constructor to create a rectangle instance based on its sides.
@@ -70,7 +70,7 @@ public class Rectangle extends SomeShape {
      *
      * @return a LinkedHashMap with a rectangle diagonal length
      */
-    public LinkedHashMap<String, String> getDiagonalLength() {
+    private LinkedHashMap<String, String> getDiagonalLength() {
         LinkedHashMap<String, String> rectangleDiagonalLength = new LinkedHashMap<>();
         rectangleDiagonalLength.put("Diagonal Length", String.format("%.2f", Math.sqrt(Math.pow(side1, 2) + Math.pow(side2, 2))));
 
@@ -82,7 +82,7 @@ public class Rectangle extends SomeShape {
      *
      * @return a LinkedHashMap with a rectangle length
      */
-    public LinkedHashMap<String, String> getRectangleLength() {
+    private LinkedHashMap<String, String> getRectangleLength() {
         LinkedHashMap<String, String> rectangleLength = new LinkedHashMap<>();
         if (side2 > side1) {
             rectangleLength.put("Rectangle Length", String.valueOf(side2));
@@ -97,7 +97,7 @@ public class Rectangle extends SomeShape {
      *
      * @return a LinkedHashMap with a rectangle width
      */
-    public LinkedHashMap<String, String> getRectangleWidth() {
+    private LinkedHashMap<String, String> getRectangleWidth() {
         LinkedHashMap<String, String> rectangleWidth = new LinkedHashMap<>();
         if (side2 > side1) {
             rectangleWidth.put("Rectangle Width", String.valueOf(side1));

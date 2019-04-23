@@ -37,7 +37,7 @@ public class GeneratorOfSpec {
      * @return StringBuilder created from the shape object
      * @throws ShapeSpecificationsException An exception is thrown if the shape object is empty.
      */
-    private static StringBuilder convertShapeSpecToStringBuilder(Shape shape) throws ShapeSpecificationsException {
+    public static StringBuilder convertShapeSpecToStringBuilder(Shape shape) throws ShapeSpecificationsException {
         if (shape != null) {
             StringBuilder stringBuilder = new StringBuilder();
             for (Map.Entry entry : shape.getShapeSpecifications().entrySet()

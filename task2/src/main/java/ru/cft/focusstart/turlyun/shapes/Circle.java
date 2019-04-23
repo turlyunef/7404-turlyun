@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
  * The class to create the specification of a circle
  */
 public class Circle extends SomeShape {
-    private int radius;
+    private final int radius;
 
     /**
      * Constructor to create a circle instance based on its radius.
@@ -67,7 +67,7 @@ public class Circle extends SomeShape {
      *
      * @return a LinkedHashMap with a circle radius
      */
-    public LinkedHashMap<String, String> getRadius() {
+    private LinkedHashMap<String, String> getRadius() {
         LinkedHashMap<String, String> circleRadius = new LinkedHashMap<>();
         circleRadius.put("Radius", String.valueOf(radius));
 
@@ -79,10 +79,22 @@ public class Circle extends SomeShape {
      *
      * @return a LinkedHashMap with a circle diameter
      */
-    public LinkedHashMap<String, String> getDiameter() {
+    private LinkedHashMap<String, String> getDiameter() {
         LinkedHashMap<String, String> circleDiameter = new LinkedHashMap<>();
         circleDiameter.put("Diameter", String.valueOf(2 * radius));
 
         return circleDiameter;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Circle guest = (Circle) obj;
+        return radius == guest.radius;
     }
 }

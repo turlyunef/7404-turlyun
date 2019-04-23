@@ -6,9 +6,9 @@ import java.util.LinkedHashMap;
  * The class to create the specification of a triangle
  */
 public class Triangle extends SomeShape {
-    private int side1;
-    private int side2;
-    private int side3;
+    private final int side1;
+    private final int side2;
+    private final int side3;
 
     /**
      * Constructor to create a triangle instance based on its sides.
@@ -71,7 +71,7 @@ public class Triangle extends SomeShape {
      *
      * @return a LinkedHashMap with a triangle lengths and angles
      */
-    public LinkedHashMap<String, String> getTriangleLengthsAndAngles() {
+    private LinkedHashMap<String, String> getTriangleLengthsAndAngles() {
         LinkedHashMap<String, String> triangleLengthsAndAngles = new LinkedHashMap<>();
         triangleLengthsAndAngles.put("First Length", String.valueOf(side1));
         triangleLengthsAndAngles.put("Angle opposite the first side", String.format("%.2f", countAngel(side2, side3, side1)));

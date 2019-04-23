@@ -18,7 +18,6 @@ public class Application {
             try {
                 ShapeParametersFromFile shapeParametersFromFile = InputFromFileOperator.getShapeParametersFromFile(args[0]);
                 Shape shape = ShapeCreator.createShape(shapeParametersFromFile);
-
                 if (args.length == 1) {
                     GeneratorOfSpec.generateShapeSpecifications(shape);
                 } else {
