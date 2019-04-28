@@ -10,12 +10,12 @@ import ru.cft.focusstart.turlyun.shapes.Triangle;
 
 import static org.junit.Assert.*;
 
-public class GeneratorOfSpecTest {
+public class SpecificationWriterTest {
     @Test
-    public void testConvertShapeSpecToStringBuilderWithCircle() throws ShapeSpecificationsException {
+    public void testConvertShapeSpecToStringBuilderWithCircle() {
         int[] args = {8};
         Shape circle = new Circle(args);
-        String actual = GeneratorOfSpec.convertShapeSpecToStringBuilder(circle).toString();
+        String actual = SpecificationWriter.generateShapeSpecification(circle).toString();
         String expected = "Name: Circle\n" +
                 "Area: 201,06\n" +
                 "Perimeter: 50,27\n" +
@@ -24,10 +24,10 @@ public class GeneratorOfSpecTest {
         assertEquals(expected, actual);
     }
     @Test
-    public void testConvertShapeSpecToStringBuilderWithRectangle() throws ShapeSpecificationsException {
+    public void testConvertShapeSpecToStringBuilderWithRectangle() {
         int[] args = {8, 2};
         Shape rectangle = new Rectangle(args);
-        String actual = GeneratorOfSpec.convertShapeSpecToStringBuilder(rectangle).toString();
+        String actual = SpecificationWriter.generateShapeSpecification(rectangle).toString();
         String expected = "Name: Rectangle\n" +
                 "Area: 16\n" +
                 "Perimeter: 20\n" +
@@ -38,10 +38,10 @@ public class GeneratorOfSpecTest {
     }
 
     @Test
-    public void testConvertShapeSpecToStringBuilderWithTriangle() throws ShapeSpecificationsException {
+    public void testConvertShapeSpecToStringBuilderWithTriangle() {
         int[] args = {3, 2, 2};
         Shape triangle = new Triangle(args);
-        String actual = GeneratorOfSpec.convertShapeSpecToStringBuilder(triangle).toString();
+        String actual = SpecificationWriter.generateShapeSpecification(triangle).toString();
         String expected = "Name: Triangle\n" +
                 "Area: 1,98\n" +
                 "Perimeter: 7\n" +
@@ -58,10 +58,10 @@ public class GeneratorOfSpecTest {
     public final ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testConvertShapeSpecToStringBuilderWithInvalidShapeName() throws ShapeSpecificationsException {
+    public void testConvertShapeSpecToStringBuilderWithInvalidShapeName() {
         Shape circle = null;
         thrown.expect(ShapeSpecificationsException.class);
         thrown.expectMessage("Unable to generate a shape specification, because shape is null");
-        String actual = GeneratorOfSpec.convertShapeSpecToStringBuilder(circle).toString();
+        String actual = SpecificationWriter.generateShapeSpecification(circle).toString();
     }
 }

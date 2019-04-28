@@ -1,9 +1,9 @@
 package ru.cft.focusstart.turlyun;
 
 /**
- * The class is designed to store the shape parameters necessary to generate its specification.
+ * The class is designed to store the shape parameters necessary to generate its specifications.
  */
-public class ShapeParametersFromFile {
+public class InputShapeParameters {
     private String shapeName;
     private int[] shapeParameters;
 

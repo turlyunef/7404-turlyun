@@ -9,7 +9,7 @@ import ru.cft.focusstart.turlyun.shapes.Triangle;
 
 import static org.junit.Assert.*;
 
-public class ShapeCreatorTest {
+public class ShapeGeneratorTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
@@ -17,11 +17,11 @@ public class ShapeCreatorTest {
     @Test
     public void testCreateShapeWithCircle() {
         try {
-            ShapeParametersFromFile shapeParametersFromFile = new ShapeParametersFromFile();
-            shapeParametersFromFile.setShapeName("Circle");
+            InputShapeParameters inputShapeParameters = new InputShapeParameters();
+            inputShapeParameters.setShapeName("Circle");
             int[] args = {8};
-            shapeParametersFromFile.setShapeParameters(args);
-            Shape actual = ShapeCreator.createShape(shapeParametersFromFile);
+            inputShapeParameters.setShapeParameters(args);
+            Shape actual = ShapeGenerator.createShape(inputShapeParameters);
             assertEquals(actual, new Circle((args)));
         } catch (ShapeSpecificationsException e) {
             e.printStackTrace();
@@ -30,23 +30,23 @@ public class ShapeCreatorTest {
 
     @Test
     public void testReadSizeWithInvalidShapeName() throws ShapeSpecificationsException {
-        ShapeParametersFromFile shapeParametersFromFile = new ShapeParametersFromFile();
-        shapeParametersFromFile.setShapeName("Circ");
+        InputShapeParameters inputShapeParameters = new InputShapeParameters();
+        inputShapeParameters.setShapeName("Circ");
         int[] args = {8};
-        shapeParametersFromFile.setShapeParameters(args);
+        inputShapeParameters.setShapeParameters(args);
         thrown.expect(ShapeSpecificationsException.class);
         thrown.expectMessage("Shape Circ is not found, check first row in the input file");
-        Circle actual = (Circle) ShapeCreator.createShape(shapeParametersFromFile);
+        Circle actual = (Circle) ShapeGenerator.createShape(inputShapeParameters);
     }
 
     @Test
     public void testReadSizeWithInvalidShapeParameters() throws ShapeSpecificationsException {
-        ShapeParametersFromFile shapeParametersFromFile = new ShapeParametersFromFile();
-        shapeParametersFromFile.setShapeName("Triangle");
+        InputShapeParameters inputShapeParameters = new InputShapeParameters();
+        inputShapeParameters.setShapeName("Triangle");
         int[] args = {8};
-        shapeParametersFromFile.setShapeParameters(args);
+        inputShapeParameters.setShapeParameters(args);
         thrown.expect(ShapeSpecificationsException.class);
         thrown.expectMessage("Shape Triangle and entered parameters is not compatible, check second row in the input file");
-        Triangle actual = (Triangle) ShapeCreator.createShape(shapeParametersFromFile);
+        Triangle actual = (Triangle) ShapeGenerator.createShape(inputShapeParameters);
     }
 }

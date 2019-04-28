@@ -3,24 +3,25 @@ package ru.cft.focusstart.turlyun;
 import java.io.*;
 
 /**
- * The class is intended for reading data from a file.
+ * The class is intended for reading and parsing data from a file.
  */
-public class InputFromFileOperator {
+class InputReader {
 
     /**
-     * Reads the shape parameters from the input file to an object of the ShapeParametersFromFile class
+     * Reads the shape parameters from the input file to the instance of the InputShapeParameters class
      *
-     * @param fileName the name of the file from which the shape parameters are initialized
-     * @return an object of class Shape Parameters From File, which contains the necessary parameters for creating a specification of a shape
+     * @param fileName name of the file from which the shape parameters are initialized
+     * @return an object of class InputShapeParameters,
+     * which contains the necessary parameters for creating a specifications of a shape
      * @throws ShapeSpecificationsException Exception is thrown if the data cannot be read from the input file.
      */
-    public static ShapeParametersFromFile getShapeParametersFromFile(String fileName) throws ShapeSpecificationsException {
-        ShapeParametersFromFile shapeParametersFromFile = new ShapeParametersFromFile();
+    static InputShapeParameters readShapeParametersFromFile(String fileName) throws ShapeSpecificationsException {
+        InputShapeParameters inputShapeParameters = new InputShapeParameters();
         try (FileInputStream fileInputStream = new FileInputStream(fileName);
              BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream))) {
-            shapeParametersFromFile.setShapeName(bufferedReader.readLine());
-            int[] shapeParameters = parseStringToIntArray(bufferedReader.readLine(), " ");
-            shapeParametersFromFile.setShapeParameters(shapeParameters);
+            inputShapeParameters.setShapeName(bufferedReader.readLine());
+            int[] shapeParameters = parseStringToIntArray(bufferedReader.readLine());
+            inputShapeParameters.setShapeParameters(shapeParameters);
         } catch (FileNotFoundException e) {
             throw new ShapeSpecificationsException("File " + fileName + " does not exist.");
         } catch (SecurityException e) {
@@ -28,19 +29,19 @@ public class InputFromFileOperator {
         } catch (IOException e) {
             throw new ShapeSpecificationsException("File " + fileName + " read error.");
         }
-        return shapeParametersFromFile;
+
+        return inputShapeParameters;
     }
 
     /**
      * Splits a string by spaces into an array of numbers
      *
      * @param str       string to split
-     * @param separator the separator by which the split line
      * @return array of integers derived from string
      * @throws ShapeSpecificationsException Exception is thrown if there are non-numeric characters in the string.
      */
-    public static int[] parseStringToIntArray(String str, String separator) throws ShapeSpecificationsException {
-        String[] splittedString = str.split(separator);
+    private static int[] parseStringToIntArray(String str) throws ShapeSpecificationsException {
+        String[] splittedString = str.split(" ");
         int[] intArray = new int[splittedString.length];
         int i = 0;
         try {
@@ -51,7 +52,8 @@ public class InputFromFileOperator {
 
             return intArray;
         } catch (NumberFormatException e) {
-            throw new ShapeSpecificationsException("Error reading shape parameters. Parameters in the second line of the input file must be numbers, separated by spaces");
+            throw new ShapeSpecificationsException("Error reading shape parameters. " +
+                    "Parameters in the second line of the input file must be numbers, separated by spaces");
         }
     }
 }

@@ -1,89 +1,68 @@
 package ru.cft.focusstart.turlyun.shapes;
 
-import java.util.LinkedHashMap;
-
 /**
- * The class to create the specification of a circle
+ * The class to create the specifications of a circle
  */
-public class Circle extends SomeShape {
+public class Circle extends BaseShape {
     private final int radius;
 
     /**
-     * Constructor to create a circle instance based on its radius.
+     * Constructor to create a circle instance and to generate specifications based on its radius.
      *
-     * @param numbers for a circle, the parameters contain only a radius in the first element
+     * @param parameters for a circle, the parameters contain only a radius in the first element
      */
-    public Circle(int[] numbers) {
-        this.radius = numbers[0];
+    public Circle(int[] parameters) {
+        this.radius = parameters[0];
+        generateShapeSpecifications();
+    }
+
+    /**
+     * {@inheritDoc}
+     * , radius, diameter
+     */
+    @Override
+    protected void generateShapeSpecifications() {
+        super.generateShapeSpecifications();
+        appendRadius();
+        appendDiameter();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public LinkedHashMap<String, String> getShapeSpecifications() {
-        LinkedHashMap<String, String> shapeSpecifications = new LinkedHashMap<>(super.getShapeSpecifications());
-        shapeSpecifications.putAll(getRadius());
-        shapeSpecifications.putAll(getDiameter());
-
-        return shapeSpecifications;
+    protected void appendShapeName() {
+        appendShapeSpecifications("Name", "Circle");
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public LinkedHashMap<String, String> getShapeName() {
-        LinkedHashMap<String, String> shapeName = new LinkedHashMap<>();
-        shapeName.put("Name", "Circle");
-
-        return shapeName;
+    protected void appendShapeArea() {
+        appendShapeSpecifications("Area", String.format("%.2f", Math.PI * radius * radius));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public LinkedHashMap<String, String> getShapeArea() {
-        LinkedHashMap<String, String> shapeArea = new LinkedHashMap<>();
-        shapeArea.put("Area", String.format("%.2f", Math.PI * radius * radius));
-
-        return shapeArea;
+    protected void appendShapePerimeter() {
+        appendShapeSpecifications("Perimeter", String.format("%.2f", 2 * Math.PI * radius));
     }
 
     /**
-     * {@inheritDoc}
+     * Generates a radius of the shape and appends this to the specifications
      */
-    @Override
-    public LinkedHashMap<String, String> getPerimeterOfTheFigure() {
-        LinkedHashMap<String, String> perimeterOfTheFigure = new LinkedHashMap<>();
-        perimeterOfTheFigure.put("Perimeter", String.format("%.2f", 2 * Math.PI * radius));
-
-        return perimeterOfTheFigure;
+    protected void appendRadius() {
+        appendShapeSpecifications("Radius", String.valueOf(radius));
     }
 
     /**
-     * Returns a LinkedHashMap with a circle radius.
-     *
-     * @return a LinkedHashMap with a circle radius
+     * Generates a diameter of the shape and appends this to the specifications
      */
-    private LinkedHashMap<String, String> getRadius() {
-        LinkedHashMap<String, String> circleRadius = new LinkedHashMap<>();
-        circleRadius.put("Radius", String.valueOf(radius));
-
-        return circleRadius;
-    }
-
-    /**
-     * Returns a LinkedHashMap with a circle diameter.
-     *
-     * @return a LinkedHashMap with a circle diameter
-     */
-    private LinkedHashMap<String, String> getDiameter() {
-        LinkedHashMap<String, String> circleDiameter = new LinkedHashMap<>();
-        circleDiameter.put("Diameter", String.valueOf(2 * radius));
-
-        return circleDiameter;
+    protected void appendDiameter() {
+        appendShapeSpecifications("Diameter", String.valueOf(2 * radius));
     }
 
     @Override
