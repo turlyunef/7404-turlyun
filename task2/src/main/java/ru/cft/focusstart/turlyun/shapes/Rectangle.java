@@ -10,7 +10,7 @@ public class Rectangle extends BaseShape {
     /**
      * Constructor to create a rectangle instance and to generate specifications based on its sides.
      *
-     * @param parameters for a rectangle, the parameters contain only two sides for it
+     * @param parameters parameters, for a rectangle, contain only two sides for it
      */
     public Rectangle(int[] parameters) {
         this.side1 = parameters[0];
@@ -86,12 +86,15 @@ public class Rectangle extends BaseShape {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
+
             return true;
         }
         if (obj == null || obj.getClass() != this.getClass()) {
+
             return false;
         }
         Rectangle guest = (Rectangle) obj;
+
         return (side1 == guest.side1) && (side2 == guest.side2);
     }
 }

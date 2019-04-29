@@ -16,7 +16,7 @@ public abstract class BaseShape implements Shape {
     }
 
     /**
-     * Generates a base specification of a shape from name, area, perimeter
+     * Generates a base specifications of a shape from name, area, perimeter
      */
     protected void generateShapeSpecifications() {
         appendShapeName();
@@ -25,22 +25,22 @@ public abstract class BaseShape implements Shape {
     }
 
     /**
-     * Generates a shape name and appends this to the specification
+     * Generates a shape name and appends this to the specifications
      */
     protected abstract void appendShapeName();
 
     /**
-     * Generates a shape area and appends this to the specification
+     * Generates a shape area and appends this to the specifications
      */
     protected abstract void appendShapeArea();
 
     /**
-     * Generates a perimeter of the shape and appends this to the specification
+     * Generates a perimeter of the shape and appends this to the specifications
      */
     protected abstract void appendShapePerimeter();
 
     /**
-     * Appends to the specification the name of the shape parameter and its value
+     * Appends to the specifications the name of the shape parameter and its value
      *
      * @param key   name of the shape parameter
      * @param value value of this shape parameter

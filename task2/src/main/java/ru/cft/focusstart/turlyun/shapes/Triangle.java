@@ -11,7 +11,7 @@ public class Triangle extends BaseShape {
     /**
      * Constructor to create a triangle instance and to generate specifications based on its sides.
      *
-     * @param parameters for a triangle, the parameters contain only three sides for it
+     * @param parameters parameters, for a triangle, contain only three sides for it
      */
     public Triangle(int[] parameters) {
         this.side1 = parameters[0];
@@ -22,6 +22,7 @@ public class Triangle extends BaseShape {
 
     /**
      * {@inheritDoc}
+     * , triangle lengths and angles
      */
     @Override
     protected void generateShapeSpecifications() {
@@ -83,12 +84,15 @@ public class Triangle extends BaseShape {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
+
             return true;
         }
         if (obj == null || obj.getClass() != this.getClass()) {
+
             return false;
         }
         Triangle guest = (Triangle) obj;
+
         return (side1 == guest.side1) && (side2 == guest.side2) && (side3 == guest.side3);
     }
 }

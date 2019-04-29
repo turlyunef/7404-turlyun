@@ -17,7 +17,7 @@ public class Application {
         } else {
             try {
                 InputShapeParameters inputShapeParameters = InputReader.readShapeParametersFromFile(args[0]);
-                Shape shape = ShapeGenerator.createShape(inputShapeParameters);
+                Shape shape = ShapeGenerator.generateShape(inputShapeParameters);
                 if (args.length == 1) {
                     SpecificationWriter.writeShapeSpecifications(shape);
                 } else {

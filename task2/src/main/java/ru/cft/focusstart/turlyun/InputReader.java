@@ -36,7 +36,7 @@ class InputReader {
     /**
      * Splits a string by spaces into an array of numbers
      *
-     * @param str       string to split
+     * @param str string to split
      * @return array of integers derived from string
      * @throws ShapeSpecificationsException Exception is thrown if there are non-numeric characters in the string.
      */
@@ -53,7 +53,7 @@ class InputReader {
             return intArray;
         } catch (NumberFormatException e) {
             throw new ShapeSpecificationsException("Error reading shape parameters. " +
-                    "Parameters in the second line of the input file must be numbers, separated by spaces");
+                    "Parameters in the second line of the input file must be numbers, separated by spaces.");
         }
     }
 }

@@ -21,7 +21,7 @@ public class ShapeGeneratorTest {
             inputShapeParameters.setShapeName("Circle");
             int[] args = {8};
             inputShapeParameters.setShapeParameters(args);
-            Shape actual = ShapeGenerator.createShape(inputShapeParameters);
+            Shape actual = ShapeGenerator.generateShape(inputShapeParameters);
             assertEquals(actual, new Circle((args)));
         } catch (ShapeSpecificationsException e) {
             e.printStackTrace();
@@ -35,8 +35,8 @@ public class ShapeGeneratorTest {
         int[] args = {8};
         inputShapeParameters.setShapeParameters(args);
         thrown.expect(ShapeSpecificationsException.class);
-        thrown.expectMessage("Shape Circ is not found, check first row in the input file");
-        Circle actual = (Circle) ShapeGenerator.createShape(inputShapeParameters);
+        thrown.expectMessage("Shape Circ is not found in enum Shapes, check first row in the input file.");
+        Circle actual = (Circle) ShapeGenerator.generateShape(inputShapeParameters);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ShapeGeneratorTest {
         int[] args = {8};
         inputShapeParameters.setShapeParameters(args);
         thrown.expect(ShapeSpecificationsException.class);
-        thrown.expectMessage("Shape Triangle and entered parameters is not compatible, check second row in the input file");
-        Triangle actual = (Triangle) ShapeGenerator.createShape(inputShapeParameters);
+        thrown.expectMessage("Shape Triangle and entered parameters is not compatible, check second row in the input file.");
+        Triangle actual = (Triangle) ShapeGenerator.generateShape(inputShapeParameters);
     }
 }

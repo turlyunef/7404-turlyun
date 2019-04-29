@@ -7,9 +7,9 @@ public class Circle extends BaseShape {
     private final int radius;
 
     /**
-     * Constructor to create a circle instance and to generate specifications based on its radius.
+     * Constructor to create a circle instance and to generate specifications based on the radius.
      *
-     * @param parameters for a circle, the parameters contain only a radius in the first element
+     * @param parameters parameters, for a circle, contain only a radius in the first element
      */
     public Circle(int[] parameters) {
         this.radius = parameters[0];
@@ -68,12 +68,15 @@ public class Circle extends BaseShape {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
+
             return true;
         }
         if (obj == null || obj.getClass() != this.getClass()) {
+
             return false;
         }
         Circle guest = (Circle) obj;
+
         return radius == guest.radius;
     }
 }

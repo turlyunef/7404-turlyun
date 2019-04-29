@@ -13,22 +13,22 @@ public class InputShapeParameters {
      * @return the name of the shape
      */
     public String getShapeName() {
-        return shapeName;
+        return this.shapeName;
     }
 
     /**
      * Gets the parameters of the shape
      *
-     * @return the parameters of the shape
+     * @return parameters of the shape
      */
     public int[] getShapeParameters() {
-        return shapeParameters;
+        return this.shapeParameters;
     }
 
     /**
      * Sets the name of the shape
      *
-     * @param shapeName the name of the shape
+     * @param shapeName name of the shape
      */
     public void setShapeName(String shapeName) {
         this.shapeName = shapeName;
@@ -37,7 +37,7 @@ public class InputShapeParameters {
     /**
      * Sets the parameters of the shape
      *
-     * @param shapeParameters the parameters of the shape
+     * @param shapeParameters parameters of the shape
      */
     public void setShapeParameters(int[] shapeParameters) {
         this.shapeParameters = shapeParameters;

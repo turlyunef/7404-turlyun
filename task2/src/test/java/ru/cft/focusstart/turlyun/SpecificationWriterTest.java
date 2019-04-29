@@ -56,12 +56,4 @@ public class SpecificationWriterTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void testConvertShapeSpecToStringBuilderWithInvalidShapeName() {
-        Shape circle = null;
-        thrown.expect(ShapeSpecificationsException.class);
-        thrown.expectMessage("Unable to generate a shape specification, because shape is null");
-        String actual = SpecificationWriter.generateShapeSpecification(circle).toString();
-    }
 }
