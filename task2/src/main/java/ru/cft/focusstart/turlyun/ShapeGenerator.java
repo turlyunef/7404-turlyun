@@ -32,8 +32,8 @@ public class ShapeGenerator {
 
             return new Rectangle(inputShapeParameters.getShapeParameters());
         } else {
-            throw new ShapeSpecificationsException("Shape " + inputShapeParameters.getShapeName() +
-                    " is not found in enum Figure, check first row in the input file.");
+            throw new ShapeSpecificationsException(inputShapeParameters.getShapeName() +
+                    " shape is not found in the enum Figure, check first row in the input file.");
         }
     }
 
@@ -49,8 +49,8 @@ public class ShapeGenerator {
     private static void checkInputShapeParameters(InputShapeParameters inputShapeParameters, Figure figure)
             throws ShapeSpecificationsException {
         if (inputShapeParameters.getShapeParameters().length < figure.getParametersCount()) {
-            throw new ShapeSpecificationsException("Shape " + inputShapeParameters.getShapeName() +
-                    " and entered parameters is not compatible, check second row in the input file.");
+            throw new ShapeSpecificationsException(inputShapeParameters.getShapeName() +
+                    " shape and entered parameters is not compatible, check second row in the input file.");
         }
     }
 }

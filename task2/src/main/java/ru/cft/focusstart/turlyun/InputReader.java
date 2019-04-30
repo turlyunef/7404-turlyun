@@ -26,13 +26,13 @@ class InputReader {
 
             return inputShapeParameters;
         } catch (FileNotFoundException e) {
-            throw new ShapeSpecificationsException("The File " + fileName + " does not exist.");
+            throw new ShapeSpecificationsException("The file " + fileName + " does not exist.");
         } catch (SecurityException e) {
             throw new ShapeSpecificationsException("Read access to the file " + fileName + " denied.");
         } catch (IOException e) {
-            throw new ShapeSpecificationsException("The File " + fileName + " read error.");
+            throw new ShapeSpecificationsException("The file " + fileName + " read error.");
         } catch (NullPointerException e) {
-            throw new ShapeSpecificationsException("The File " + fileName + " must contain at least two lines.");
+            throw new ShapeSpecificationsException("The file " + fileName + " must contain at least two lines.");
         }
     }
 

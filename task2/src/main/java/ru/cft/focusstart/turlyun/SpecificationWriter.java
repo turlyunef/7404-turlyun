@@ -58,7 +58,7 @@ public class SpecificationWriter {
         try (FileWriter writer = new FileWriter(fileName, false)) {
             writer.append(str);
         } catch (IOException ex) {
-            throw new ShapeSpecificationsException("Cannot write information to file" + fileName + ".");
+            throw new ShapeSpecificationsException("Cannot write information to the file" + fileName + ".");
         }
     }
 }
