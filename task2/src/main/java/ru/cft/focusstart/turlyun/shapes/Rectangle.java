@@ -57,14 +57,14 @@ public class Rectangle extends BaseShape {
     /**
      * Generates a diagonal length of the rectangle and appends this to the specifications
      */
-    protected void appendDiagonalLength() {
+    private void appendDiagonalLength() {
         appendShapeSpecifications("Diagonal Length", String.format("%.2f", Math.sqrt(Math.pow(side1, 2) + Math.pow(side2, 2))));
     }
 
     /**
      * Generates a rectangle length and appends this to the specifications
      */
-    protected void appendRectangleLength() {
+    private void appendRectangleLength() {
         if (side2 > side1) {
             appendShapeSpecifications("Rectangle Length", String.valueOf(side2));
         } else {
@@ -75,7 +75,7 @@ public class Rectangle extends BaseShape {
     /**
      * Generates a rectangle width and appends this to the specifications
      */
-    protected void appendRectangleWidth() {
+    private void appendRectangleWidth() {
         if (side2 > side1) {
             appendShapeSpecifications("Rectangle Width", String.valueOf(side1));
         } else {

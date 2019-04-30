@@ -1,5 +1,7 @@
 package ru.cft.focusstart.turlyun;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -8,9 +10,17 @@ import ru.cft.focusstart.turlyun.shapes.Rectangle;
 import ru.cft.focusstart.turlyun.shapes.Shape;
 import ru.cft.focusstart.turlyun.shapes.Triangle;
 
+import java.util.Locale;
+
 import static org.junit.Assert.*;
 
 public class SpecificationWriterTest {
+    private static final Locale DEFAULT_LOCALE = Locale.getDefault();
+
+    @BeforeClass
+    public static void setUp() {
+        Locale.setDefault(new Locale("ru"));
+    }
     @Test
     public void testConvertShapeSpecToStringBuilderWithCircle() {
         int[] args = {8};
@@ -56,4 +66,9 @@ public class SpecificationWriterTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
+
+    @AfterClass
+    public static void tearDown() {
+        Locale.setDefault(DEFAULT_LOCALE);
+    }
 }

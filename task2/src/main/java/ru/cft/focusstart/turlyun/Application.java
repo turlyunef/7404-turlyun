@@ -12,6 +12,7 @@ import ru.cft.focusstart.turlyun.shapes.Shape;
  */
 public class Application {
     public static void main(String[] args) {
+
         if (args.length == 0) {
             System.out.println("You must enter at least one file name!");
         } else {

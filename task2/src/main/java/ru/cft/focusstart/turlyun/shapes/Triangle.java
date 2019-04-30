@@ -59,7 +59,7 @@ public class Triangle extends BaseShape {
     /**
      * Generates a triangle lengths and angles and appends this to the specifications
      */
-    protected void appendTriangleLengthsAndAngles() {
+    private void appendTriangleLengthsAndAngles() {
         appendShapeSpecifications("First Length", String.valueOf(side1));
         appendShapeSpecifications("Angle opposite the first side", String.format("%.2f", countAngle(side2, side3, side1)));
         appendShapeSpecifications("Second Length", String.valueOf(side2));

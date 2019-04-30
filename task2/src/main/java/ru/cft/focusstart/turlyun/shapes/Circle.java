@@ -54,14 +54,14 @@ public class Circle extends BaseShape {
     /**
      * Generates a radius of the shape and appends this to the specifications
      */
-    protected void appendRadius() {
+    private void appendRadius() {
         appendShapeSpecifications("Radius", String.valueOf(radius));
     }
 
     /**
      * Generates a diameter of the shape and appends this to the specifications
      */
-    protected void appendDiameter() {
+    private void appendDiameter() {
         appendShapeSpecifications("Diameter", String.valueOf(2 * radius));
     }
 
