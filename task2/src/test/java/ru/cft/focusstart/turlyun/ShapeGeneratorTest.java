@@ -35,7 +35,7 @@ public class ShapeGeneratorTest {
         int[] args = {8};
         inputShapeParameters.setShapeParameters(args);
         thrown.expect(ShapeSpecificationsException.class);
-        thrown.expectMessage("Shape Circ is not found in enum Shapes, check first row in the input file.");
+        thrown.expectMessage("Shape Circ is not found in enum Figure, check first row in the input file.");
         Circle actual = (Circle) ShapeGenerator.generateShape(inputShapeParameters);
     }
 

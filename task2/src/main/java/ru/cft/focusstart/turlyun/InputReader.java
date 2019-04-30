@@ -13,7 +13,8 @@ class InputReader {
      * @param fileName name of the file from which the shape parameters are initialized
      * @return an object of class InputShapeParameters,
      * which contains the necessary parameters for creating a specifications of a shape
-     * @throws ShapeSpecificationsException Exception is thrown if the data cannot be read from the input file.
+     * @throws ShapeSpecificationsException Exception is thrown if the data cannot be read from the input file or
+     *                                      if file has less than two lines.
      */
     static InputShapeParameters readShapeParametersFromFile(String fileName) throws ShapeSpecificationsException {
         InputShapeParameters inputShapeParameters = new InputShapeParameters();
@@ -22,15 +23,17 @@ class InputReader {
             inputShapeParameters.setShapeName(bufferedReader.readLine());
             int[] shapeParameters = parseStringToIntArray(bufferedReader.readLine());
             inputShapeParameters.setShapeParameters(shapeParameters);
-        } catch (FileNotFoundException e) {
-            throw new ShapeSpecificationsException("File " + fileName + " does not exist.");
-        } catch (SecurityException e) {
-            throw new ShapeSpecificationsException("Read access to file " + fileName + " denied.");
-        } catch (IOException e) {
-            throw new ShapeSpecificationsException("File " + fileName + " read error.");
-        }
 
-        return inputShapeParameters;
+            return inputShapeParameters;
+        } catch (FileNotFoundException e) {
+            throw new ShapeSpecificationsException("The File " + fileName + " does not exist.");
+        } catch (SecurityException e) {
+            throw new ShapeSpecificationsException("Read access to the file " + fileName + " denied.");
+        } catch (IOException e) {
+            throw new ShapeSpecificationsException("The File " + fileName + " read error.");
+        } catch (NullPointerException e) {
+            throw new ShapeSpecificationsException("The File " + fileName + " must contain at least two lines.");
+        }
     }
 
     /**

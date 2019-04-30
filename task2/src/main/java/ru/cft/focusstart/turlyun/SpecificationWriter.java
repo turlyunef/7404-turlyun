@@ -37,8 +37,7 @@ public class SpecificationWriter {
      */
     public static StringBuilder generateShapeSpecification(Shape shape) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry entry : shape.getShapeSpecifications().entrySet()
-        ) {
+        for (Map.Entry entry : shape.getShapeSpecifications().entrySet()) {
             String str = String.format("%s: %s\n", entry.getKey(), entry.getValue());
             stringBuilder.append(str);
         }

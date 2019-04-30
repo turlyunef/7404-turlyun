@@ -8,16 +8,16 @@ public class InputShapeParameters {
     private int[] shapeParameters;
 
     /**
-     * Gets the name of the shape
+     * Returns the name of the shape
      *
-     * @return the name of the shape
+     * @return name of the shape
      */
     public String getShapeName() {
         return this.shapeName;
     }
 
     /**
-     * Gets the parameters of the shape
+     * Returns the parameters of the shape
      *
      * @return parameters of the shape
      */
