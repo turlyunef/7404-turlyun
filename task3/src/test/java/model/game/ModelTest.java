@@ -8,8 +8,8 @@ import java.util.Random;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class ContentTableTest {
-    private static Logger log = LoggerFactory.getLogger(ContentTableTest.class);
+public class ModelTest {
+    private static Logger log = LoggerFactory.getLogger(ModelTest.class);
 
     @Test
     public void testBombsGeneration1() {
@@ -45,7 +45,7 @@ public class ContentTableTest {
     }
 
     private void testBombsGeneration(int bombsCount, int rowsCount, int columnsCount) throws TableGenerationException {
-        ContentTable table = new ContentTable(bombsCount, rowsCount, columnsCount);
+        Model table = new Model(bombsCount, rowsCount, columnsCount);
         int bombsCounter = 0;
         for (int i = 0; i < rowsCount; i++) {
             for (int j = 0; j < columnsCount; j++) {

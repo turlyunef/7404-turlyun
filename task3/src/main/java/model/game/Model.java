@@ -5,21 +5,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-public class ContentTable {
-    private static final int DEFAULT_BOMBS_COUNT = 10;
-    private static final int DEFAULT_ROWS_COUNT = 9;
-    private static final int DEFAULT_COLUMNS_COUNT = 9;
-    private static Logger log = LoggerFactory.getLogger(ContentTable.class);
+public class Model {
+
+    private static Logger log = LoggerFactory.getLogger(Model.class);
 
     private int rowsCount;
     private int columnsCount;
     private final Cell[][] table;
 
-    public ContentTable() throws TableGenerationException {
-        this(DEFAULT_BOMBS_COUNT, DEFAULT_ROWS_COUNT, DEFAULT_COLUMNS_COUNT);
-    }
-
-    public ContentTable(int bombsCount, int rowsCount, int columnsCount) throws TableGenerationException {
+    public Model(int bombsCount, int rowsCount, int columnsCount) throws TableGenerationException {
         this.table = new Cell[rowsCount][columnsCount];
         if (bombsCount > rowsCount * columnsCount) {
             throw (new TableGenerationException("Error generating bombs on the field, " +
