@@ -1,77 +1,129 @@
 package view;
 
-import controller.Controller;
+import controller.ButtonController;
 import controller.Controllers;
+import model.game.GameState;
 import model.game.Model;
 import model.game.TableGenerationException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class SwingApplication {
+    Controllers controllers;
+    JButton[][] buttons;
+    JPanel jPanel;
+    Model model;
+    JLabel jLabel;
+    JFrame frame;
 
-    public static void main(String[] args) throws TableGenerationException {
+    public void initFrame() throws TableGenerationException {
+        initFrame(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT);
+    }
 
-        JFrame frame = new JFrame();
+    public void initFrame(int bombsCount, int rows, int cols) throws TableGenerationException {
+        frame = new JFrame();
         frame.setTitle("Minesweeper");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setJMenuBar(createMenu());
+        frame.setLayout(new BorderLayout());
+        createGameField(bombsCount, rows, cols);
+        frame.add(this.jPanel, BorderLayout.CENTER);
+        jLabel = new JLabel(new ImageIcon(SwingApplication.class.getResource(Constants.WIN_ICON)));
+        frame.add(jLabel, BorderLayout.NORTH);
+        frame.setResizable(false);
+        frame.pack();
+        frame.setVisible(true);
+    }
 
-        JMenuItem exitItem = new JMenuItem("Exit");
-        exitItem.addActionListener(e -> System.exit(0));
+    public void restartGame(int bombsCount, int rows, int cols) throws TableGenerationException {
+//        this.model = new Model(bombsCount, rows, cols);
+//        closeButtons();
+    }
 
-        JMenu jMenu = new JMenu("File");
-        jMenu.add(exitItem);
+    public void closeButtons() {
+        Icon closedIcon = new ImageIcon(Constants.class.getResource(Constants.CLOSED_ICON));
+        for (JButton[] button : buttons) {
+            for (JButton jButton : button) {
+                jButton.setIcon(closedIcon);
+            }
+        }
+    }
 
-        JMenuBar jMenuBar = new JMenuBar();
-        jMenuBar.add(jMenu);
-
-        frame.setJMenuBar(jMenuBar);
-
-        JPanel jPanel = new JPanel();
-        frame.add(jPanel);
-
-        int rows = Constants.DEFAULT_ROWS_COUNT;
-        int cols = Constants.DEFAULT_COLUMNS_COUNT;
-        int bombsCount = Constants.DEFAULT_BOMBS_COUNT;
-
-        Model model = new Model(bombsCount, rows, cols);
-        Controllers controllers = new Controllers(rows, cols, model);
-
-        JButton[][] buttons = new JButton[rows][cols];
-
+    private void createGameField(int bombsCount, int rows, int cols) throws TableGenerationException {
+        this.jPanel = new JPanel();
+        this.model = new Model(bombsCount, rows, cols);
+        this.controllers = new Controllers(new ButtonController[rows][cols], this.model);
+        this.buttons = new JButton[rows][cols];
         jPanel.setLayout(new GridLayout(rows, cols));
 
-        Icon closedIcon = new ImageIcon(Constants.class.getResource(Constants.CLOSED_ICON));
         Dimension buttonPreferredSize = new Dimension(40, 40);
-
         for (int i = 0; i < buttons.length; i++) {
             for (int j = 0; j < buttons[i].length; j++) {
                 buttons[i][j] = new JButton();
-                buttons[i][j].setIcon(closedIcon);
+                ButtonController buttonController = new ButtonController(buttons[i][j]);
+                controllers.setController(buttonController, i, j);
+                int finalI = i;
+                int finalJ = j;
+                buttons[i][j].addMouseListener(new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                    }
 
-                Controller controller = new Controller(i, j, buttons[i][j], model);
-                controllers.setController(controller, i, j);
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        if (e.getButton() == MouseEvent.BUTTON3) {
+                            controllers.pressedButton3(finalI, finalJ);
+                        }
+                    }
 
-                buttons[i][j].addActionListener(controller);
-                buttons[i][j].addMouseListener(controller);
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        if (e.getButton() == MouseEvent.BUTTON1) {
+                            controllers.releasedButton1(finalI, finalJ);
+                        }
+                        if (e.getButton() == MouseEvent.BUTTON2) {
+                            controllers.releasedButton2(finalI, finalJ);
+                        }
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                    }
+                });
                 buttons[i][j].setPreferredSize(buttonPreferredSize);
                 jPanel.add(buttons[i][j]);
             }
         }
-        for (int i = 0; i < buttons.length; i++) {
-            for (int j = 0; j < buttons[i].length; j++) {
-                controllers.addCellsAround(i, j, cols);
+        closeButtons();
+    }
+
+    private JMenuBar createMenu() {
+        JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.addActionListener(e -> System.exit(0));
+
+        JMenuItem restartItem = new JMenuItem("New game");
+        restartItem.addActionListener(e -> {
+            try {
+                restartGame(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT);
+            } catch (TableGenerationException ex) {
+                ex.printStackTrace();
             }
-        }
+        });
 
-        frame.setLayout(new BorderLayout());
-        frame.add(jPanel, BorderLayout.CENTER);
+        JMenu jMenu = new JMenu("File");
+        jMenu.add(exitItem);
+        jMenu.add(restartItem);
 
-        JLabel jLabel = new JLabel(new ImageIcon(SwingApplication.class.getResource("/icons/win.png")));
-        frame.add(jLabel, BorderLayout.NORTH);
+        JMenuBar jMenuBar = new JMenuBar();
+        jMenuBar.add(jMenu);
 
-        frame.setResizable(false);
-        frame.pack();
-        frame.setVisible(true);
+        return jMenuBar;
     }
 }

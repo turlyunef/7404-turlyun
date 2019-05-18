@@ -2,13 +2,14 @@ package model.game;
 
 public class Cell {
     private final CellContent cellContent;
+
     private int bombsAroundCellCount;
 
-    public Cell(CellContent cellContent) {
+    Cell(CellContent cellContent) {
         this.cellContent = cellContent;
     }
 
-    public CellContent getCellContent() {
+    CellContent getCellContent() {
 
         return cellContent;
     }
@@ -18,7 +19,7 @@ public class Cell {
         return bombsAroundCellCount;
     }
 
-    public void setBombsAroundCellCount(int bombsAroundCellCount) {
+    void setBombsAroundCellCount(int bombsAroundCellCount) {
         this.bombsAroundCellCount = bombsAroundCellCount;
     }
 }

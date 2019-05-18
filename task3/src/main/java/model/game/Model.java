@@ -12,6 +12,7 @@ public class Model {
     private int rowsCount;
     private int columnsCount;
     private final Cell[][] table;
+    private GameState state = GameState.PLAY;
 
     public Model(int bombsCount, int rowsCount, int columnsCount) throws TableGenerationException {
         this.table = new Cell[rowsCount][columnsCount];
@@ -86,6 +87,15 @@ public class Model {
     }
 
     public Cell getCell(int rowIndex, int columnIndex) {
+
         return this.table[rowIndex][columnIndex];
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
     }
 }

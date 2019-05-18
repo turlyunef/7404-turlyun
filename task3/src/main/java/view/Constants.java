@@ -1,7 +1,8 @@
 package view;
 
 public class Constants {
-    public static final String MINE_ICON = "/icons/mined.png";
+    public static final String EXPLODED_MINE_ICON = "/icons/mined.png";
+    public static final String MINE_ICON = "/icons/mine.png";
     public static final String NO_MINE_AROUND_ICON = "/icons/zero.png";
     public static final String ONE_MINE_AROUND_ICON = "/icons/one.png";
     public static final String TWO_MINE_AROUND_ICON = "/icons/two.png";
@@ -16,7 +17,6 @@ public class Constants {
     public static final String NOT_MINE_ICON = "/icons/not_mine.png";
     public static final String WIN_ICON = "/icons/win.png";
     public static final String LOST_ICON = "/icons/lost.png";
-    public static final String QUESTION_ICON = "/icons/question.png";
     public static final String FLAG_ICON = "/icons/flag.png";
 
     public static final int DEFAULT_BOMBS_COUNT = 10;
