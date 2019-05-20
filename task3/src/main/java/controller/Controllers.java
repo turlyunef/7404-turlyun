@@ -102,6 +102,20 @@ public class Controllers {
         }
     }
 
+    public void newGame(Model model, AbstractController[][] abstractControllers) {
+        this.model = model;
+        this.controllers = abstractControllers;
+        closeAllCells();
+    }
+
+    private void closeAllCells() {
+        for (int i = 0; i < this.controllers.length; i++) {
+            for (int j = 0; j < this.controllers[i].length; j++) {
+                this.controllers[i][j].setClose();
+            }
+        }
+    }
+
     public void releasedButton1(int rowIndex, int columnIndex) {
         if (gameNotLoss()) {
             openCell(rowIndex, columnIndex);

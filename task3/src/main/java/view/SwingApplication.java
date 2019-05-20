@@ -5,45 +5,68 @@ import controller.Controllers;
 import model.game.GameState;
 import model.game.Model;
 import model.game.TableGenerationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 public class SwingApplication {
-    Controllers controllers;
-    JButton[][] buttons;
-    JPanel jPanel;
-    Model model;
+    private JPanel gameField;
     JLabel jLabel;
-    JFrame frame;
+    private JFrame gameFrame;
+    Model gameModel;
+    GameState gameState;
+    private static Logger log = LoggerFactory.getLogger(SwingApplication.class);
 
     public void initFrame() throws TableGenerationException {
         initFrame(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT);
     }
 
-    public void initFrame(int bombsCount, int rows, int cols) throws TableGenerationException {
-        frame = new JFrame();
-        frame.setTitle("Minesweeper");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setJMenuBar(createMenu());
-        frame.setLayout(new BorderLayout());
+    private void initFrame(int bombsCount, int rows, int cols) throws TableGenerationException {
+        gameFrame = new JFrame();
+        gameFrame.setTitle("Minesweeper");
+        gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        gameFrame.setJMenuBar(createMenu());
+        gameFrame.setLayout(new BorderLayout());
         createGameField(bombsCount, rows, cols);
-        frame.add(this.jPanel, BorderLayout.CENTER);
+
         jLabel = new JLabel(new ImageIcon(SwingApplication.class.getResource(Constants.WIN_ICON)));
-        frame.add(jLabel, BorderLayout.NORTH);
-        frame.setResizable(false);
-        frame.pack();
-        frame.setVisible(true);
+        gameFrame.add(jLabel, BorderLayout.NORTH);
+        gameFrame.setResizable(false);
+        gameFrame.pack();
+        gameFrame.setVisible(true);
     }
 
-    public void restartGame(int bombsCount, int rows, int cols) throws TableGenerationException {
-//        this.model = new Model(bombsCount, rows, cols);
-//        closeButtons();
+    private void restartGame(int bombsCount, int rows, int cols) throws TableGenerationException {
+        this.gameFrame.remove(gameField);
+        createGameField(bombsCount, rows, cols);
+        this.gameFrame.pack();
     }
 
-    public void closeButtons() {
+    private void createGameField(int bombsCount, int rows, int cols) throws TableGenerationException {
+        this.gameState = GameState.PLAY;
+        this.gameField = new JPanel();
+        this.gameModel = new Model(bombsCount, rows, cols);
+        Controllers controllers = new Controllers(new ButtonController[rows][cols], gameModel);
+        JButton[][] buttons = new JButton[rows][cols];
+        gameField.setLayout(new GridLayout(rows, cols));
+        Dimension buttonPreferredSize = new Dimension(40, 40);
+        for (int i = 0; i < buttons.length; i++) {
+            for (int j = 0; j < buttons[i].length; j++) {
+                buttons[i][j] = new JButton();
+                ButtonController buttonController = new ButtonController(buttons[i][j]);
+                controllers.setController(buttonController, i, j);
+                buttons[i][j].addMouseListener(new ButtonMouseListener(controllers, i, j));
+                buttons[i][j].setPreferredSize(buttonPreferredSize);
+                gameField.add(buttons[i][j]);
+            }
+        }
+        closeButtons(buttons);
+        gameFrame.add(this.gameField, BorderLayout.CENTER);
+    }
+
+    private void closeButtons(JButton[][] buttons) {
         Icon closedIcon = new ImageIcon(Constants.class.getResource(Constants.CLOSED_ICON));
         for (JButton[] button : buttons) {
             for (JButton jButton : button) {
@@ -52,74 +75,54 @@ public class SwingApplication {
         }
     }
 
-    private void createGameField(int bombsCount, int rows, int cols) throws TableGenerationException {
-        this.jPanel = new JPanel();
-        this.model = new Model(bombsCount, rows, cols);
-        this.controllers = new Controllers(new ButtonController[rows][cols], this.model);
-        this.buttons = new JButton[rows][cols];
-        jPanel.setLayout(new GridLayout(rows, cols));
-
-        Dimension buttonPreferredSize = new Dimension(40, 40);
-        for (int i = 0; i < buttons.length; i++) {
-            for (int j = 0; j < buttons[i].length; j++) {
-                buttons[i][j] = new JButton();
-                ButtonController buttonController = new ButtonController(buttons[i][j]);
-                controllers.setController(buttonController, i, j);
-                int finalI = i;
-                int finalJ = j;
-                buttons[i][j].addMouseListener(new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON3) {
-                            controllers.pressedButton3(finalI, finalJ);
-                        }
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() == MouseEvent.BUTTON1) {
-                            controllers.releasedButton1(finalI, finalJ);
-                        }
-                        if (e.getButton() == MouseEvent.BUTTON2) {
-                            controllers.releasedButton2(finalI, finalJ);
-                        }
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
-                });
-                buttons[i][j].setPreferredSize(buttonPreferredSize);
-                jPanel.add(buttons[i][j]);
-            }
-        }
-        closeButtons();
-    }
-
     private JMenuBar createMenu() {
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(e -> System.exit(0));
 
-        JMenuItem restartItem = new JMenuItem("New game");
-        restartItem.addActionListener(e -> {
+        JMenuItem restartAsNewbieItem = new JMenuItem("New game (newbie)");
+        restartAsNewbieItem.addActionListener(e -> {
             try {
-                restartGame(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT);
+                restartGame(10, 9, 9);
             } catch (TableGenerationException ex) {
-                ex.printStackTrace();
+                try {
+                    restartGame(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT);
+                } catch (TableGenerationException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        });
+
+        JMenuItem restartAsExperiencedItem = new JMenuItem("New game (experienced)");
+        restartAsExperiencedItem.addActionListener(e -> {
+            try {
+                restartGame(40, 16, 16);
+            } catch (TableGenerationException ex) {
+                try {
+                    restartGame(10, 9, 9);
+                } catch (TableGenerationException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        });
+
+        JMenuItem restartAsExpertItem = new JMenuItem("New game (expert)");
+        restartAsExpertItem.addActionListener(e -> {
+            try {
+                restartGame(99, 16, 30);
+            } catch (TableGenerationException ex) {
+                try {
+                    restartGame(10, 9, 9);
+                } catch (TableGenerationException exc) {
+                    exc.printStackTrace();
+                }
             }
         });
 
         JMenu jMenu = new JMenu("File");
         jMenu.add(exitItem);
-        jMenu.add(restartItem);
+        jMenu.add(restartAsNewbieItem);
+        jMenu.add(restartAsExperiencedItem);
+        jMenu.add(restartAsExpertItem);
 
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(jMenu);
