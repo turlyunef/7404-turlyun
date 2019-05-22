@@ -4,11 +4,13 @@ import controller.Controllers;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
-public class ButtonMouseListener implements MouseListener {
+public class ButtonMouseListener implements MouseListener, Observed {
     private Controllers controllers;
     private int rowIndex;
     private int columnIndex;
+    private ArrayList<Observer> observers = new ArrayList<>();
 
 
     ButtonMouseListener(Controllers controllers, int rowIndex, int columnIndex) {
@@ -24,6 +26,7 @@ public class ButtonMouseListener implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        notifyObservers();
         if (e.getButton() == MouseEvent.BUTTON3) {
             controllers.pressedButton3(rowIndex, columnIndex);
         }
@@ -31,6 +34,7 @@ public class ButtonMouseListener implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        notifyObservers();
         if (e.getButton() == MouseEvent.BUTTON1) {
             controllers.releasedButton1(rowIndex, columnIndex);
         }
@@ -47,5 +51,23 @@ public class ButtonMouseListener implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void addObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o :
+                observers) {
+            o.handleEvent();
+        }
     }
 }

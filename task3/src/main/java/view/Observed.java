@@ -7,5 +7,5 @@ public interface Observed {
 
     void removeObserver(Observer o);
 
-    void notifyObserversChangeDefusedBombsCounter(int value);
+    void notifyObservers();
 }

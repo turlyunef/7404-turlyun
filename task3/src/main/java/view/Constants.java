@@ -17,6 +17,8 @@ public class Constants {
     public static final String NOT_MINE_ICON = "/icons/not_mine.png";
     public static final String WIN_ICON = "/icons/win.png";
     public static final String LOST_ICON = "/icons/lost.png";
+    public static final String PLAY_ICON = "/icons/play.png";
+    public static final String CLICK_ICON = "/icons/click.png";
     public static final String FLAG_ICON = "/icons/flag.png";
 
     public static final int DEFAULT_BOMBS_COUNT = 10;

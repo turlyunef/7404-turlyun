@@ -6,10 +6,18 @@ import model.game.Model;
 public class Controllers {
     private AbstractController[][] controllers;
     private Model model;
+    private RestartButtonController restartButtonController;
 
-    public Controllers(AbstractController[][] controllers, Model model) {
+    public Controllers(AbstractController[][] controllers, Model model, RestartButtonController restartButtonController) {
         this.controllers = controllers;
         this.model = model;
+        this.restartButtonController = restartButtonController;
+        restartButtonController.setPlayButton();
+    }
+
+    public void setLost(){
+        this.restartButtonController.setLostButton();
+        this.restartButtonController.setGameState(GameState.LOSE);
     }
 
     public void setController(ButtonController buttonController, int rowIndex, int columnIndex) {
@@ -37,6 +45,7 @@ public class Controllers {
 
     private void explode(int rowIndex, int columnIndex) {
         showAllBombs();
+        setLost();
         controllers[rowIndex][columnIndex].setExplodedMineCell();
         this.model.setState(GameState.LOSE);
     }
@@ -98,20 +107,6 @@ public class Controllers {
                 if (isCellExist(i, j)) {
                     controllers[i][j].changeFlaggedBombsCounter(value);
                 }
-            }
-        }
-    }
-
-    public void newGame(Model model, AbstractController[][] abstractControllers) {
-        this.model = model;
-        this.controllers = abstractControllers;
-        closeAllCells();
-    }
-
-    private void closeAllCells() {
-        for (int i = 0; i < this.controllers.length; i++) {
-            for (int j = 0; j < this.controllers[i].length; j++) {
-                this.controllers[i][j].setClose();
             }
         }
     }

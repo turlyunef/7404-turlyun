@@ -1,10 +1,10 @@
 import model.game.TableGenerationException;
-import view.SwingApplication;
+import view.GameFrame;
 
 public class Application {
     public static void main(String[] args) throws TableGenerationException {
-        SwingApplication swingApplication = new SwingApplication();
-                swingApplication.initFrame();
+        GameFrame gameFrame = new GameFrame();
+                gameFrame.initFrame();
 
     }
 }

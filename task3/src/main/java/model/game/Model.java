@@ -2,6 +2,7 @@ package model.game;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.GameProperties;
 
 import java.util.Random;
 
@@ -14,16 +15,17 @@ public class Model {
     private final Cell[][] table;
     private GameState state = GameState.PLAY;
 
-    public Model(int bombsCount, int rowsCount, int columnsCount) throws TableGenerationException {
+    public Model(GameProperties gameProperties) throws TableGenerationException {
+        this.rowsCount = gameProperties.getRows();
+        this.columnsCount = gameProperties.getCols();
         this.table = new Cell[rowsCount][columnsCount];
-        if (bombsCount > rowsCount * columnsCount) {
+        if (gameProperties.getBombsCount() > rowsCount * columnsCount) {
             throw (new TableGenerationException("Error generating bombs on the field, " +
                     "their number must be less than the number of cells in the field"));
         }
-        this.columnsCount = columnsCount;
-        this.rowsCount = rowsCount;
 
-        generateBombs(bombsCount);
+
+        generateBombs(gameProperties.getBombsCount());
         calculateBombsAroundCells();
     }
 
