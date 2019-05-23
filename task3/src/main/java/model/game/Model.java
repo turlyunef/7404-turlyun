@@ -12,20 +12,20 @@ public class Model {
 
     private int rowsCount;
     private int columnsCount;
+    private int bombsCount;
     private final Cell[][] table;
     private GameState state = GameState.PLAY;
 
     public Model(GameProperties gameProperties) throws TableGenerationException {
         this.rowsCount = gameProperties.getRows();
         this.columnsCount = gameProperties.getCols();
+        this.bombsCount = gameProperties.getBombsCount();
         this.table = new Cell[rowsCount][columnsCount];
-        if (gameProperties.getBombsCount() > rowsCount * columnsCount) {
+        if (this.bombsCount > rowsCount * columnsCount) {
             throw (new TableGenerationException("Error generating bombs on the field, " +
                     "their number must be less than the number of cells in the field"));
         }
-
-
-        generateBombs(gameProperties.getBombsCount());
+        generateBombs(this.bombsCount);
         calculateBombsAroundCells();
     }
 
@@ -99,5 +99,9 @@ public class Model {
 
     public void setState(GameState state) {
         this.state = state;
+    }
+
+    public int getBombsCount() {
+        return bombsCount;
     }
 }

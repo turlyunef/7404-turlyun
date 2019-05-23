@@ -8,10 +8,11 @@ import javax.swing.*;
 
 public class RestartButtonController implements Observer {
 
-    private Icon lostIcon = new ImageIcon(Constants.class.getResource(Constants.LOST_ICON));
-    private Icon playIcon = new ImageIcon(Constants.class.getResource(Constants.PLAY_ICON));
-    private Icon winIcon = new ImageIcon(Constants.class.getResource(Constants.WIN_ICON));
-    private Icon clickIcon = new ImageIcon(Constants.class.getResource(Constants.CLICK_ICON));
+    private final Icon lostIcon = new ImageIcon(Constants.class.getResource(Constants.LOST_ICON));
+    private final Icon playIcon = new ImageIcon(Constants.class.getResource(Constants.PLAY_ICON));
+    private final Icon winIcon = new ImageIcon(Constants.class.getResource(Constants.WIN_ICON));
+    private final Icon clickIcon = new ImageIcon(Constants.class.getResource(Constants.CLICK_ICON));
+
     private JButton jButton;
     private GameState gameState = GameState.PLAY;
 
@@ -41,14 +42,13 @@ public class RestartButtonController implements Observer {
 
     @Override
     public void handleEvent() {
-        if (gameState.equals(GameState.LOSE)) {
-            return;
-        }
-        if (jButton.getIcon().equals(playIcon)){
-            setClickButton();
-        }
-        else {
-            setPlayButton();
+        if (gameState.equals(GameState.PLAY)) {
+
+            if (jButton.getIcon().equals(playIcon)) {
+                setClickButton();
+            } else {
+                setPlayButton();
+            }
         }
     }
 

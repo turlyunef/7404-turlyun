@@ -7,17 +7,24 @@ public class Controllers {
     private AbstractController[][] controllers;
     private Model model;
     private RestartButtonController restartButtonController;
+    private int flagCount;
 
     public Controllers(AbstractController[][] controllers, Model model, RestartButtonController restartButtonController) {
         this.controllers = controllers;
         this.model = model;
         this.restartButtonController = restartButtonController;
+        this.flagCount = 0;
         restartButtonController.setPlayButton();
     }
 
-    public void setLost(){
+    public void setLost() {
         this.restartButtonController.setLostButton();
         this.restartButtonController.setGameState(GameState.LOSE);
+    }
+
+    public void setWin() {
+        this.restartButtonController.setWinButton();
+        this.restartButtonController.setGameState(GameState.WIN);
     }
 
     public void setController(ButtonController buttonController, int rowIndex, int columnIndex) {
@@ -36,10 +43,24 @@ public class Controllers {
             } else {
                 int bombsAroundCellCount = model.getCell(rowIndex, columnIndex).getBombsAroundCellCount();
                 controllers[rowIndex][columnIndex].setOpenCell(bombsAroundCellCount);
+                checkWin();
                 if (bombsAroundCellCount == 0) {
                     openCellsAround(rowIndex, columnIndex);
                 }
             }
+        }
+    }
+
+    private void checkWin() {
+        if (this.flagCount == this.model.getBombsCount()) {
+            for (AbstractController[] controller : controllers) {
+                for (AbstractController abstractController : controller) {
+                    if (abstractController.cellStatus.equals(CellStatus.CLOSE)) {
+                        return;
+                    }
+                }
+            }
+            setWin();
         }
     }
 
@@ -91,11 +112,14 @@ public class Controllers {
             case CLOSE: {
                 this.controllers[rowIndex][columnIndex].setFlag();
                 changeDefusedBombsCountersInCellsAround(rowIndex, columnIndex, 1);
+                this.flagCount++;
+                checkWin();
                 break;
             }
             case FLAG: {
                 this.controllers[rowIndex][columnIndex].setClose();
                 changeDefusedBombsCountersInCellsAround(rowIndex, columnIndex, -1);
+                this.flagCount--;
                 break;
             }
         }
