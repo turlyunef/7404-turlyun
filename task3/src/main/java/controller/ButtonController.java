@@ -32,7 +32,7 @@ public class ButtonController extends AbstractController {
     }
 
     @Override
-    void setClose(){
+    void setClose() {
         cellStatus = CellStatus.CLOSE;
         Icon closedIcon = new ImageIcon(Constants.class.getResource(Constants.CLOSED_ICON));
         jButton.setIcon(closedIcon);

@@ -1,6 +1,6 @@
 package controller;
 
-abstract class AbstractController{
+abstract class AbstractController {
     CellStatus cellStatus;
     private int flaggedBombsCounter;
 

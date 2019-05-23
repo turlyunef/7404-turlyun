@@ -17,19 +17,39 @@ public class Controllers {
         restartButtonController.setPlayButton();
     }
 
-    public void setLost() {
+    public void setCellButtonController(ButtonController buttonController, int rowIndex, int columnIndex) {
+        this.controllers[rowIndex][columnIndex] = buttonController;
+    }
+
+    public void releasedButton1(int rowIndex, int columnIndex) {
+        if (checkGameNotEnded()) {
+            openCell(rowIndex, columnIndex);
+        }
+    }
+
+    public void releasedButton2(int rowIndex, int colIndex) {
+        if ((checkGameNotEnded()) && (!cellIsClose(rowIndex, colIndex)) && (cellsAroundDemine(rowIndex, colIndex))) {
+            openCellsAround(rowIndex, colIndex);
+        }
+    }
+
+    public void pressedButton3(int rowIndex, int columnIndex) {
+        if (checkGameNotEnded()) {
+            changeCellStatus(rowIndex, columnIndex);
+        }
+    }
+
+    private void setLost() {
         this.restartButtonController.setLostButton();
+
         this.restartButtonController.setGameState(GameState.LOSE);
     }
 
-    public void setWin() {
+    private void setWin() {
         this.restartButtonController.setWinButton();
         this.restartButtonController.setGameState(GameState.WIN);
     }
 
-    public void setController(ButtonController buttonController, int rowIndex, int columnIndex) {
-        this.controllers[rowIndex][columnIndex] = buttonController;
-    }
 
     private boolean isCellExist(int rowIndex, int columnIndex) {
 
@@ -37,8 +57,8 @@ public class Controllers {
     }
 
     private void openCell(int rowIndex, int columnIndex) {
-        if ((gameNotLoss()) && (cellIsClose(rowIndex, columnIndex))) {
-            if (model.cellIsBomb(rowIndex, columnIndex)) {
+        if ((checkGameNotEnded()) && (cellIsClose(rowIndex, columnIndex))) {
+            if (model.getCell(rowIndex, columnIndex).isCellBomb()) {
                 explode(rowIndex, columnIndex);
             } else {
                 int bombsAroundCellCount = model.getCell(rowIndex, columnIndex).getBombsAroundCellCount();
@@ -56,6 +76,7 @@ public class Controllers {
             for (AbstractController[] controller : controllers) {
                 for (AbstractController abstractController : controller) {
                     if (abstractController.cellStatus.equals(CellStatus.CLOSE)) {
+
                         return;
                     }
                 }
@@ -68,7 +89,6 @@ public class Controllers {
         showAllBombs();
         setLost();
         controllers[rowIndex][columnIndex].setExplodedMineCell();
-        this.model.setState(GameState.LOSE);
     }
 
     private void openCellsAround(int rowIndex, int columnIndex) {
@@ -81,9 +101,9 @@ public class Controllers {
         }
     }
 
-    private boolean gameNotLoss() {
+    private boolean checkGameNotEnded() {
 
-        return !this.model.getState().equals(GameState.LOSE);
+        return (!this.model.getState().equals(GameState.LOSE)) & (!this.restartButtonController.getGameState().equals(GameState.WIN));
     }
 
     private boolean cellIsClose(int rowIndex, int columnIndex) {
@@ -94,7 +114,7 @@ public class Controllers {
     private void showAllBombs() {
         for (int i = 0; i < this.controllers.length; i++) {
             for (int j = 0; j < this.controllers[i].length; j++) {
-                if (this.model.cellIsBomb(i, j)) {
+                if (this.model.getCell(i, j).isCellBomb()) {
                     if (this.controllers[i][j].getCellStatus().equals(CellStatus.CLOSE)) {
                         this.controllers[i][j].setMineCell();
                     }
@@ -135,27 +155,10 @@ public class Controllers {
         }
     }
 
-    public void releasedButton1(int rowIndex, int columnIndex) {
-        if (gameNotLoss()) {
-            openCell(rowIndex, columnIndex);
-        }
-    }
-
-    public void releasedButton2(int rowIndex, int colIndex) {
-        if ((gameNotLoss()) && (!cellIsClose(rowIndex, colIndex)) && (cellsAroundDemine(rowIndex, colIndex))) {
-            openCellsAround(rowIndex, colIndex);
-        }
-    }
 
     private boolean cellsAroundDemine(int rowIndex, int colIndex) {
 
         return this.controllers[rowIndex][colIndex].getFlaggedBombsCounter() >=
                 model.getCell(rowIndex, colIndex).getBombsAroundCellCount();
-    }
-
-    public void pressedButton3(int rowIndex, int columnIndex) {
-        if (gameNotLoss()) {
-            changeCellStatus(rowIndex, columnIndex);
-        }
     }
 }

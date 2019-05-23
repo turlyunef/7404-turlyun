@@ -1,4 +1,6 @@
-package view;
+package model.game;
+
+import view.Constants;
 
 public class GameProperties {
     private int bombsCount;
@@ -15,15 +17,18 @@ public class GameProperties {
         this.cols = cols;
     }
 
-    public int getBombsCount() {
+    int getBombsCount() {
+
         return bombsCount;
     }
 
     public int getRows() {
+
         return rows;
     }
 
     public int getCols() {
+
         return cols;
     }
 }

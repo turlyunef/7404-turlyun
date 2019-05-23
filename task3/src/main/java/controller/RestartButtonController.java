@@ -20,22 +20,22 @@ public class RestartButtonController implements Observer {
         this.jButton = jButton;
     }
 
-    public void setLostButton() {
+    void setLostButton() {
 
         jButton.setIcon(lostIcon);
     }
 
-    public void setPlayButton() {
+    void setPlayButton() {
 
         jButton.setIcon(playIcon);
     }
 
-    public void setWinButton() {
+    void setWinButton() {
 
         jButton.setIcon(winIcon);
     }
 
-    public void setClickButton() {
+    private void setClickButton() {
 
         jButton.setIcon(clickIcon);
     }
@@ -52,7 +52,11 @@ public class RestartButtonController implements Observer {
         }
     }
 
-    public void setGameState(GameState gameState) {
+    void setGameState(GameState gameState) {
         this.gameState = gameState;
+    }
+
+    GameState getGameState() {
+        return gameState;
     }
 }

@@ -2,7 +2,6 @@ package model.game;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import view.GameProperties;
 
 import java.util.Random;
 
@@ -27,6 +26,22 @@ public class Model {
         }
         generateBombs(this.bombsCount);
         calculateBombsAroundCells();
+    }
+
+    public Cell getCell(int rowIndex, int columnIndex) {
+        if (cellIsBomb(rowIndex, columnIndex)) {
+            this.state = GameState.LOSE;
+        }
+
+        return this.table[rowIndex][columnIndex];
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public int getBombsCount() {
+        return bombsCount;
     }
 
     private void generateBombs(int bombsCount) {
@@ -84,24 +99,8 @@ public class Model {
         return bombsAroundCellCounter;
     }
 
-    public boolean cellIsBomb(int rowIndex, int columnIndex) {
+    private boolean cellIsBomb(int rowIndex, int columnIndex) {
+
         return (this.table[rowIndex][columnIndex] != null) && (this.table[rowIndex][columnIndex].getCellContent() == CellContent.BOMB);
-    }
-
-    public Cell getCell(int rowIndex, int columnIndex) {
-
-        return this.table[rowIndex][columnIndex];
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
-    public int getBombsCount() {
-        return bombsCount;
     }
 }
