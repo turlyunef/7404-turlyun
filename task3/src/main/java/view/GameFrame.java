@@ -4,6 +4,7 @@ import controller.ButtonController;
 import controller.Controllers;
 import controller.RestartButtonController;
 import model.game.GameProperties;
+import model.game.GameState;
 import model.game.Model;
 import model.game.TableGenerationException;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ public class GameFrame {
 
     private void restartGame() {
         this.gameFrame.remove(gameField);
+        restartButtonController.setGameState(GameState.PLAY);
         createGame();
         this.gameFrame.pack();
     }
@@ -57,23 +59,40 @@ public class GameFrame {
         int rows = gameProperties.getRows();
         int cols = gameProperties.getCols();
         Controllers controllers = new Controllers(new ButtonController[rows][cols], gameModel, restartButtonController);
-        JButton[][] buttons = new JButton[rows][cols];
         gameField.setLayout(new GridLayout(rows, cols));
-        Dimension buttonPreferredSize = new Dimension(40, 40);
-        for (int i = 0; i < buttons.length; i++) {
-            for (int j = 0; j < buttons[i].length; j++) {
-                buttons[i][j] = new JButton();
-                ButtonController buttonController = new ButtonController(buttons[i][j]);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+
+                ButtonMouseListener buttonMouseListener = createButtonMouseListener(controllers, i, j);
+                JButton cellButton = createCellButton(buttonMouseListener);
+
+
+                ButtonController buttonController = new ButtonController(cellButton);
                 controllers.setCellButtonController(buttonController, i, j);
-                ButtonMouseListener buttonMouseListener = new ButtonMouseListener(controllers, i, j);
-                buttonMouseListener.addObserver(restartButtonController);
-                buttons[i][j].addMouseListener(buttonMouseListener);
-                buttons[i][j].setPreferredSize(buttonPreferredSize);
-                gameField.add(buttons[i][j]);
+                gameField.add(cellButton);
             }
         }
-        closeButtons(buttons);
+
         gameFrame.add(this.gameField, BorderLayout.CENTER);
+    }
+
+    private JButton createCellButton(ButtonMouseListener buttonMouseListener){
+        JButton cellButton = new JButton();
+
+        cellButton.addMouseListener(buttonMouseListener);
+        Dimension buttonPreferredSize = new Dimension(40, 40);
+        cellButton.setPreferredSize(buttonPreferredSize);
+        closeButton(cellButton);
+
+        return cellButton;
+    }
+
+    private ButtonMouseListener createButtonMouseListener(Controllers controllers, int rowIndex, int colIndex){
+        ButtonMouseListener buttonMouseListener = new ButtonMouseListener(controllers, rowIndex, colIndex);
+        buttonMouseListener.addObserver(restartButtonController);
+
+        return buttonMouseListener;
     }
 
     private void createNewModel() {
@@ -89,13 +108,9 @@ public class GameFrame {
         }
     }
 
-    private void closeButtons(JButton[][] buttons) {
+    private void closeButton(JButton button) {
         Icon closedIcon = new ImageIcon(Constants.class.getResource(Constants.CLOSED_ICON));
-        for (JButton[] button : buttons) {
-            for (JButton jButton : button) {
-                jButton.setIcon(closedIcon);
-            }
-        }
+        button.setIcon(closedIcon);
     }
 
     private JMenuBar createMenu() {

@@ -52,7 +52,7 @@ public class RestartButtonController implements Observer {
         }
     }
 
-    void setGameState(GameState gameState) {
+    public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
 
