@@ -1,15 +1,21 @@
 package controller;
 
+import controller.statistic.Winner;
 import model.game.GameState;
 import model.game.Model;
+
+import java.util.ArrayList;
 
 public class Controllers {
     private AbstractController[][] controllers;
     private Model model;
     private RestartButtonController restartButtonController;
     private int flagCount;
+    private long startTime;
+    private ArrayList<Winner> winners = new ArrayList<>();
 
     public Controllers(AbstractController[][] controllers, Model model, RestartButtonController restartButtonController) {
+        startTime = System.currentTimeMillis();
         this.controllers = controllers;
         this.model = model;
         this.restartButtonController = restartButtonController;
@@ -48,8 +54,14 @@ public class Controllers {
     private void setWin() {
         this.restartButtonController.setWinButton();
         this.restartButtonController.setGameState(GameState.WIN);
+        winners.add(new Winner(this.model.getGameProperties(), getPlayTime()));
     }
 
+
+
+    private int getPlayTime(){
+        return (int) (System.currentTimeMillis() - startTime)/1000;
+    }
 
     private boolean isCellExist(int rowIndex, int columnIndex) {
 
@@ -155,6 +167,9 @@ public class Controllers {
         }
     }
 
+    public ArrayList<Winner> getWinners() {
+        return winners;
+    }
 
     private boolean cellsAroundDemine(int rowIndex, int colIndex) {
 

@@ -6,15 +6,17 @@ public class GameProperties {
     private int bombsCount;
     private int rows;
     private int cols;
+    private String gameModeName;
 
     public GameProperties() {
-        setProperties(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT);
+        setProperties(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT, "Beginner");
     }
 
-    public void setProperties(int bombsCount, int rows, int cols) {
+    public void setProperties(int bombsCount, int rows, int cols, String gameModeName) {
         this.bombsCount = bombsCount;
         this.rows = rows;
         this.cols = cols;
+        this.gameModeName = gameModeName;
     }
 
     int getBombsCount() {
@@ -30,5 +32,9 @@ public class GameProperties {
     public int getCols() {
 
         return cols;
+    }
+
+    public String getGameModeName() {
+        return gameModeName;
     }
 }

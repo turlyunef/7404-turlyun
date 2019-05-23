@@ -3,6 +3,7 @@ package view;
 import controller.ButtonController;
 import controller.Controllers;
 import controller.RestartButtonController;
+import controller.statistic.Winner;
 import model.game.GameProperties;
 import model.game.GameState;
 import model.game.Model;
@@ -20,6 +21,7 @@ public class GameFrame {
     private GameProperties gameProperties = new GameProperties();
     private RestartButtonController restartButtonController;
     private static Logger log = LoggerFactory.getLogger(GameFrame.class);
+    private Controllers controllers;
 
 
     public void initFrame() {
@@ -58,28 +60,22 @@ public class GameFrame {
         createNewModel();
         int rows = gameProperties.getRows();
         int cols = gameProperties.getCols();
-        Controllers controllers = new Controllers(new ButtonController[rows][cols], gameModel, restartButtonController);
+        this.controllers = new Controllers(new ButtonController[rows][cols], gameModel, restartButtonController);
         gameField.setLayout(new GridLayout(rows, cols));
-
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-
                 ButtonMouseListener buttonMouseListener = createButtonMouseListener(controllers, i, j);
                 JButton cellButton = createCellButton(buttonMouseListener);
-
-
                 ButtonController buttonController = new ButtonController(cellButton);
                 controllers.setCellButtonController(buttonController, i, j);
                 gameField.add(cellButton);
             }
         }
-
         gameFrame.add(this.gameField, BorderLayout.CENTER);
     }
 
     private JButton createCellButton(ButtonMouseListener buttonMouseListener){
         JButton cellButton = new JButton();
-
         cellButton.addMouseListener(buttonMouseListener);
         Dimension buttonPreferredSize = new Dimension(40, 40);
         cellButton.setPreferredSize(buttonPreferredSize);
@@ -119,9 +115,10 @@ public class GameFrame {
         exitItem.addActionListener(e -> System.exit(0));
         jMenu.add(exitItem);
 
-        addNewGameSubmenu("New game (beginner)", jMenu, 10, 9, 9);
-        addNewGameSubmenu("New game (experienced)", jMenu, 40, 16, 16);
-        addNewGameSubmenu("New game (expert)", jMenu, 99, 16, 30);
+        addNewGameSubmenu("New game (beginner)", jMenu, 10, 9, 9, "Beginner");
+        addNewGameSubmenu("New game (experienced)", jMenu, 40, 16, 16, "Experienced");
+        addNewGameSubmenu("New game (expert)", jMenu, 99, 16, 30, "Expert");
+        addStatisticsSubmenu(jMenu);
 
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(jMenu);
@@ -129,13 +126,23 @@ public class GameFrame {
         return jMenuBar;
     }
 
-    private void addNewGameSubmenu(String nameSubmenu, JMenu menu, int bombsCount, int rows, int cols) {
+    private void addNewGameSubmenu(String nameSubmenu, JMenu menu, int bombsCount, int rows, int cols, String gameModeName) {
         JMenuItem restartItem = new JMenuItem(nameSubmenu);
         restartItem.addActionListener(e -> {
-            gameProperties.setProperties(bombsCount, rows, cols);
+            gameProperties.setProperties(bombsCount, rows, cols, gameModeName);
             restartGame();
         });
         menu.add(restartItem);
+    }
 
+    private void addStatisticsSubmenu(JMenu menu){
+        JMenuItem item = new JMenuItem("Statistics");
+        item.addActionListener(e -> {
+            for (Winner winner: this.controllers.getWinners()
+                 ) {
+                System.out.printf("Game mode: %s, time: %s sec\n", winner.getPlayMode(), winner.getPlayTime());
+            }
+        });
+        menu.add(item);
     }
 }

@@ -12,6 +12,7 @@ public class Model {
     private int rowsCount;
     private int columnsCount;
     private int bombsCount;
+    private GameProperties gameProperties;
     private final Cell[][] table;
     private GameState state = GameState.PLAY;
 
@@ -19,6 +20,7 @@ public class Model {
         this.rowsCount = gameProperties.getRows();
         this.columnsCount = gameProperties.getCols();
         this.bombsCount = gameProperties.getBombsCount();
+        this.gameProperties = gameProperties;
         this.table = new Cell[rowsCount][columnsCount];
         if (this.bombsCount > rowsCount * columnsCount) {
             throw (new TableGenerationException("Error generating bombs on the field, " +
@@ -42,6 +44,10 @@ public class Model {
 
     public int getBombsCount() {
         return bombsCount;
+    }
+
+    public GameProperties getGameProperties() {
+        return gameProperties;
     }
 
     private void generateBombs(int bombsCount) {
