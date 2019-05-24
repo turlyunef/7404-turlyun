@@ -1,4 +1,4 @@
-package controller;
+package controller.restart.button;
 
 import model.game.GameState;
 import view.Constants;
@@ -20,17 +20,17 @@ public class RestartButtonController implements Observer {
         this.jButton = jButton;
     }
 
-    void setLostButton() {
+    public void setLostButton() {
 
         jButton.setIcon(lostIcon);
     }
 
-    void setPlayButton() {
+    public void setPlayButton() {
 
         jButton.setIcon(playIcon);
     }
 
-    void setWinButton() {
+    public void setWinButton() {
 
         jButton.setIcon(winIcon);
     }
@@ -43,7 +43,6 @@ public class RestartButtonController implements Observer {
     @Override
     public void handleEvent() {
         if (gameState.equals(GameState.PLAY)) {
-
             if (jButton.getIcon().equals(playIcon)) {
                 setClickButton();
             } else {
@@ -54,9 +53,5 @@ public class RestartButtonController implements Observer {
 
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
-    }
-
-    GameState getGameState() {
-        return gameState;
     }
 }

@@ -1,11 +1,11 @@
-package controller;
+package controller.cell;
 
 import view.Constants;
 
 import javax.swing.*;
 
 public class ButtonController extends AbstractController {
-    private JButton jButton;
+    private final JButton jButton;
 
     public ButtonController(JButton jButton) {
         super();
@@ -13,39 +13,39 @@ public class ButtonController extends AbstractController {
     }
 
     @Override
-    void setExplodedMineCell() {
+    public void setExplodedMineCell() {
         Icon minedIcon = new ImageIcon(Constants.class.getResource(Constants.EXPLODED_MINE_ICON));
         jButton.setIcon(minedIcon);
     }
 
     @Override
-    void setMineCell() {
+    public void setMineCell() {
         Icon mineIcon = new ImageIcon(Constants.class.getResource(Constants.MINE_ICON));
         jButton.setIcon(mineIcon);
     }
 
     @Override
-    void setFlag() {
+    public void setFlag() {
         cellStatus = CellStatus.FLAG;
         Icon flagIcon = new ImageIcon(Constants.class.getResource(Constants.FLAG_ICON));
         jButton.setIcon(flagIcon);
     }
 
     @Override
-    void setClose() {
+    public void setClose() {
         cellStatus = CellStatus.CLOSE;
         Icon closedIcon = new ImageIcon(Constants.class.getResource(Constants.CLOSED_ICON));
         jButton.setIcon(closedIcon);
     }
 
     @Override
-    void setFalseMinedCell() {
+    public void setFalseMinedCell() {
         Icon falseMinedIcon = new ImageIcon(Constants.class.getResource(Constants.NOT_MINE_ICON));
         jButton.setIcon(falseMinedIcon);
     }
 
     @Override
-    void setOpenCell(int bombsAroundCellCount) {
+    public void setOpenCell(int bombsAroundCellCount) {
         cellStatus = CellStatus.OPEN;
         drawBombsAroundCellCount(bombsAroundCellCount);
     }

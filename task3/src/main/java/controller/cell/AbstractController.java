@@ -1,6 +1,6 @@
-package controller;
+package controller.cell;
 
-abstract class AbstractController {
+public abstract class AbstractController {
     CellStatus cellStatus;
     private int flaggedBombsCounter;
 
@@ -9,27 +9,29 @@ abstract class AbstractController {
         this.cellStatus = CellStatus.CLOSE;
     }
 
-    abstract void setExplodedMineCell();
+    public abstract void setExplodedMineCell();
 
-    abstract void setMineCell();
+    public abstract void setMineCell();
 
-    abstract void setFlag();
+    public abstract void setFlag();
 
-    abstract void setClose();
+    public abstract void setClose();
 
-    abstract void setFalseMinedCell();
+    public abstract void setFalseMinedCell();
 
-    abstract void setOpenCell(int bombsAroundCellCount);
+    public abstract void setOpenCell(int bombsAroundCellCount);
 
     void changeFlaggedBombsCounter(int value) {
         flaggedBombsCounter += value;
     }
 
     int getFlaggedBombsCounter() {
+
         return flaggedBombsCounter;
     }
 
     CellStatus getCellStatus() {
+
         return cellStatus;
     }
 }

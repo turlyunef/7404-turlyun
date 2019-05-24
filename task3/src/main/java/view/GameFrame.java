@@ -1,13 +1,11 @@
 package view;
 
-import controller.ButtonController;
+import controller.cell.ButtonController;
 import controller.Controllers;
-import controller.RestartButtonController;
+import controller.restart.button.RestartButtonController;
 import controller.statistic.Winner;
 import model.game.GameProperties;
 import model.game.GameState;
-import model.game.Model;
-import model.game.TableGenerationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +15,6 @@ import java.awt.*;
 public class GameFrame {
     private JPanel gameField;
     private JFrame gameFrame;
-    private Model gameModel;
     private GameProperties gameProperties = new GameProperties();
     private RestartButtonController restartButtonController;
     private static Logger log = LoggerFactory.getLogger(GameFrame.class);
@@ -30,22 +27,20 @@ public class GameFrame {
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setJMenuBar(createMenu());
         gameFrame.setLayout(new BorderLayout());
-
-        gameFrame.add(createRestartButton(), BorderLayout.NORTH);
+        createRestartButton();
         createGame();
         gameFrame.setResizable(false);
         gameFrame.pack();
         gameFrame.setVisible(true);
     }
 
-    private JButton createRestartButton() {
+    private void createRestartButton() {
         JButton restartButton = new JButton();
         Dimension buttonPreferredSize = new Dimension(50, 50);
         restartButton.setPreferredSize(buttonPreferredSize);
         restartButton.addActionListener(e -> restartGame());
         restartButtonController = new RestartButtonController(restartButton);
-
-        return restartButton;
+        gameFrame.add(restartButton, BorderLayout.NORTH);
     }
 
     private void restartGame() {
@@ -57,10 +52,9 @@ public class GameFrame {
 
     private void createGame() {
         this.gameField = new JPanel();
-        createNewModel();
         int rows = gameProperties.getRows();
         int cols = gameProperties.getCols();
-        this.controllers = new Controllers(new ButtonController[rows][cols], gameModel, restartButtonController);
+        this.controllers = new Controllers(new ButtonController[rows][cols], gameProperties, restartButtonController);
         gameField.setLayout(new GridLayout(rows, cols));
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -89,19 +83,6 @@ public class GameFrame {
         buttonMouseListener.addObserver(restartButtonController);
 
         return buttonMouseListener;
-    }
-
-    private void createNewModel() {
-        try {
-            this.gameModel = new Model(gameProperties);
-        } catch (TableGenerationException e) {
-            gameProperties = new GameProperties();
-            try {
-                this.gameModel = new Model(gameProperties);
-            } catch (TableGenerationException ex) {
-                ex.printStackTrace();
-            }
-        }
     }
 
     private void closeButton(JButton button) {
