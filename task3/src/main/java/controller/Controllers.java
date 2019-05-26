@@ -6,6 +6,7 @@ import controller.cell.ButtonGameField;
 import controller.cell.GameField;
 import controller.restart.button.RestartButtonController;
 import controller.statistic.Winner;
+import controller.statistic.WinnersManager;
 import model.game.GameProperties;
 import model.game.GameState;
 import model.game.MainModel;
@@ -14,14 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Controllers {
     private static final Logger log = LoggerFactory.getLogger(Controllers.class);
     private GameField gameField;
     private RestartButtonController restartButtonController;
     private GameProperties gameProperties;
-    private long startTime;
-    private final ArrayList<Winner> winners = new ArrayList<>();
+    private WinnersManager winnersManager = new WinnersManager();
 
     public Controllers(GameProperties gameProperties) {
         this.gameProperties = gameProperties;
@@ -41,7 +42,6 @@ public class Controllers {
                 new ButtonCellController[gameProperties.getRows()][gameProperties.getCols()];
         MainModel gameMainModel = createNewModel(gameProperties);
         this.gameField = new ButtonGameField(gameMainModel, controllers);
-        startTime = System.currentTimeMillis();
     }
 
     public void setCellButtonController(ButtonCellController buttonCellController, int rowIndex, int columnIndex) {
@@ -50,6 +50,7 @@ public class Controllers {
 
     public void releasedButton1(int rowIndex, int columnIndex) {
         if (checkGameNotEnded()) {
+            this.winnersManager.startTimer();
             gameField.tryOpenCell(rowIndex, columnIndex);
             checkGameState();
         }
@@ -67,6 +68,11 @@ public class Controllers {
             gameField.changeCellStatus(rowIndex, columnIndex);
             checkGameState();
         }
+    }
+
+    public List<Winner> getWinners() {
+
+        return this.winnersManager.getWinners();
     }
 
     private boolean checkGameNotEnded() {
@@ -101,7 +107,7 @@ public class Controllers {
     private void setWin() {
         this.restartButtonController.setWinButton();
         this.restartButtonController.setGameState(GameState.WIN);
-        winners.add(new Winner(this.gameProperties, getPlayTime()));
+        this.winnersManager.createWinner(gameProperties);
     }
 
     private MainModel createNewModel(GameProperties gameProperties) {
@@ -118,15 +124,5 @@ public class Controllers {
         }
 
         return gameMainModel;
-    }
-
-    private int getPlayTime() {
-
-        return (int) (System.currentTimeMillis() - startTime) / 1000;
-    }
-
-    public ArrayList<Winner> getWinners() {
-
-        return winners;
     }
 }

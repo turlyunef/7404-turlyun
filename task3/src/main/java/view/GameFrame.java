@@ -8,6 +8,7 @@ import model.game.GameProperties;
 import model.game.GameState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.statistics.StatisticsFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +19,7 @@ public class GameFrame {
     private GameProperties gameProperties = new GameProperties();
     private RestartButtonController restartButtonController;
     private Controllers controllers;
-
+    private StatisticsFrame statisticsFrame = new StatisticsFrame();
 
     public void initFrame() {
         gameFrame = new JFrame();
@@ -98,17 +99,19 @@ public class GameFrame {
 
     private JMenuBar createMenu() {
         JMenu jMenu = new JMenu("File");
-        JMenuItem exitItem = new JMenuItem("Exit");
-        exitItem.addActionListener(e -> System.exit(0));
-        jMenu.add(exitItem);
+
+        addStatisticsSubmenu(jMenu);
 
         addNewGameSubmenu("New game (beginner)", jMenu, 10, 9, 9, "Beginner");
         addNewGameSubmenu("New game (experienced)", jMenu, 40, 16, 16, "Experienced");
         addNewGameSubmenu("New game (expert)", jMenu, 99, 16, 30, "Expert");
-        addStatisticsSubmenu(jMenu);
 
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(jMenu);
+
+        JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.addActionListener(e -> System.exit(0));
+        jMenu.add(exitItem);
 
         return jMenuBar;
     }
@@ -126,10 +129,12 @@ public class GameFrame {
     private void addStatisticsSubmenu(JMenu menu){
         JMenuItem item = new JMenuItem("Statistics");
         item.addActionListener(e -> {
+            StringBuilder statisticsData = new StringBuilder();
             for (Winner winner: this.controllers.getWinners()
                  ) {
-                System.out.printf("Game mode: %s, time: %s sec\n", winner.getPlayMode(), winner.getPlayTime());
+            statisticsData.append(String.format("Game mode: %s, time: %s sec\n", winner.getPlayMode(), winner.getPlayTime()));
             }
+            statisticsFrame.initFrame(statisticsData.toString());
         });
         menu.add(item);
     }
