@@ -7,10 +7,10 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 public class ButtonMouseListener implements MouseListener, Observed {
-    private Controllers controllers;
-    private int rowIndex;
-    private int columnIndex;
-    private ArrayList<Observer> observers = new ArrayList<>();
+    private final Controllers controllers;
+    private final int rowIndex;
+    private final int columnIndex;
+    private final ArrayList<Observer> observers = new ArrayList<>();
 
 
     ButtonMouseListener(Controllers controllers, int rowIndex, int columnIndex) {

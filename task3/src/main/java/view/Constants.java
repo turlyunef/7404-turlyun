@@ -21,6 +21,7 @@ public class Constants {
     public static final String CLICK_ICON = "/icons/click.png";
     public static final String FLAG_ICON = "/icons/flag.png";
 
+    public static final String DEFAULT_GAME_MODE_NAME = "Beginner";
     public static final int DEFAULT_BOMBS_COUNT = 10;
     public static final int DEFAULT_ROWS_COUNT = 9;
     public static final int DEFAULT_COLUMNS_COUNT = 9;

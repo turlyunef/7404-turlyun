@@ -1,4 +1,3 @@
-import model.game.TableGenerationException;
 import view.GameFrame;
 
 public class Application {

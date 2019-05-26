@@ -1,7 +1,7 @@
 package ru.cft.focusstart.turlyun.core;
 
 /**
- * Implementation of the cell value creation strategy for multiplication tables.
+ * Implementation of the field value creation strategy for multiplication tables.
  *
  * @see CellValueStrategy
  */

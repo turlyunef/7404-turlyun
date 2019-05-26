@@ -13,7 +13,7 @@ public class RestartButtonController implements Observer {
     private final Icon winIcon = new ImageIcon(Constants.class.getResource(Constants.WIN_ICON));
     private final Icon clickIcon = new ImageIcon(Constants.class.getResource(Constants.CLICK_ICON));
 
-    private JButton jButton;
+    private final JButton jButton;
     private GameState gameState = GameState.PLAY;
 
     public RestartButtonController(JButton jButton) {

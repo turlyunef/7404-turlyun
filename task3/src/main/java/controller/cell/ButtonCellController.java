@@ -1,13 +1,14 @@
 package controller.cell;
 
+import model.game.field.outside.CellStatus;
 import view.Constants;
 
 import javax.swing.*;
 
-public class ButtonController extends AbstractController {
+public class ButtonCellController extends AbstractButtonCellController {
     private final JButton jButton;
 
-    public ButtonController(JButton jButton) {
+    public ButtonCellController(JButton jButton) {
         super();
         this.jButton = jButton;
     }

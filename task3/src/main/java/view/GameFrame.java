@@ -1,6 +1,6 @@
 package view;
 
-import controller.cell.ButtonController;
+import controller.cell.ButtonCellController;
 import controller.Controllers;
 import controller.restart.button.RestartButtonController;
 import controller.statistic.Winner;
@@ -17,7 +17,6 @@ public class GameFrame {
     private JFrame gameFrame;
     private GameProperties gameProperties = new GameProperties();
     private RestartButtonController restartButtonController;
-    private static Logger log = LoggerFactory.getLogger(GameFrame.class);
     private Controllers controllers;
 
 
@@ -27,11 +26,14 @@ public class GameFrame {
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setJMenuBar(createMenu());
         gameFrame.setLayout(new BorderLayout());
+        this.controllers = new Controllers(gameProperties);
         createRestartButton();
         createGame();
         gameFrame.setResizable(false);
         gameFrame.pack();
+        gameFrame.setLocationRelativeTo(null);
         gameFrame.setVisible(true);
+
     }
 
     private void createRestartButton() {
@@ -41,27 +43,31 @@ public class GameFrame {
         restartButton.addActionListener(e -> restartGame());
         restartButtonController = new RestartButtonController(restartButton);
         gameFrame.add(restartButton, BorderLayout.NORTH);
+        controllers.setRestartButtonController(this.restartButtonController);
     }
 
     private void restartGame() {
         this.gameFrame.remove(gameField);
         restartButtonController.setGameState(GameState.PLAY);
+        restartButtonController.setPlayButton();
+        controllers.setGameProperties(gameProperties);
         createGame();
         this.gameFrame.pack();
     }
 
     private void createGame() {
+        controllers.createCellFieldControllers();
         this.gameField = new JPanel();
         int rows = gameProperties.getRows();
         int cols = gameProperties.getCols();
-        this.controllers = new Controllers(new ButtonController[rows][cols], gameProperties, restartButtonController);
+
         gameField.setLayout(new GridLayout(rows, cols));
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 ButtonMouseListener buttonMouseListener = createButtonMouseListener(controllers, i, j);
                 JButton cellButton = createCellButton(buttonMouseListener);
-                ButtonController buttonController = new ButtonController(cellButton);
-                controllers.setCellButtonController(buttonController, i, j);
+                ButtonCellController buttonCellController = new ButtonCellController(cellButton);
+                controllers.setCellButtonController(buttonCellController, i, j);
                 gameField.add(cellButton);
             }
         }
@@ -112,6 +118,7 @@ public class GameFrame {
         restartItem.addActionListener(e -> {
             gameProperties.setProperties(bombsCount, rows, cols, gameModeName);
             restartGame();
+            gameFrame.setLocationRelativeTo(null);
         });
         menu.add(restartItem);
     }

@@ -1,4 +1,4 @@
-package model.game;
+package model.game.field.inside;
 
 public class Cell {
     private final CellContent cellContent;
@@ -9,7 +9,7 @@ public class Cell {
         this.cellContent = cellContent;
     }
 
-    CellContent getCellContent() {
+    public CellContent getCellContent() {
 
         return cellContent;
     }

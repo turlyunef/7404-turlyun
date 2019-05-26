@@ -3,8 +3,8 @@ package controller.statistic;
 import model.game.GameProperties;
 
 public class Winner {
-    private GameProperties gameProperties;
-    private int playTime;
+    private final GameProperties gameProperties;
+    private final int playTime;
 
     public Winner(GameProperties gameProperties, int playTime) {
         this.gameProperties = gameProperties;

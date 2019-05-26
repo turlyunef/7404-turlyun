@@ -1,14 +1,14 @@
 package controller;
 
-import controller.cell.AbstractController;
-import controller.cell.ButtonController;
+import controller.cell.AbstractButtonCellController;
+import controller.cell.ButtonCellController;
 import controller.cell.ButtonGameField;
 import controller.cell.GameField;
 import controller.restart.button.RestartButtonController;
 import controller.statistic.Winner;
 import model.game.GameProperties;
 import model.game.GameState;
-import model.game.Model;
+import model.game.MainModel;
 import model.game.TableGenerationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,27 +16,36 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 public class Controllers {
+    private static final Logger log = LoggerFactory.getLogger(Controllers.class);
     private GameField gameField;
     private RestartButtonController restartButtonController;
     private GameProperties gameProperties;
-
     private long startTime;
-    private ArrayList<Winner> winners = new ArrayList<>();
-    private static Logger log = LoggerFactory.getLogger(Controllers.class);
+    private final ArrayList<Winner> winners = new ArrayList<>();
 
-    public Controllers(AbstractController[][] controllers, GameProperties gameProperties, RestartButtonController restartButtonController) { //TODO реализовать добавление новых контроллеров сеттерами
-        startTime = System.currentTimeMillis();
+    public Controllers(GameProperties gameProperties) {
         this.gameProperties = gameProperties;
+    }
 
-        Model gameModel = createNewModel(gameProperties);
-        this.gameField = new ButtonGameField(gameModel, controllers);
+    public void setGameProperties(GameProperties gameProperties) {
+        this.gameProperties = gameProperties;
+    }
+
+    public void setRestartButtonController(RestartButtonController restartButtonController) {
         this.restartButtonController = restartButtonController;
-
         restartButtonController.setPlayButton();
     }
 
-    public void setCellButtonController(ButtonController buttonController, int rowIndex, int columnIndex) {
-        gameField.setController(buttonController, rowIndex, columnIndex);
+    public void createCellFieldControllers() {
+        AbstractButtonCellController[][] controllers =
+                new ButtonCellController[gameProperties.getRows()][gameProperties.getCols()];
+        MainModel gameMainModel = createNewModel(gameProperties);
+        this.gameField = new ButtonGameField(gameMainModel, controllers);
+        startTime = System.currentTimeMillis();
+    }
+
+    public void setCellButtonController(ButtonCellController buttonCellController, int rowIndex, int columnIndex) {
+        gameField.setController(buttonCellController, rowIndex, columnIndex);
     }
 
     public void releasedButton1(int rowIndex, int columnIndex) {
@@ -61,9 +70,8 @@ public class Controllers {
     }
 
     private boolean checkGameNotEnded() {
-        System.out.println("gameField.getGameState() = " + gameField.getGameState());
 
-        return gameField.getGameState() == GameState.PLAY;
+        return gameField.getGameState().equals(GameState.PLAY);
     }
 
     private void checkGameState() {
@@ -73,13 +81,11 @@ public class Controllers {
                 log.debug("Game over, set lost");
                 break;
             }
-
             case WIN: {
                 setWin();
                 log.debug("Victory, set win");
                 break;
             }
-
             case PLAY: {
                 /*NOP*/
                 break;
@@ -98,20 +104,20 @@ public class Controllers {
         winners.add(new Winner(this.gameProperties, getPlayTime()));
     }
 
-    private Model createNewModel(GameProperties gameProperties) {
-        Model gameModel = null; //TODO: Переделать
+    private MainModel createNewModel(GameProperties gameProperties) {
+        MainModel gameMainModel = null;
         try {
-            gameModel = new Model(gameProperties);
+            gameMainModel = new MainModel(gameProperties);
         } catch (TableGenerationException e) {
             gameProperties = new GameProperties();
             try {
-                gameModel = new Model(gameProperties);
+                gameMainModel = new MainModel(gameProperties);
             } catch (TableGenerationException ex) {
                 ex.printStackTrace();
             }
         }
 
-        return gameModel;
+        return gameMainModel;
     }
 
     private int getPlayTime() {

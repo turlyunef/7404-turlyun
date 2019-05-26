@@ -1,10 +1,12 @@
 package controller.cell;
 
-public abstract class AbstractController {
+import model.game.field.outside.CellStatus;
+
+public abstract class AbstractButtonCellController {
     CellStatus cellStatus;
     private int flaggedBombsCounter;
 
-    AbstractController() {
+    AbstractButtonCellController() {
         this.flaggedBombsCounter = 0;
         this.cellStatus = CellStatus.CLOSE;
     }

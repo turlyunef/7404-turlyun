@@ -1,53 +1,42 @@
-package model.game;
+package model.game.field.inside;
 
+import model.game.GameProperties;
+import model.game.GameState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-public class Model {
+public class InsideValueGameModel implements InsideModel {
 
-    private static Logger log = LoggerFactory.getLogger(Model.class);
+    private static final Logger log = LoggerFactory.getLogger(InsideValueGameModel.class);
 
-    private int rowsCount;
-    private int columnsCount;
-    private int bombsCount;
-    private GameProperties gameProperties;
-    private final Cell[][] table;
-    private GameState state = GameState.PLAY;
+    private final int rowsCount;
+    private final int columnsCount;
+    private final Cell[][] cellsValues;
+    private GameState gameState = GameState.PLAY;
 
-    public Model(GameProperties gameProperties) throws TableGenerationException {
+    public InsideValueGameModel(GameProperties gameProperties) {
         this.rowsCount = gameProperties.getRows();
         this.columnsCount = gameProperties.getCols();
-        this.bombsCount = gameProperties.getBombsCount();
-        this.gameProperties = gameProperties;
-        this.table = new Cell[rowsCount][columnsCount];
-        if (this.bombsCount > rowsCount * columnsCount) {
-            throw (new TableGenerationException("Error generating bombs on the field, " +
-                    "their number must be less than the number of cells in the field"));
-        }
-        generateBombs(this.bombsCount);
+        this.cellsValues = new Cell[rowsCount][columnsCount];
+        generateBombs(gameProperties.getBombsCount());
         calculateBombsAroundCells();
     }
 
+    @Override
+    public GameState getGameState() {
+
+        return this.gameState;
+    }
+
+    @Override
     public Cell getCell(int rowIndex, int columnIndex) {
-        if (cellIsBomb(rowIndex, columnIndex)) {
-            this.state = GameState.LOSE;
+        if (this.cellsValues[rowIndex][columnIndex].isCellBomb()) {
+            this.gameState = GameState.LOSE;
         }
 
-        return this.table[rowIndex][columnIndex];
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public int getBombsCount() {
-        return bombsCount;
-    }
-
-    public GameProperties getGameProperties() {
-        return gameProperties;
+        return this.cellsValues[rowIndex][columnIndex];
     }
 
     private void generateBombs(int bombsCount) {
@@ -56,22 +45,22 @@ public class Model {
             Random random = new Random();
             int randomRowIndex = random.nextInt(this.rowsCount);
             int randomColumnIndex = random.nextInt(this.columnsCount);
-            if (this.table[randomRowIndex][randomColumnIndex] == null) {
-                this.table[randomRowIndex][randomColumnIndex] = new Cell(CellContent.BOMB);
+            if (this.cellsValues[randomRowIndex][randomColumnIndex] == null) {
+                this.cellsValues[randomRowIndex][randomColumnIndex] = new Cell(CellContent.BOMB);
             } else {
                 continue;
             }
             bombsCounter++;
         }
-        log.debug(bombsCounter + " bombs are created in the table");
+        log.debug(bombsCounter + " bombs are created in the cellsValues");
     }
 
     private void calculateBombsAroundCells() {
         for (int i = 0; i < rowsCount; i++) {
             for (int j = 0; j < columnsCount; j++) {
-                if (this.table[i][j] == null) {
-                    this.table[i][j] = new Cell(CellContent.EMPTY);
-                    this.table[i][j].setBombsAroundCellCount(calculateBombsAroundCell(i, j));
+                if (this.cellsValues[i][j] == null) {
+                    this.cellsValues[i][j] = new Cell(CellContent.EMPTY);
+                    this.cellsValues[i][j].setBombsAroundCellCount(calculateBombsAroundCell(i, j));
                 }
             }
         }
@@ -107,6 +96,7 @@ public class Model {
 
     private boolean cellIsBomb(int rowIndex, int columnIndex) {
 
-        return (this.table[rowIndex][columnIndex] != null) && (this.table[rowIndex][columnIndex].getCellContent() == CellContent.BOMB);
+        return (this.cellsValues[rowIndex][columnIndex] != null) &&
+                (this.cellsValues[rowIndex][columnIndex].getCellContent() == CellContent.BOMB);
     }
 }

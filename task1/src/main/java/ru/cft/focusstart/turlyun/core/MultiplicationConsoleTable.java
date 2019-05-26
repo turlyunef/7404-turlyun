@@ -56,7 +56,7 @@ public class MultiplicationConsoleTable implements Table {
     }
 
     /**
-     * Creates the string as StringBuilder of linear separators between cells, as well as cell intersections.
+     * Creates the string as StringBuilder of linear separators between cells, as well as field intersections.
      *
      * @return the row of the linear separators and the cells intersections
      */
@@ -73,11 +73,11 @@ public class MultiplicationConsoleTable implements Table {
     }
 
     /**
-     * Creates the horizontal separators row of a single cell.
-     * Based on the number of elements in one cell rowElementsCount.
+     * Creates the horizontal separators row of a single field.
+     * Based on the number of elements in one field rowElementsCount.
      * Intersection separator not included.
      *
-     * @return the separators row of a single cell
+     * @return the separators row of a single field
      */
     private StringBuilder generateHorizontalOneCellSeparator() {
         StringBuilder horizontalOneCellSeparator = new StringBuilder();
@@ -89,10 +89,10 @@ public class MultiplicationConsoleTable implements Table {
     }
 
     /**
-     * Generates the missing spaces before the value so that each cell is of the specified length.
+     * Generates the missing spaces before the value so that each field is of the specified length.
      *
-     * @param cellValue the cell value
-     * @return the cell value with required spaces
+     * @param cellValue the field value
+     * @return the field value with required spaces
      */
     private String getCellFormattedValue(String cellValue) {
         StringBuilder spacesBuilder = new StringBuilder();
