@@ -3,17 +3,19 @@ package view;
 import controller.cell.ButtonCellController;
 import controller.Controllers;
 import controller.restart.button.RestartButtonController;
+import controller.scoreboard.BombsCounterNumberPanel;
+import controller.scoreboard.NumberPanel;
+import controller.scoreboard.TimerNumberPanel;
 import controller.statistic.Winner;
 import model.game.GameProperties;
 import model.game.GameState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import view.statistics.StatisticsFrame;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GameFrame {
+    private JPanel mainPanel;
+    private JPanel northPanel;
     private JPanel gameField;
     private JFrame gameFrame;
     private GameProperties gameProperties = new GameProperties();
@@ -26,16 +28,41 @@ public class GameFrame {
         gameFrame.setTitle("Minesweeper");
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         gameFrame.setJMenuBar(createMenu());
-        gameFrame.setLayout(new BorderLayout());
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        northPanel = new JPanel();
+        northPanel.setLayout(new BorderLayout());
         this.controllers = new Controllers(gameProperties);
         createRestartButton();
+        createBombsCounter();
+        createTimer();
         createGame();
-        gameFrame.setResizable(false);
+        mainPanel.add(northPanel, BorderLayout.NORTH);
+        gameFrame.add(mainPanel);
+        gameFrame.setResizable(true);
         gameFrame.pack();
         gameFrame.setLocationRelativeTo(null);
         gameFrame.setVisible(true);
-
     }
+
+    private void createBombsCounter(){
+        BombsCounterNumberPanel numberPanel = new BombsCounterNumberPanel(3);
+        numberPanel.setNumber(0);
+        JPanel bombCounterPanel = new JPanel();
+        bombCounterPanel.add(numberPanel);
+        northPanel.add(bombCounterPanel, BorderLayout.WEST);
+        controllers.addObserver(numberPanel);
+    }
+
+    private void createTimer(){
+        TimerNumberPanel timerNumberPanel = new TimerNumberPanel(3);
+        timerNumberPanel.setNumber(0);
+        JPanel timerPanel = new JPanel();
+        timerPanel.add(timerNumberPanel);
+        northPanel.add(timerPanel, BorderLayout.EAST);
+        controllers.addObserver(timerNumberPanel);
+    }
+
 
     private void createRestartButton() {
         JButton restartButton = new JButton();
@@ -43,12 +70,14 @@ public class GameFrame {
         restartButton.setPreferredSize(buttonPreferredSize);
         restartButton.addActionListener(e -> restartGame());
         restartButtonController = new RestartButtonController(restartButton);
-        gameFrame.add(restartButton, BorderLayout.NORTH);
+        JPanel restartButtonPanel = new JPanel();
+        restartButtonPanel.add(restartButton);
+        northPanel.add(restartButtonPanel);
         controllers.setRestartButtonController(this.restartButtonController);
     }
 
     private void restartGame() {
-        this.gameFrame.remove(gameField);
+        this.mainPanel.remove(gameField);
         restartButtonController.setGameState(GameState.PLAY);
         restartButtonController.setPlayButton();
         controllers.setGameProperties(gameProperties);
@@ -72,7 +101,7 @@ public class GameFrame {
                 gameField.add(cellButton);
             }
         }
-        gameFrame.add(this.gameField, BorderLayout.CENTER);
+        mainPanel.add(this.gameField, BorderLayout.SOUTH);
     }
 
     private JButton createCellButton(ButtonMouseListener buttonMouseListener){

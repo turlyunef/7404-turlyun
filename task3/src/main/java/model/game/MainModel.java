@@ -45,6 +45,10 @@ public class MainModel implements Model {
         return cellStatus;
     }
 
+    public int getFlagCount() {
+        return outsideValues.getFlagCount();
+    }
+
     private void checkWin() {
         if (outsideValues.getGameState().equals(GameState.WIN) && (insideValues.getGameState().equals(GameState.PLAY))) {
             this.gameState = GameState.WIN;

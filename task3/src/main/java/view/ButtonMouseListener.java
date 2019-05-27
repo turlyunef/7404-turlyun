@@ -1,6 +1,8 @@
 package view;
 
 import controller.Controllers;
+import controller.Observed;
+import controller.Observer;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -69,5 +71,10 @@ public class ButtonMouseListener implements MouseListener, Observed {
                 observers) {
             o.handleEvent();
         }
+    }
+
+    @Override
+    public void notifyObservers(int number, String observerName) {
+        /*NOP*/
     }
 }

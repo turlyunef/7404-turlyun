@@ -46,6 +46,11 @@ public class OutsideValueGameModel implements Model, OutsideModel {
         checkWin();
     }
 
+    @Override
+    public int getFlagCount() {
+        return flagCount;
+    }
+
     private void closeCells() {
         for (int i = 0; i < this.gameProperties.getRows(); i++) {
             for (int j = 0; j < this.gameProperties.getCols(); j++) {

@@ -2,7 +2,7 @@ package controller.restart.button;
 
 import model.game.GameState;
 import view.Constants;
-import view.Observer;
+import controller.Observer;
 
 import javax.swing.*;
 
@@ -49,6 +49,11 @@ public class RestartButtonController implements Observer {
                 setPlayButton();
             }
         }
+    }
+
+    @Override
+    public void handleEvent(int number, String observerName) {
+        /*NOP*/
     }
 
     public void setGameState(GameState gameState) {

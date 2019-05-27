@@ -25,4 +25,15 @@ public class Constants {
     public static final int DEFAULT_BOMBS_COUNT = 1;
     public static final int DEFAULT_ROWS_COUNT = 9;
     public static final int DEFAULT_COLUMNS_COUNT = 9;
+
+    public static final String ZERO_ICON = "/numbers/0.png";
+    public static final String ONE_ICON = "/numbers/1.png";
+    public static final String TWO_ICON = "/numbers/2.png";
+    public static final String THREE_ICON = "/numbers/3.png";
+    public static final String FOUR_ICON = "/numbers/4.png";
+    public static final String FIVE_ICON = "/numbers/5.png";
+    public static final String SIX_ICON = "/numbers/6.png";
+    public static final String SEVEN_ICON = "/numbers/7.png";
+    public static final String EIGHT_ICON = "/numbers/8.png";
+    public static final String NINE_ICON = "/numbers/9.png";
 }
