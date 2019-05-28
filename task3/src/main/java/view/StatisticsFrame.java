@@ -3,9 +3,17 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-public class StatisticsFrame {
+/**
+ * Game statistics display window
+ */
+class StatisticsFrame {
 
-    public void initFrame(String data) {
+    /**
+     * Initializes the statistics window.
+     *
+     * @param data information displayed in the window
+     */
+    void initFrame(String data) {
         JFrame statisticsFrame = new JFrame();
         statisticsFrame.setTitle("Statistics");
         statisticsFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

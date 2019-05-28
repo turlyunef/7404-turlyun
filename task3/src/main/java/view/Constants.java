@@ -1,5 +1,8 @@
 package view;
 
+/**
+ * Constants for storing icons, sizes and names of game components
+ */
 public class Constants {
     public static final String EXPLODED_MINE_ICON = "/icons/mined.png";
     public static final String MINE_ICON = "/icons/mine.png";
@@ -28,7 +31,7 @@ public class Constants {
     public static final int RESTART_BUTTON_IMAGE_WIDTH = 50;
 
     public static final String DEFAULT_GAME_MODE_NAME = "Beginner";
-    public static final int DEFAULT_BOMBS_COUNT = 1;
+    public static final int DEFAULT_BOMBS_COUNT = 10;
     public static final int DEFAULT_ROWS_COUNT = 9;
     public static final int DEFAULT_COLUMNS_COUNT = 9;
 

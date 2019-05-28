@@ -16,6 +16,9 @@ public class OutsideValuesGameModel implements Model, OutsideModel {
         closeCells();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CellStatus changeCellStatus(int rowIndex, int colIndex) {
         switch (this.cellStatuses[rowIndex][colIndex]) {
@@ -34,23 +37,35 @@ public class OutsideValuesGameModel implements Model, OutsideModel {
         return this.cellStatuses[rowIndex][colIndex];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameState getGameState(){
 
         return this.localState;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setOpen(int rowIndex, int colIndex) {
         this.cellStatuses[rowIndex][colIndex] = CellStatus.OPEN;
         checkWin();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getFlagCount() {
         return this.flagCount;
     }
 
+    /**
+     * Sets all cells of the playing field closed cell status
+     */
     private void closeCells() {
         for (int i = 0; i < this.gameProperties.getRows(); i++) {
             for (int j = 0; j < this.gameProperties.getCols(); j++) {
@@ -59,6 +74,9 @@ public class OutsideValuesGameModel implements Model, OutsideModel {
         }
     }
 
+    /**
+     * Changes the game status if the user correctly set the flags and opened all the cells
+     */
     private void checkWin() {
         if (this.flagCount == this.gameProperties.getBombsCount()) {
             for (int i = 0; i < this.gameProperties.getRows(); i++) {
