@@ -21,33 +21,33 @@ public class RestartButtonController implements Observer {
     }
 
     public void setLostButton() {
-
-        jButton.setIcon(lostIcon);
+        this.jButton.setIcon(this.lostIcon);
     }
 
-    public void setPlayButton() {
-
-        jButton.setIcon(playIcon);
+    public void setPlayedButton() {
+        this.jButton.setIcon(this.playIcon);
     }
 
     public void setWinButton() {
-
-        jButton.setIcon(winIcon);
+        this.jButton.setIcon(this.winIcon);
     }
 
-    private void setClickButton() {
-
-        jButton.setIcon(clickIcon);
+    private void setClickedButton() {
+        this.jButton.setIcon(this.clickIcon);
     }
 
     @Override
     public void handleEvent() {
-        if (gameState.equals(GameState.PLAY)) {
-            if (jButton.getIcon().equals(playIcon)) {
-                setClickButton();
-            } else {
-                setPlayButton();
-            }
+        if (this.gameState.equals(GameState.PLAY)) {
+            changeButtonIcon();
+        }
+    }
+
+    private void changeButtonIcon() {
+        if (this.jButton.getIcon().equals(this.playIcon)) {
+            setClickedButton();
+        } else {
+            setPlayedButton();
         }
     }
 

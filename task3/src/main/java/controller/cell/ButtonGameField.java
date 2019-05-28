@@ -17,11 +17,11 @@ public class ButtonGameField implements GameField {
     @Override
     public void tryOpenCell(int rowIndex, int columnIndex) {
         if (checkGameNotEnded() && (cellIsClose(rowIndex, columnIndex))) {
-            if (gameMainModel.getCell(rowIndex, columnIndex).isCellBomb()) {
+            if (this.gameMainModel.getCell(rowIndex, columnIndex).isCellBomb()) {
                 explode(rowIndex, columnIndex);
             } else {
-                int bombsAroundCellCount = gameMainModel.getCell(rowIndex, columnIndex).getBombsAroundCellCount();
-                cellControllers[rowIndex][columnIndex].setOpenCell(bombsAroundCellCount);
+                int bombsAroundCellCount = this.gameMainModel.getCell(rowIndex, columnIndex).getBombsAroundCellCount();
+                this.cellControllers[rowIndex][columnIndex].setOpenCell(bombsAroundCellCount);
                 if (bombsAroundCellCount == 0) {
                     openCellsAround(rowIndex, columnIndex);
                 }
@@ -30,16 +30,16 @@ public class ButtonGameField implements GameField {
     }
 
     @Override
-    public void changeCellStatus(int rowIndex, int columnIndex) {
-        switch (gameMainModel.changeCellStatus(rowIndex, columnIndex)) {
+    public void changeCellStatus(int rowIndex, int colIndex) {
+        switch (this.gameMainModel.changeCellStatus(rowIndex, colIndex)) {
             case CLOSE: {
-                changeDefusedBombsCountersInCellsAround(rowIndex, columnIndex, -1);
-                cellControllers[rowIndex][columnIndex].setClose();
+                changeDefusedBombsCountersInCellsAround(rowIndex, colIndex, -1);
+                this.cellControllers[rowIndex][colIndex].setClosed();
                 break;
             }
             case FLAG: {
-                changeDefusedBombsCountersInCellsAround(rowIndex, columnIndex, 1);
-                cellControllers[rowIndex][columnIndex].setFlag();
+                changeDefusedBombsCountersInCellsAround(rowIndex, colIndex, 1);
+                this.cellControllers[rowIndex][colIndex].setFlag();
                 break;
             }
         }
@@ -48,12 +48,12 @@ public class ButtonGameField implements GameField {
     @Override
     public GameState getGameState() {
 
-            return this.gameMainModel.getGameState();
+        return this.gameMainModel.getGameState();
     }
 
     @Override
     public void openCellsAround(int rowIndex, int colIndex) {
-        if ((!cellIsClose(rowIndex, colIndex)) && (cellsAroundDemine(rowIndex, colIndex))) {
+        if ((!cellIsClose(rowIndex, colIndex)) && (cellsAroundIsDemined(rowIndex, colIndex))) {
             for (int i = rowIndex - 1; i <= rowIndex + 1; i++) {
                 for (int j = colIndex - 1; j <= colIndex + 1; j++) {
                     if (isCellExist(i, j)) {
@@ -65,8 +65,8 @@ public class ButtonGameField implements GameField {
     }
 
     @Override
-    public void setController(ButtonCellController buttonCellController, int rowIndex, int columnIndex) {
-        this.cellControllers[rowIndex][columnIndex] = buttonCellController;
+    public void setController(ButtonCellController buttonCellController, int rowIndex, int colIndex) {
+        this.cellControllers[rowIndex][colIndex] = buttonCellController;
     }
 
     private boolean checkGameNotEnded() {
@@ -74,15 +74,14 @@ public class ButtonGameField implements GameField {
         return (this.gameMainModel.getGameState().equals(GameState.PLAY));
     }
 
-    private void explode(int rowIndex, int columnIndex) {
+    private void explode(int rowIndex, int colIndex) {
         showAllBombs();
-        cellControllers[rowIndex][columnIndex].setExplodedMineCell();
+        this.cellControllers[rowIndex][colIndex].setExplodedMineCell();
     }
 
+    private boolean cellIsClose(int rowIndex, int colIndex) {
 
-    private boolean cellIsClose(int rowIndex, int columnIndex) {
-
-        return cellControllers[rowIndex][columnIndex].getCellStatus().equals(CellStatus.CLOSE);
+        return this.cellControllers[rowIndex][colIndex].getCellStatus().equals(CellStatus.CLOSE);
     }
 
     private void showAllBombs() {
@@ -101,26 +100,26 @@ public class ButtonGameField implements GameField {
         }
     }
 
-    private void changeDefusedBombsCountersInCellsAround(int rowIndex, int columnIndex, int value) {
+    private void changeDefusedBombsCountersInCellsAround(int rowIndex, int colIndex, int value) {
         for (int i = rowIndex - 1; i <= rowIndex + 1; i++) {
-            for (int j = columnIndex - 1; j <= columnIndex + 1; j++) {
+            for (int j = colIndex - 1; j <= colIndex + 1; j++) {
                 if (isCellExist(i, j)) {
-                    cellControllers[i][j].changeFlaggedBombsCounter(value);
+                    this.cellControllers[i][j].changeFlaggedBombsCounter(value);
                 }
             }
         }
     }
 
-    private boolean isCellExist(int rowIndex, int columnIndex) {
+    private boolean isCellExist(int rowIndex, int colIndex) {
 
-        return !((rowIndex < 0) | (columnIndex < 0) |
-                (rowIndex >= cellControllers.length) |
-                (columnIndex >= cellControllers[0].length));
+        return !((rowIndex < 0) | (colIndex < 0) |
+                (rowIndex >= this.cellControllers.length) |
+                (colIndex >= this.cellControllers[0].length));
     }
 
-    private boolean cellsAroundDemine(int rowIndex, int colIndex) {
+    private boolean cellsAroundIsDemined(int rowIndex, int colIndex) {
 
         return this.cellControllers[rowIndex][colIndex].getFlaggedBombsCounter() >=
-                gameMainModel.getCell(rowIndex, colIndex).getBombsAroundCellCount();
+                this.gameMainModel.getCell(rowIndex, colIndex).getBombsAroundCellCount();
     }
 }

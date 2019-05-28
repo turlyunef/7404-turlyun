@@ -2,7 +2,6 @@ package model.game.field.inside;
 
 public class Cell {
     private final CellContent cellContent;
-
     private int bombsAroundCellCount;
 
     Cell(CellContent cellContent) {
@@ -11,16 +10,17 @@ public class Cell {
 
     public CellContent getCellContent() {
 
-        return cellContent;
+        return this.cellContent;
     }
 
     public int getBombsAroundCellCount() {
 
-        return bombsAroundCellCount;
+        return this.bombsAroundCellCount;
     }
 
     public boolean isCellBomb() {
-        return cellContent.equals(CellContent.BOMB);
+
+        return this.cellContent.equals(CellContent.BOMB);
     }
 
     void setBombsAroundCellCount(int bombsAroundCellCount) {

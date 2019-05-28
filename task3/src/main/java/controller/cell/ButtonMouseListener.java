@@ -1,4 +1,4 @@
-package view;
+package controller.cell;
 
 import controller.Controllers;
 import controller.Observed;
@@ -11,26 +11,26 @@ import java.util.ArrayList;
 public class ButtonMouseListener implements MouseListener, Observed {
     private final Controllers controllers;
     private final int rowIndex;
-    private final int columnIndex;
+    private final int colIndex;
     private final ArrayList<Observer> observers = new ArrayList<>();
 
 
-    ButtonMouseListener(Controllers controllers, int rowIndex, int columnIndex) {
+    public ButtonMouseListener(Controllers controllers, int rowIndex, int colIndex) {
         this.controllers = controllers;
         this.rowIndex = rowIndex;
-        this.columnIndex = columnIndex;
+        this.colIndex = colIndex;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        /*NOP*/
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         notifyObservers();
         if (e.getButton() == MouseEvent.BUTTON3) {
-            controllers.pressedButton3(rowIndex, columnIndex);
+            this.controllers.pressedButton3(this.rowIndex, this.colIndex);
         }
     }
 
@@ -38,37 +38,36 @@ public class ButtonMouseListener implements MouseListener, Observed {
     public void mouseReleased(MouseEvent e) {
         notifyObservers();
         if (e.getButton() == MouseEvent.BUTTON1) {
-            controllers.releasedButton1(rowIndex, columnIndex);
+            this.controllers.releasedButton1(this.rowIndex, this.colIndex);
         }
         if (e.getButton() == MouseEvent.BUTTON2) {
-            controllers.releasedButton2(rowIndex, columnIndex);
+            this.controllers.releasedButton2(this.rowIndex, this.colIndex);
         }
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        /*NOP*/
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        /*NOP*/
     }
 
     @Override
     public void addObserver(Observer o) {
-        observers.add(o);
+        this.observers.add(o);
     }
 
     @Override
     public void removeObserver(Observer o) {
-        observers.remove(o);
+        this.observers.remove(o);
     }
 
     @Override
     public void notifyObservers() {
-        for (Observer o :
-                observers) {
+        for (Observer o : this.observers) {
             o.handleEvent();
         }
     }

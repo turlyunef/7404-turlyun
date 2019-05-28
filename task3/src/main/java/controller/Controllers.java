@@ -37,44 +37,44 @@ public class Controllers implements Observed {
 
     public void setRestartButtonController(RestartButtonController restartButtonController) {
         this.restartButtonController = restartButtonController;
-        restartButtonController.setPlayButton();
+        restartButtonController.setPlayedButton();
     }
 
     public void createCellFieldControllers() {
         AbstractButtonCellController[][] controllers =
-                new ButtonCellController[gameProperties.getRows()][gameProperties.getCols()];
-        MainModel gameMainModel = createNewModel(gameProperties);
+                new ButtonCellController[this.gameProperties.getRows()][this.gameProperties.getCols()];
+        MainModel gameMainModel = createNewModel(this.gameProperties);
         this.gameField = new ButtonGameField(gameMainModel, controllers);
         this.gameMainModel = gameMainModel;
-        setBombsCountToBombsNumberPanel();
-        gameTimer.restartTimer();
+        setBombsCountToBombsScoreboard();
+        this.gameTimer.restartTimer();
     }
 
-    public void setCellButtonController(ButtonCellController buttonCellController, int rowIndex, int columnIndex) {
-        gameField.setController(buttonCellController, rowIndex, columnIndex);
+    public void setCellButtonController(ButtonCellController buttonCellController, int rowIndex, int colIndex) {
+        this.gameField.setController(buttonCellController, rowIndex, colIndex);
     }
 
-    public void releasedButton1(int rowIndex, int columnIndex) {
+    public void releasedButton1(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
-            gameTimer.runTimer();
-            gameField.tryOpenCell(rowIndex, columnIndex);
+            this.gameTimer.runTimer();
+            this.gameField.tryOpenCell(rowIndex, colIndex);
             checkGameState();
         }
     }
 
     public void releasedButton2(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
-            gameField.openCellsAround(rowIndex, colIndex);
+            this.gameField.openCellsAround(rowIndex, colIndex);
             checkGameState();
         }
     }
 
-    public void pressedButton3(int rowIndex, int columnIndex) {
+    public void pressedButton3(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
-            gameTimer.runTimer();
-            gameField.changeCellStatus(rowIndex, columnIndex);
+            this.gameTimer.runTimer();
+            this.gameField.changeCellStatus(rowIndex, colIndex);
             checkGameState();
-            setBombsCountToBombsNumberPanel();
+            setBombsCountToBombsScoreboard();
         }
     }
 
@@ -83,18 +83,44 @@ public class Controllers implements Observed {
         return this.winnersManager.getWinners();
     }
 
-    private void setBombsCountToBombsNumberPanel(){
-        int bombsCount = gameProperties.getBombsCount()-gameMainModel.getFlagCount();
+    @Override
+    public void addObserver(Observer o) {
+        this.observers.add(o);
+        this.gameTimer.addObserver(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        this.observers.remove(o);
+        this.gameTimer.removeObserver(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : this.observers) {
+            o.handleEvent();
+        }
+    }
+
+    @Override
+    public void notifyObservers(int number, String observerName) {
+        for (Observer o : this.observers) {
+            o.handleEvent(number, observerName);
+        }
+    }
+
+    private void setBombsCountToBombsScoreboard() {
+        int bombsCount = this.gameProperties.getBombsCount() - this.gameMainModel.getFlagCount();
         notifyObservers(bombsCount, "bombsCounterPanel");
     }
 
     private boolean checkGameNotEnded() {
 
-        return gameField.getGameState().equals(GameState.PLAY);
+        return this.gameField.getGameState().equals(GameState.PLAY);
     }
 
     private void checkGameState() {
-        switch (gameField.getGameState()) {
+        switch (this.gameField.getGameState()) {
             case LOSE: {
                 setLost();
                 log.debug("Game over, set lost");
@@ -115,14 +141,14 @@ public class Controllers implements Observed {
     private void setLost() {
         this.restartButtonController.setLostButton();
         this.restartButtonController.setGameState(GameState.LOSE);
-        gameTimer.stopTimer();
+        this.gameTimer.stopTimer();
     }
 
     private void setWin() {
         this.restartButtonController.setWinButton();
         this.restartButtonController.setGameState(GameState.WIN);
-        this.winnersManager.createWinner(gameProperties, gameTimer.getTime());
-        gameTimer.stopTimer();
+        this.winnersManager.createWinner(this.gameProperties, this.gameTimer.getTime());
+        this.gameTimer.stopTimer();
     }
 
     private MainModel createNewModel(GameProperties gameProperties) {
@@ -139,31 +165,5 @@ public class Controllers implements Observed {
         }
 
         return gameMainModel;
-    }
-
-    @Override
-    public void addObserver(Observer o) {
-        observers.add(o);
-        gameTimer.addObserver(o);
-    }
-
-    @Override
-    public void removeObserver(Observer o) {
-        observers.remove(o);
-        gameTimer.removeObserver(o);
-    }
-
-    @Override
-    public void notifyObservers() {
-        for (Observer o : observers) {
-            o.handleEvent();
-        }
-    }
-
-    @Override
-    public void notifyObservers(int number, String observerName) {
-        for (Observer o : observers) {
-            o.handleEvent(number, observerName);
-        }
     }
 }

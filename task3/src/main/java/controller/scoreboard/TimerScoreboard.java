@@ -2,9 +2,9 @@ package controller.scoreboard;
 
 import controller.Observer;
 
-public class BombsCounterNumberPanel extends NumberPanel implements Observer {
-    public BombsCounterNumberPanel(int charactersNumber) {
-        super(charactersNumber);
+public class TimerScoreboard extends Scoreboard implements Observer {
+    public TimerScoreboard(int digitsCount) {
+        super(digitsCount);
     }
 
     @Override
@@ -14,9 +14,8 @@ public class BombsCounterNumberPanel extends NumberPanel implements Observer {
 
     @Override
     public void handleEvent(int number, String observerName) {
-        if (observerName.equals("bombsCounterPanel")){
+        if (observerName.equals("timerPanel")){
             setNumber(number);
-
         }
     }
 }

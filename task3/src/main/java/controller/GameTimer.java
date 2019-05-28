@@ -22,50 +22,50 @@ public class GameTimer implements Runnable, Observed {
         }
     }
 
-    public void runTimer() {
+    void runTimer() {
         if (this.timerThread == null) {
             this.timerThread = new Thread(this);
             this.timerThread.start();
         }
-            this.timerStoppedFlag = false;
+        this.timerStoppedFlag = false;
     }
 
-    public void stopTimer() {
+    void stopTimer() {
         this.timerStoppedFlag = true;
     }
 
-    public void restartTimer(){
+    void restartTimer() {
         this.gameTime = 0;
         this.timerStoppedFlag = true;
         this.timerThread = null;
         notifyObservers(this.gameTime, "timerPanel");
     }
 
-    public int getTime(){
+    int getTime() {
 
-        return gameTime;
+        return this.gameTime;
     }
 
     @Override
     public void addObserver(Observer o) {
-        observers.add(o);
+        this.observers.add(o);
     }
 
     @Override
     public void removeObserver(Observer o) {
-        observers.remove(o);
+        this.observers.remove(o);
     }
 
     @Override
     public void notifyObservers() {
-        for (Observer o : observers) {
+        for (Observer o : this.observers) {
             o.handleEvent();
         }
     }
 
     @Override
     public void notifyObservers(int number, String observerName) {
-        for (Observer o : observers) {
+        for (Observer o : this.observers) {
             o.handleEvent(number, observerName);
         }
     }

@@ -17,23 +17,23 @@ public abstract class AbstractButtonCellController {
 
     public abstract void setFlag();
 
-    public abstract void setClose();
+    public abstract void setClosed();
 
     public abstract void setFalseMinedCell();
 
     public abstract void setOpenCell(int bombsAroundCellCount);
 
     void changeFlaggedBombsCounter(int value) {
-        flaggedBombsCounter += value;
+        this.flaggedBombsCounter += value;
     }
 
     int getFlaggedBombsCounter() {
 
-        return flaggedBombsCounter;
+        return this.flaggedBombsCounter;
     }
 
     CellStatus getCellStatus() {
 
-        return cellStatus;
+        return this.cellStatus;
     }
 }

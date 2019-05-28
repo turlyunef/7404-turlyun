@@ -13,6 +13,9 @@ public class Constants {
     public static final String SEVEN_MINE_AROUND_ICON = "/icons/seven.png";
     public static final String EIGHT_MINE_AROUND_ICON = "/icons/eight.png";
 
+    public static final int CELL_IMAGE_HEIGHT = 40;
+    public static final int CELL_IMAGE_WIDTH = 40;
+
     public static final String CLOSED_ICON = "/icons/closed.png";
     public static final String NOT_MINE_ICON = "/icons/not_mine.png";
     public static final String WIN_ICON = "/icons/win.png";
@@ -20,6 +23,9 @@ public class Constants {
     public static final String PLAY_ICON = "/icons/play.png";
     public static final String CLICK_ICON = "/icons/click.png";
     public static final String FLAG_ICON = "/icons/flag.png";
+
+    public static final int RESTART_BUTTON_IMAGE_HEIGHT = 50;
+    public static final int RESTART_BUTTON_IMAGE_WIDTH = 50;
 
     public static final String DEFAULT_GAME_MODE_NAME = "Beginner";
     public static final int DEFAULT_BOMBS_COUNT = 1;
@@ -36,4 +42,9 @@ public class Constants {
     public static final String SEVEN_ICON = "/numbers/7.png";
     public static final String EIGHT_ICON = "/numbers/8.png";
     public static final String NINE_ICON = "/numbers/9.png";
+
+    public static final int NUMBER_IMAGE_HEIGHT = 47;
+    public static final int NUMBER_IMAGE_WIDTH = 38;
+
+    public static final int SCOREBOARDS_DIGITS_COUNT = 3;
 }

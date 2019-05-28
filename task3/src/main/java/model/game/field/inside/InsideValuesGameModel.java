@@ -7,19 +7,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
-public class InsideValueGameModel implements InsideModel {
+public class InsideValuesGameModel implements InsideModel {
 
-    private static final Logger log = LoggerFactory.getLogger(InsideValueGameModel.class);
+    private static final Logger log = LoggerFactory.getLogger(InsideValuesGameModel.class);
 
     private final int rowsCount;
-    private final int columnsCount;
+    private final int colCount;
     private final Cell[][] cellsValues;
     private GameState gameState = GameState.PLAY;
 
-    public InsideValueGameModel(GameProperties gameProperties) {
+    public InsideValuesGameModel(GameProperties gameProperties) {
         this.rowsCount = gameProperties.getRows();
-        this.columnsCount = gameProperties.getCols();
-        this.cellsValues = new Cell[rowsCount][columnsCount];
+        this.colCount = gameProperties.getCols();
+        this.cellsValues = new Cell[rowsCount][colCount];
         generateBombs(gameProperties.getBombsCount());
         calculateBombsAroundCells();
     }
@@ -31,12 +31,12 @@ public class InsideValueGameModel implements InsideModel {
     }
 
     @Override
-    public Cell getCell(int rowIndex, int columnIndex) {
-        if (this.cellsValues[rowIndex][columnIndex].isCellBomb()) {
+    public Cell getCell(int rowIndex, int colIndex) {
+        if (this.cellsValues[rowIndex][colIndex].isCellBomb()) {
             this.gameState = GameState.LOSE;
         }
 
-        return this.cellsValues[rowIndex][columnIndex];
+        return this.cellsValues[rowIndex][colIndex];
     }
 
     private void generateBombs(int bombsCount) {
@@ -44,20 +44,20 @@ public class InsideValueGameModel implements InsideModel {
         while (bombsCounter < bombsCount) {
             Random random = new Random();
             int randomRowIndex = random.nextInt(this.rowsCount);
-            int randomColumnIndex = random.nextInt(this.columnsCount);
-            if (this.cellsValues[randomRowIndex][randomColumnIndex] == null) {
-                this.cellsValues[randomRowIndex][randomColumnIndex] = new Cell(CellContent.BOMB);
+            int randomColIndex = random.nextInt(this.colCount);
+            if (this.cellsValues[randomRowIndex][randomColIndex] == null) {
+                this.cellsValues[randomRowIndex][randomColIndex] = new Cell(CellContent.BOMB);
             } else {
                 continue;
             }
             bombsCounter++;
         }
-        log.debug(bombsCounter + " bombs are created in the cellsValues");
+        log.debug(bombsCounter + " bombs are created in the game field");
     }
 
     private void calculateBombsAroundCells() {
-        for (int i = 0; i < rowsCount; i++) {
-            for (int j = 0; j < columnsCount; j++) {
+        for (int i = 0; i < this.rowsCount; i++) {
+            for (int j = 0; j < colCount; j++) {
                 if (this.cellsValues[i][j] == null) {
                     this.cellsValues[i][j] = new Cell(CellContent.EMPTY);
                     this.cellsValues[i][j].setBombsAroundCellCount(calculateBombsAroundCell(i, j));
@@ -66,15 +66,15 @@ public class InsideValueGameModel implements InsideModel {
         }
     }
 
-    private int calculateBombsAroundCell(int rowIndex, int columnIndex) {
+    private int calculateBombsAroundCell(int rowIndex, int colIndex) {
         int bombsAroundCellCounter = 0;
         if (rowIndex > 0) {
-            bombsAroundCellCounter += calculateRowBombs(rowIndex - 1, columnIndex);
+            bombsAroundCellCounter += calculateRowBombs(rowIndex - 1, colIndex);
         }
         if (rowIndex < rowsCount - 1) {
-            bombsAroundCellCounter += calculateRowBombs(rowIndex + 1, columnIndex);
+            bombsAroundCellCounter += calculateRowBombs(rowIndex + 1, colIndex);
         }
-        bombsAroundCellCounter += calculateRowBombs(rowIndex, columnIndex);
+        bombsAroundCellCounter += calculateRowBombs(rowIndex, colIndex);
 
         return bombsAroundCellCounter;
     }
@@ -84,7 +84,7 @@ public class InsideValueGameModel implements InsideModel {
         if ((actualCellColumnIndex > 0) && (cellIsBomb(rowIndex, actualCellColumnIndex - 1))) {
             bombsAroundCellCounter++;
         }
-        if ((actualCellColumnIndex < columnsCount - 1) && (cellIsBomb(rowIndex, actualCellColumnIndex + 1))) {
+        if ((actualCellColumnIndex < colCount - 1) && (cellIsBomb(rowIndex, actualCellColumnIndex + 1))) {
             bombsAroundCellCounter++;
         }
         if (cellIsBomb(rowIndex, actualCellColumnIndex)) {
@@ -94,9 +94,9 @@ public class InsideValueGameModel implements InsideModel {
         return bombsAroundCellCounter;
     }
 
-    private boolean cellIsBomb(int rowIndex, int columnIndex) {
+    private boolean cellIsBomb(int rowIndex, int colIndex) {
 
-        return (this.cellsValues[rowIndex][columnIndex] != null) &&
-                (this.cellsValues[rowIndex][columnIndex].getCellContent() == CellContent.BOMB);
+        return (this.cellsValues[rowIndex][colIndex] != null) &&
+                (this.cellsValues[rowIndex][colIndex].getCellContent() == CellContent.BOMB);
     }
 }

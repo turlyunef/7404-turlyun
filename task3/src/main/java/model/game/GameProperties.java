@@ -36,6 +36,7 @@ public class GameProperties {
     }
 
     public String getGameModeName() {
+
         return gameModeName;
     }
 }
