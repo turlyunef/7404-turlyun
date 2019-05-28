@@ -58,7 +58,7 @@ public class NumberPanel extends JPanel {
                 return new ImageIcon(Constants.class.getResource(Constants.NINE_ICON));
             }
         }
-        return null;
+        return new ImageIcon(Constants.class.getResource(Constants.ZERO_ICON));
     }
 
     public void setNumber(int number) {
