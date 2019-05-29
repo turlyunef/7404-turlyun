@@ -17,43 +17,84 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class contains connections between game controllers and the model.
+ */
 public class Controllers implements Observed {
     private static final Logger log = LoggerFactory.getLogger(Controllers.class);
     private MainModel gameMainModel;
     private GameField gameField;
     private RestartButtonController restartButtonController;
     private GameProperties gameProperties;
-    private WinnersManager winnersManager = new WinnersManager();
-    private List<Observer> observers = new ArrayList<>();
-    private GameTimer gameTimer = new GameTimer();
+    private final WinnersManager winnersManager = new WinnersManager();
+    private final List<Observer> observers = new ArrayList<>();
+    private final GameTimer gameTimer = new GameTimer();
 
+    /**
+     * Constructor based on the game properties.
+     *
+     * @param gameProperties game properties containing number of bombs of the game, number of rows and columns game field
+     */
     public Controllers(GameProperties gameProperties) {
         this.gameProperties = gameProperties;
     }
 
+    /**
+     * Sets new game properties.
+     *
+     * @param gameProperties game properties containing number of bombs of the game, number of rows and columns game field
+     */
     public void setGameProperties(GameProperties gameProperties) {
         this.gameProperties = gameProperties;
     }
 
+    /**
+     * Sets the restart button controller.
+     *
+     * @param restartButtonController restart button controller
+     * @see RestartButtonController     *
+     */
     public void setRestartButtonController(RestartButtonController restartButtonController) {
         this.restartButtonController = restartButtonController;
         restartButtonController.setPlayedButton();
     }
 
-    public void createCellFieldControllers() {
-        AbstractButtonCellController[][] controllers =
-                new ButtonCellController[this.gameProperties.getRows()][this.gameProperties.getCols()];
-        MainModel gameMainModel = createNewModel(this.gameProperties);
-        this.gameField = new ButtonGameField(gameMainModel, controllers);
-        this.gameMainModel = gameMainModel;
+    /**
+     * Creates a new game.
+     */
+    public void createGame() {
+        createCellsFieldControllers();
         setBombsCountToBombsScoreboard();
         this.gameTimer.restartTimer();
     }
 
+    /**
+     * Creates controllers of the game field cells with reference to the game model.
+     */
+    private void createCellsFieldControllers() {
+        AbstractButtonCellController[][] controllers =
+                new ButtonCellController[this.gameProperties.getRows()][this.gameProperties.getCols()];
+        this.gameMainModel = createNewModel(this.gameProperties);
+        this.gameField = new ButtonGameField(gameMainModel, controllers);
+    }
+
+    /**
+     * Sets a specific controller for a cell to the game board object.
+     *
+     * @param buttonCellController controller for a cell
+     * @param rowIndex             index on the rows of this cell
+     * @param colIndex             index on the columns of this cell
+     */
     public void setCellButtonController(ButtonCellController buttonCellController, int rowIndex, int colIndex) {
         this.gameField.setController(buttonCellController, rowIndex, colIndex);
     }
 
+    /**
+     * Responds to clicking the left mouse button on the cell with the specified coordinates.
+     *
+     * @param rowIndex index on the rows of this cell
+     * @param colIndex index on the columns of this cell
+     */
     public void releasedButton1(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
             this.gameTimer.runTimer();
@@ -62,6 +103,12 @@ public class Controllers implements Observed {
         }
     }
 
+    /**
+     * Responds to pressing the middle mouse button on the cell with the specified coordinates.
+     *
+     * @param rowIndex index on the rows of this cell
+     * @param colIndex index on the columns of this cell
+     */
     public void releasedButton2(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
             this.gameField.openCellsAround(rowIndex, colIndex);
@@ -69,6 +116,12 @@ public class Controllers implements Observed {
         }
     }
 
+    /**
+     * Responds to pressing the middle mouse button on the cell with the specified coordinates.
+     *
+     * @param rowIndex index on the rows of this cell
+     * @param colIndex index on the columns of this cell
+     */
     public void pressedButton3(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
             this.gameTimer.runTimer();
@@ -78,23 +131,41 @@ public class Controllers implements Observed {
         }
     }
 
+    /**
+     * Returns the list of winners with their results.
+     *
+     * @return list of winners
+     */
     public List<Winner> getWinners() {
 
         return this.winnersManager.getWinners();
     }
 
+    /**
+     * Adds the observer object to the observers list for this controller.
+     *
+     * @param o observer object
+     */
     @Override
     public void addObserver(Observer o) {
         this.observers.add(o);
         this.gameTimer.addObserver(o);
     }
 
+    /**
+     * Removes the observer object from the observers list for this controller.
+     *
+     * @param o observer object
+     */
     @Override
     public void removeObserver(Observer o) {
         this.observers.remove(o);
         this.gameTimer.removeObserver(o);
     }
 
+    /**
+     * Notify all observer objects from the observers list for this controller.
+     */
     @Override
     public void notifyObservers() {
         for (Observer o : this.observers) {
@@ -102,6 +173,13 @@ public class Controllers implements Observed {
         }
     }
 
+    /**
+     * Pass the number to all observer objects from the observers list for this controller
+     * tagged with which observer the number is intended.
+     *
+     * @param number       transmitted number for observer
+     * @param observerName tag with which observer the number is intended
+     */
     @Override
     public void notifyObservers(int number, String observerName) {
         for (Observer o : this.observers) {
@@ -109,16 +187,27 @@ public class Controllers implements Observed {
         }
     }
 
+    /**
+     * Sets the number of bombs on the scoreboard.
+     */
     private void setBombsCountToBombsScoreboard() {
         int bombsCount = this.gameProperties.getBombsCount() - this.gameMainModel.getFlagCount();
         notifyObservers(bombsCount, "bombsCounterPanel");
     }
 
+    /**
+     * Checks if the current game is over.
+     *
+     * @return true if the current game is over
+     */
     private boolean checkGameNotEnded() {
 
         return this.gameField.getGameState().equals(GameState.PLAY);
     }
 
+    /**
+     * Checks current game state.
+     */
     private void checkGameState() {
         switch (this.gameField.getGameState()) {
             case LOSE: {
@@ -138,19 +227,31 @@ public class Controllers implements Observed {
         }
     }
 
+    /**
+     * Sets the end of the game by losing.
+     */
     private void setLost() {
         this.restartButtonController.setLostButton();
         this.restartButtonController.setGameState(GameState.LOSE);
         this.gameTimer.stopTimer();
     }
 
+    /**
+     * Sets the end of the game by winning.
+     */
     private void setWin() {
         this.restartButtonController.setWinButton();
         this.restartButtonController.setGameState(GameState.WIN);
-        this.winnersManager.createWinner(this.gameProperties, this.gameTimer.getTime());
+        this.winnersManager.addWinner(this.gameProperties, this.gameTimer.getTime());
         this.gameTimer.stopTimer();
     }
 
+    /**
+     * Creates a new main model by game properties
+     *
+     * @param gameProperties game properties containing number of bombs of the game, number of rows and columns game field
+     * @return new main model
+     */
     private MainModel createNewModel(GameProperties gameProperties) {
         MainModel gameMainModel = null;
         try {

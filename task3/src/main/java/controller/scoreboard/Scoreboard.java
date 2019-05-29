@@ -5,15 +5,28 @@ import view.Constants;
 import javax.swing.*;
 import java.awt.*;
 
-public class Scoreboard extends JPanel {
-    private int digitsCount;
-    private int[] numbers;
+/**
+ * Scoreboard with a given number of digits.
+ */
+class Scoreboard extends JPanel {
+    private final int digitsCount;
+    private final int[] numbers;
 
+    /**
+     * Creates scoreboard with a given number of digits.
+     *
+     * @param digitsCount given number of digits
+     */
     Scoreboard(int digitsCount) {
         this.digitsCount = digitsCount;
         this.numbers = new int[digitsCount];
     }
 
+    /**
+     * Paints icons of numbers corresponding to numbers stored in the numbers array.
+     *
+     * @param g graphics object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -23,6 +36,12 @@ public class Scoreboard extends JPanel {
         }
     }
 
+    /**
+     * Returns image icon corresponding to the number.
+     *
+     * @param number number that needs a image icon
+     * @return image icon corresponding to the number
+     */
     private ImageIcon getImageIconFromNumber(int number) {
         switch (number) {
             case 0: {
@@ -70,14 +89,31 @@ public class Scoreboard extends JPanel {
         return new ImageIcon(Constants.class.getResource(Constants.ZERO_ICON));
     }
 
+    /**
+     * Sets the number on the scoreboard.
+     *
+     * @param number number that must be set on the scoreboard
+     */
     public void setNumber(int number) {
+        divideByDigits(number);
+        initScoreboard();
+    }
+
+    /**
+     * Divides the number into digits and write to the array numbers.
+     *
+     * @param number number that needs to be divided into digits
+     */
+    private void divideByDigits(int number) {
         for (int i = 0; i < this.numbers.length; i++) {
             this.numbers[i] = (int) (number / (Math.pow(10, i))) % 10;
         }
-        initPanel();
     }
 
-    private void initPanel() {
+    /**
+     * Initializes scoreboard.
+     */
+    private void initScoreboard() {
         setPreferredSize(new Dimension(this.digitsCount * Constants.NUMBER_IMAGE_WIDTH, Constants.NUMBER_IMAGE_HEIGHT));
         repaint();
     }

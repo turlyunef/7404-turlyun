@@ -26,10 +26,10 @@ public class GameFrame {
     private JPanel mainPanel;
     private JPanel gameField;
     private JFrame gameFrame;
-    private GameProperties gameProperties = new GameProperties();
+    private final GameProperties gameProperties = new GameProperties();
     private RestartButtonController restartButtonController;
     private Controllers controllers;
-    private StatisticsFrame statisticsFrame = new StatisticsFrame();
+    private final StatisticsFrame statisticsFrame = new StatisticsFrame();
 
     /**
      * Initializes the main game window.
@@ -78,6 +78,7 @@ public class GameFrame {
      *
      * @param usedPanel panel to which this scoreboard is added
      * @see TimerScoreboard
+     * @see controller.GameTimer
      */
     private void createTimer(JPanel usedPanel) {
         TimerScoreboard timerScoreboard = new TimerScoreboard(Constants.SCOREBOARDS_DIGITS_COUNT);
@@ -114,7 +115,7 @@ public class GameFrame {
      * @see controller.cell.GameField
      */
     private void createGame(JPanel usedPanel) {
-        this.controllers.createCellFieldControllers();
+        this.controllers.createGame();
         this.gameField = new JPanel();
         int rows = this.gameProperties.getRows();
         int cols = this.gameProperties.getCols();

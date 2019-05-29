@@ -13,18 +13,28 @@ public class ButtonCellController extends AbstractButtonCellController {
         this.jButton = jButton;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setExplodedMineCell() {
         Icon icon = new ImageIcon(Constants.class.getResource(Constants.EXPLODED_MINE_ICON));
         this.jButton.setIcon(icon);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setMineCell() {
         Icon icon = new ImageIcon(Constants.class.getResource(Constants.MINE_ICON));
         this.jButton.setIcon(icon);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setFlag() {
         cellStatus = CellStatus.FLAG;
@@ -32,6 +42,9 @@ public class ButtonCellController extends AbstractButtonCellController {
         this.jButton.setIcon(icon);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setClosed() {
         cellStatus = CellStatus.CLOSE;
@@ -39,18 +52,29 @@ public class ButtonCellController extends AbstractButtonCellController {
         this.jButton.setIcon(icon);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setFalseMinedCell() {
         Icon icon = new ImageIcon(Constants.class.getResource(Constants.NOT_MINE_ICON));
         this.jButton.setIcon(icon);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setOpenCell(int bombsAroundCellCount) {
         this.cellStatus = CellStatus.OPEN;
         drawBombsAroundCellCount(bombsAroundCellCount);
     }
 
+    /**
+     * Draws a button icon according to the number of bombs around it.
+     *
+     * @param bombsAroundCellCount number of bombs around cell.
+     */
     private void drawBombsAroundCellCount(int bombsAroundCellCount) {
         switch (bombsAroundCellCount) {
             case 0: {
