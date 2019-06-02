@@ -2,7 +2,6 @@ package controller.restart.button;
 
 import controller.Observer;
 import model.game.GameState;
-import view.Constants;
 
 import javax.swing.*;
 
@@ -10,11 +9,11 @@ import javax.swing.*;
  * Controller restart button. Also reflects the current status of the game: play, lose, win, hold the mouse button.
  */
 public class RestartButtonController implements Observer {
-
-    private final Icon lostIcon = new ImageIcon(Constants.class.getResource(Constants.LOST_ICON));
-    private final Icon playIcon = new ImageIcon(Constants.class.getResource(Constants.PLAY_ICON));
-    private final Icon winIcon = new ImageIcon(Constants.class.getResource(Constants.WIN_ICON));
-    private final Icon clickIcon = new ImageIcon(Constants.class.getResource(Constants.CLICK_ICON));
+    private static final String CLICK_ICON_PATH = "/icons/click.png";
+    private static final String WIN_ICON_PATH = "/icons/win.png";
+    private static final String LOST_ICON_PATH = "/icons/lost.png";
+    private static final String PLAY_ICON_PATH = "/icons/play.png";
+    private final Icon playIcon = new ImageIcon(this.getClass().getResource(PLAY_ICON_PATH));
 
     private final JButton jButton;
     private GameState gameState = GameState.PLAY;
@@ -32,7 +31,8 @@ public class RestartButtonController implements Observer {
      * Sets the lost icon on the restart button.
      */
     public void setLostButton() {
-        this.jButton.setIcon(this.lostIcon);
+        Icon lostIcon = new ImageIcon(this.getClass().getResource(LOST_ICON_PATH));
+        this.jButton.setIcon(lostIcon);
     }
 
     /**
@@ -46,16 +46,17 @@ public class RestartButtonController implements Observer {
      * Sets the win icon on the restart button.
      */
     public void setWinButton() {
-        this.jButton.setIcon(this.winIcon);
+        Icon winIcon = new ImageIcon(this.getClass().getResource(WIN_ICON_PATH));
+        this.jButton.setIcon(winIcon);
     }
 
     /**
      * Sets the clicked icon on the restart button.
      */
     private void setClickedButton() {
-        this.jButton.setIcon(this.clickIcon);
+        Icon clickIcon = new ImageIcon(this.getClass().getResource(CLICK_ICON_PATH));
+        this.jButton.setIcon(clickIcon);
     }
-
 
     /**
      * Sets the icon on the restart button by the observed's call.
@@ -88,6 +89,7 @@ public class RestartButtonController implements Observer {
 
     /**
      * Sets game state
+     *
      * @param gameState game state
      */
     public void setGameState(GameState gameState) {

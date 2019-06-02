@@ -1,7 +1,5 @@
 package controller.scoreboard;
 
-import view.Constants;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,6 +7,19 @@ import java.awt.*;
  * Scoreboard with a given number of digits.
  */
 class Scoreboard extends JPanel {
+    private static final String ZERO_NUMBER_ICON = "/numbers/0.png";
+    private static final String ONE_NUMBER_ICON = "/numbers/1.png";
+    private static final String TWO_NUMBER_ICON = "/numbers/2.png";
+    private static final String THREE_NUMBER_ICON = "/numbers/3.png";
+    private static final String FOUR_NUMBER_ICON = "/numbers/4.png";
+    private static final String FIVE_NUMBER_ICON = "/numbers/5.png";
+    private static final String SIX_NUMBER_ICON = "/numbers/6.png";
+    private static final String SEVEN_NUMBER_ICON = "/numbers/7.png";
+    private static final String EIGHT_NUMBER_ICON = "/numbers/8.png";
+    private static final String NINE_NUMBER_ICON = "/numbers/9.png";
+    private static final int NUMBER_ICON_HEIGHT = 47;
+    private static final int NUMBER_ICON_WIDTH = 38;
+
     private final int digitsCount;
     private final int[] numbers;
 
@@ -32,7 +43,7 @@ class Scoreboard extends JPanel {
         super.paintComponent(g);
         for (int i = 0; i < this.digitsCount; i++) {
             ImageIcon icon = getImageIconFromNumber(this.numbers[digitsCount - 1 - i]);
-            g.drawImage(icon.getImage(), i * Constants.NUMBER_IMAGE_WIDTH, 0, this);
+            g.drawImage(icon.getImage(), i * NUMBER_ICON_WIDTH, 0, this);
         }
     }
 
@@ -46,47 +57,47 @@ class Scoreboard extends JPanel {
         switch (number) {
             case 0: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.ZERO_ICON));
+                return new ImageIcon(this.getClass().getResource(ZERO_NUMBER_ICON));
             }
             case 1: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.ONE_ICON));
+                return new ImageIcon(this.getClass().getResource(ONE_NUMBER_ICON));
             }
             case 2: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.TWO_ICON));
+                return new ImageIcon(this.getClass().getResource(TWO_NUMBER_ICON));
             }
             case 3: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.THREE_ICON));
+                return new ImageIcon(this.getClass().getResource(THREE_NUMBER_ICON));
             }
             case 4: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.FOUR_ICON));
+                return new ImageIcon(this.getClass().getResource(FOUR_NUMBER_ICON));
             }
             case 5: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.FIVE_ICON));
+                return new ImageIcon(this.getClass().getResource(FIVE_NUMBER_ICON));
             }
             case 6: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.SIX_ICON));
+                return new ImageIcon(this.getClass().getResource(SIX_NUMBER_ICON));
             }
             case 7: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.SEVEN_ICON));
+                return new ImageIcon(this.getClass().getResource(SEVEN_NUMBER_ICON));
             }
             case 8: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.EIGHT_ICON));
+                return new ImageIcon(this.getClass().getResource(EIGHT_NUMBER_ICON));
             }
             case 9: {
 
-                return new ImageIcon(Constants.class.getResource(Constants.NINE_ICON));
+                return new ImageIcon(this.getClass().getResource(NINE_NUMBER_ICON));
             }
         }
 
-        return new ImageIcon(Constants.class.getResource(Constants.ZERO_ICON));
+        return new ImageIcon(this.getClass().getResource(ZERO_NUMBER_ICON));
     }
 
     /**
@@ -114,7 +125,7 @@ class Scoreboard extends JPanel {
      * Initializes scoreboard.
      */
     private void initScoreboard() {
-        setPreferredSize(new Dimension(this.digitsCount * Constants.NUMBER_IMAGE_WIDTH, Constants.NUMBER_IMAGE_HEIGHT));
+        setPreferredSize(new Dimension(this.digitsCount * NUMBER_ICON_WIDTH, NUMBER_ICON_HEIGHT));
         repaint();
     }
 }

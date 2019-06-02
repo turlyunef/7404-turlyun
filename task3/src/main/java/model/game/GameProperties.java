@@ -1,7 +1,5 @@
 package model.game;
 
-import view.Constants;
-
 /**
  * Game properties containing number of bombs of the game, number of rows and columns game field and the name of the game mode.
  */
@@ -10,13 +8,25 @@ public class GameProperties {
     private int rows;
     private int cols;
     private String gameModeName;
+    private static final DifficultyLevel DEFAULT_DIFFICULT_LEVEL = DifficultyLevel.BEGINNER;
 
     /**
      * Constructor to create a game properties with the default settings
      */
     public GameProperties() {
-        setProperties(Constants.DEFAULT_BOMBS_COUNT, Constants.DEFAULT_ROWS_COUNT, Constants.DEFAULT_COLUMNS_COUNT,
-                Constants.DEFAULT_GAME_MODE_NAME);
+        setProperties(DEFAULT_DIFFICULT_LEVEL);
+    }
+
+    /**
+     * Sets game settings to the properties
+     *
+     * @param difficultyLevel level of difficulty, that contains parameters of the game mode
+     */
+    public void setProperties(DifficultyLevel difficultyLevel) {
+        this.bombsCount = difficultyLevel.getBombsCount();
+        this.rows = difficultyLevel.getRows();
+        this.cols = difficultyLevel.getCols();
+        this.gameModeName = difficultyLevel.getDisplayName();
     }
 
     /**

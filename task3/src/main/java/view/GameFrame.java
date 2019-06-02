@@ -7,6 +7,7 @@ import controller.restart.button.RestartButtonController;
 import controller.scoreboard.BombsCounterScoreboard;
 import controller.scoreboard.TimerScoreboard;
 import controller.statistic.Winner;
+import model.game.DifficultyLevel;
 import model.game.GameProperties;
 import model.game.GameState;
 
@@ -19,10 +20,14 @@ import java.awt.*;
  * In the menu, user cans select game modes, see the statistics of wins.
  * The restart button displays the state of the game: play, lose or win with the corresponding icon.
  * This class configures the connection of controllers and viewers.
- *
- * @see Constants
  */
 public class GameFrame {
+    private static final int GAME_CELL_IMAGE_HEIGHT = 40;
+    private static final int GAME_CELL_IMAGE_WIDTH = 40;
+    private static final int RESTART_BUTTON_IMAGE_HEIGHT = 50;
+    private static final int RESTART_BUTTON_IMAGE_WIDTH = 50;
+    private static final int SCOREBOARDS_DIGITS_COUNT = 3;
+
     private JPanel mainPanel;
     private JPanel gameField;
     private JFrame gameFrame;
@@ -63,7 +68,7 @@ public class GameFrame {
      * @see BombsCounterScoreboard
      */
     private void createBombsCounter(JPanel usedPanel) {
-        BombsCounterScoreboard numberPanel = new BombsCounterScoreboard(Constants.SCOREBOARDS_DIGITS_COUNT);
+        BombsCounterScoreboard numberPanel = new BombsCounterScoreboard(SCOREBOARDS_DIGITS_COUNT);
         JPanel bombCounterPanel = new JPanel();
         bombCounterPanel.add(numberPanel);
         usedPanel.add(bombCounterPanel, BorderLayout.WEST);
@@ -81,7 +86,7 @@ public class GameFrame {
      * @see controller.GameTimer
      */
     private void createTimer(JPanel usedPanel) {
-        TimerScoreboard timerScoreboard = new TimerScoreboard(Constants.SCOREBOARDS_DIGITS_COUNT);
+        TimerScoreboard timerScoreboard = new TimerScoreboard(SCOREBOARDS_DIGITS_COUNT);
         JPanel timerPanel = new JPanel();
         timerPanel.add(timerScoreboard);
         usedPanel.add(timerPanel, BorderLayout.EAST);
@@ -98,7 +103,7 @@ public class GameFrame {
      */
     private void createRestartButton(JPanel usedPanel) {
         JButton restartButton = new JButton();
-        Dimension buttonPreferredSize = new Dimension(Constants.RESTART_BUTTON_IMAGE_WIDTH, Constants.RESTART_BUTTON_IMAGE_HEIGHT);
+        Dimension buttonPreferredSize = new Dimension(RESTART_BUTTON_IMAGE_WIDTH, RESTART_BUTTON_IMAGE_HEIGHT);
         restartButton.setPreferredSize(buttonPreferredSize);
         restartButton.addActionListener(e -> restartGame());
         this.restartButtonController = new RestartButtonController(restartButton);
@@ -156,7 +161,7 @@ public class GameFrame {
     private JButton createCellButton(ButtonMouseListener buttonMouseListener) {
         JButton cellButton = new JButton();
         cellButton.addMouseListener(buttonMouseListener);
-        Dimension buttonPreferredSize = new Dimension(Constants.CELL_IMAGE_WIDTH, Constants.CELL_IMAGE_HEIGHT);
+        Dimension buttonPreferredSize = new Dimension(GAME_CELL_IMAGE_WIDTH, GAME_CELL_IMAGE_HEIGHT);
         cellButton.setPreferredSize(buttonPreferredSize);
         closeButton(cellButton);
 
@@ -184,8 +189,8 @@ public class GameFrame {
      *
      * @param button close button
      */
-    private void closeButton(JButton button) {
-        Icon closedIcon = new ImageIcon(Constants.class.getResource(Constants.CLOSED_ICON));
+    private void closeButton(JButton button) {//TODO: убрать метод после рефакторинга Cell
+        Icon closedIcon = new ImageIcon(this.getClass().getResource("/icons/closed.png"));
         button.setIcon(closedIcon);
     }
 
@@ -198,9 +203,9 @@ public class GameFrame {
         JMenu jMenu = new JMenu("File");
         addStatisticsSubmenu(jMenu);
 
-        addNewGameSubmenu("New game (beginner)", jMenu, 10, 9, 9, "Beginner");
-        addNewGameSubmenu("New game (experienced)", jMenu, 40, 16, 16, "Experienced");
-        addNewGameSubmenu("New game (expert)", jMenu, 99, 16, 30, "Expert");
+        addNewGameSubmenu("New game (beginner)", jMenu, DifficultyLevel.BEGINNER);
+        addNewGameSubmenu("New game (experienced)", jMenu, DifficultyLevel.EXPERIENCED);
+        addNewGameSubmenu("New game (expert)", jMenu, DifficultyLevel.EXPERT);
 
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(jMenu);
@@ -214,17 +219,14 @@ public class GameFrame {
     /**
      * Creates a submenu for creating a new game with the given parameters
      *
-     * @param nameSubmenu  display name of the submenu
-     * @param menu         menu to which this submenu is added
-     * @param bombsCount   number of bombs of the game
-     * @param rows         number of rows of the game
-     * @param cols         number of columns of the game
-     * @param gameModeName name of the game mode, which will be displayed in the statistics
+     * @param nameSubmenu     display name of the submenu
+     * @param menu            menu to which this submenu is added
+     * @param difficultyLevel level of difficulty, that contains parameters of the game mode
      */
-    private void addNewGameSubmenu(String nameSubmenu, JMenu menu, int bombsCount, int rows, int cols, String gameModeName) {
+    private void addNewGameSubmenu(String nameSubmenu, JMenu menu, DifficultyLevel difficultyLevel) {
         JMenuItem restartItem = new JMenuItem(nameSubmenu);
         restartItem.addActionListener(e -> {
-            this.gameProperties.setProperties(bombsCount, rows, cols, gameModeName);
+            this.gameProperties.setProperties(difficultyLevel);
             restartGame();
             this.gameFrame.setLocationRelativeTo(null);
         });
