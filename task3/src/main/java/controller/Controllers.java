@@ -7,10 +7,7 @@ import controller.cell.GameField;
 import controller.restart.button.RestartButtonController;
 import controller.statistic.Winner;
 import controller.statistic.WinnersManager;
-import model.game.GameProperties;
-import model.game.GameState;
-import model.game.MainModel;
-import model.game.TableGenerationException;
+import model.game.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +19,7 @@ import java.util.List;
  */
 public class Controllers implements Observed {
     private static final Logger log = LoggerFactory.getLogger(Controllers.class);
-    private MainModel gameMainModel;
+    private IModel gameModel;
     private GameField gameField;
     private RestartButtonController restartButtonController;
     private GameProperties gameProperties;
@@ -52,7 +49,7 @@ public class Controllers implements Observed {
      * Sets the restart button controller.
      *
      * @param restartButtonController restart button controller
-     * @see RestartButtonController     *
+     * @see RestartButtonController
      */
     public void setRestartButtonController(RestartButtonController restartButtonController) {
         this.restartButtonController = restartButtonController;
@@ -74,8 +71,8 @@ public class Controllers implements Observed {
     private void createCellsFieldControllers() {
         AbstractButtonCellController[][] controllers =
                 new ButtonCellController[this.gameProperties.getRows()][this.gameProperties.getCols()];
-        this.gameMainModel = createNewModel(this.gameProperties);
-        this.gameField = new ButtonGameField(gameMainModel, controllers);
+        this.gameModel = createNewModel(this.gameProperties);
+        this.gameField = new ButtonGameField(gameModel, controllers);
     }
 
     /**
@@ -191,7 +188,7 @@ public class Controllers implements Observed {
      * Sets the number of bombs on the scoreboard.
      */
     private void setBombsCountToBombsScoreboard() {
-        int bombsCount = this.gameProperties.getBombsCount() - this.gameMainModel.getFlagCount();
+        int bombsCount = this.gameProperties.getBombsCount() - this.gameModel.getFlagCount();
         notifyObservers(bombsCount, "bombsCounterPanel");
     }
 
@@ -252,19 +249,19 @@ public class Controllers implements Observed {
      * @param gameProperties game properties containing number of bombs of the game, number of rows and columns game field
      * @return new main model
      */
-    private MainModel createNewModel(GameProperties gameProperties) {
-        MainModel gameMainModel = null;
+    private IModel createNewModel(GameProperties gameProperties) {
+        IModel gameModel = null;
         try {
-            gameMainModel = new MainModel(gameProperties);
+            gameModel = new GameModel(gameProperties);
         } catch (TableGenerationException e) {
             gameProperties = new GameProperties();
             try {
-                gameMainModel = new MainModel(gameProperties);
+                gameModel = new GameModel(gameProperties);
             } catch (TableGenerationException ex) {
                 ex.printStackTrace();
             }
         }
 
-        return gameMainModel;
+        return gameModel;
     }
 }

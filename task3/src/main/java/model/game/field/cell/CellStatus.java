@@ -1,4 +1,4 @@
-package model.game.field.outside;
+package model.game.field.cell;
 
 /**
  * Types of cell statuses.

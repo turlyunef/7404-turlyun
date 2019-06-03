@@ -1,16 +1,22 @@
 package controller.cell;
 
 import model.game.GameState;
-import model.game.MainModel;
-import model.game.field.outside.CellStatus;
+import model.game.IModel;
+import model.game.field.cell.CellStatus;
 
 public class ButtonGameField implements GameField {
 
-    private final MainModel gameMainModel;
+    private final IModel gameModel;
     private final AbstractButtonCellController[][] cellControllers;
 
-    public ButtonGameField(MainModel gameMainModel, AbstractButtonCellController[][] cellControllers) {
-        this.gameMainModel = gameMainModel;
+    /**
+     * Creates a field of controllers, creating a connection with the game model and a set of all field controllers.
+     *
+     * @param gameModel       game model
+     * @param cellControllers set of all field controllers
+     */
+    public ButtonGameField(IModel gameModel, AbstractButtonCellController[][] cellControllers) {
+        this.gameModel = gameModel;
         this.cellControllers = cellControllers;
     }
 
@@ -20,10 +26,10 @@ public class ButtonGameField implements GameField {
     @Override
     public void tryOpenCell(int rowIndex, int colIndex) {
         if (checkGameNotEnded() && (cellIsClose(rowIndex, colIndex))) {
-            if (this.gameMainModel.getCell(rowIndex, colIndex).isCellBomb()) {
+            if (this.gameModel.getCell(rowIndex, colIndex).isBomb()) {
                 explode(rowIndex, colIndex);
             } else {
-                int bombsAroundCellCount = this.gameMainModel.getCell(rowIndex, colIndex).getBombsAroundCellCount();
+                int bombsAroundCellCount = this.gameModel.getCell(rowIndex, colIndex).getBombsAroundCellCount();
                 this.cellControllers[rowIndex][colIndex].setOpenCell(bombsAroundCellCount);
                 if (bombsAroundCellCount == 0) {
                     openCellsAround(rowIndex, colIndex);
@@ -37,7 +43,7 @@ public class ButtonGameField implements GameField {
      */
     @Override
     public void changeCellStatus(int rowIndex, int colIndex) {
-        switch (this.gameMainModel.changeCellStatus(rowIndex, colIndex)) {
+        switch (this.gameModel.changeCellStatus(rowIndex, colIndex)) {
             case CLOSE: {
                 changeDefusedBombsCountersInCellsAround(rowIndex, colIndex, -1);
                 this.cellControllers[rowIndex][colIndex].setClosed();
@@ -57,7 +63,7 @@ public class ButtonGameField implements GameField {
     @Override
     public GameState getGameState() {
 
-        return this.gameMainModel.getGameState();
+        return this.gameModel.getGameState();
     }
 
     /**
@@ -91,7 +97,7 @@ public class ButtonGameField implements GameField {
      */
     private boolean checkGameNotEnded() {
 
-        return (this.gameMainModel.getGameState().equals(GameState.PLAY));
+        return (this.gameModel.getGameState().equals(GameState.PLAY));
     }
 
     /**
@@ -123,7 +129,7 @@ public class ButtonGameField implements GameField {
     private void showAllBombs() {
         for (int i = 0; i < this.cellControllers.length; i++) {
             for (int j = 0; j < this.cellControllers[i].length; j++) {
-                if (this.gameMainModel.getCell(i, j).isCellBomb()) {
+                if (this.gameModel.getCell(i, j).isBomb()) {
                     if (this.cellControllers[i][j].getCellStatus().equals(CellStatus.CLOSE)) {
                         this.cellControllers[i][j].setMineCell();
                     }
@@ -177,6 +183,6 @@ public class ButtonGameField implements GameField {
     private boolean cellsAroundIsDemined(int rowIndex, int colIndex) {
 
         return this.cellControllers[rowIndex][colIndex].getFlaggedBombsCounter() >=
-                this.gameMainModel.getCell(rowIndex, colIndex).getBombsAroundCellCount();
+                this.gameModel.getCell(rowIndex, colIndex).getBombsAroundCellCount();
     }
 }

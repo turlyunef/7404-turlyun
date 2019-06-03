@@ -1,6 +1,6 @@
 package controller.cell;
 
-import model.game.field.outside.CellStatus;
+import model.game.field.cell.CellStatus;
 
 import javax.swing.*;
 

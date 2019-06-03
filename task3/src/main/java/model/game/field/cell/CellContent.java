@@ -1,4 +1,4 @@
-package model.game.field.inside;
+package model.game.field.cell;
 
 /**
  * Types of inner cell contents

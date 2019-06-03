@@ -1,3 +1,5 @@
+import controller.Controllers;
+import model.game.GameModel;
 import view.GameFrame;
 
 public class Application {
@@ -10,8 +12,8 @@ public class Application {
      *
      * @author Turlyun Evgeny Fedorovich
      * @see GameFrame
-     * @see controller.Controllers
-     * @see model.game.MainModel
+     * @see Controllers
+     * @see GameModel
      */
     public static void main(String[] args) {
         GameFrame gameFrame = new GameFrame();

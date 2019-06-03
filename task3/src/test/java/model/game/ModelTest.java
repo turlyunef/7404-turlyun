@@ -1,7 +1,7 @@
 package model.game;
 
-import model.game.field.inside.InsideModel;
-import model.game.field.inside.InsideValuesGameModel;
+import model.game.field.IField;
+import model.game.field.GameField;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +49,11 @@ public class ModelTest {
     private void testBombsGeneration(int bombsCount, int rowsCount, int columnsCount) throws TableGenerationException {
         GameProperties gameProperties = new GameProperties();
         gameProperties.setProperties(bombsCount, rowsCount, columnsCount, "Test mode");
-        InsideModel table = new InsideValuesGameModel(gameProperties);
+        IField field = new GameField(gameProperties);
         int bombsCounter = 0;
         for (int i = 0; i < rowsCount; i++) {
             for (int j = 0; j < columnsCount; j++) {
-                if (table.getCell(i, j).isCellBomb()) {
+                if (field.openCell(i, j).isBomb()) {
                     bombsCounter++;
                 }
             }

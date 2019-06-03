@@ -34,6 +34,7 @@ public enum DifficultyLevel {
      * @return display name
      */
     public String getDisplayName() {
+
         return displayName;
     }
 
@@ -43,6 +44,7 @@ public enum DifficultyLevel {
      * @return number of the bombs
      */
     public int getBombsCount() {
+
         return bombsCount;
     }
 
@@ -52,6 +54,7 @@ public enum DifficultyLevel {
      * @return number of the rows
      */
     public int getRows() {
+
         return rows;
     }
 
@@ -61,6 +64,7 @@ public enum DifficultyLevel {
      * @return number of the cols
      */
     public int getCols() {
+
         return cols;
     }
 }

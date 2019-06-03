@@ -11,14 +11,14 @@ public class GameProperties {
     private static final DifficultyLevel DEFAULT_DIFFICULT_LEVEL = DifficultyLevel.BEGINNER;
 
     /**
-     * Constructor to create a game properties with the default settings
+     * Constructor to create a game properties with the default settings.
      */
     public GameProperties() {
         setProperties(DEFAULT_DIFFICULT_LEVEL);
     }
 
     /**
-     * Sets game settings to the properties
+     * Sets game settings to the properties.
      *
      * @param difficultyLevel level of difficulty, that contains parameters of the game mode
      */
@@ -30,7 +30,7 @@ public class GameProperties {
     }
 
     /**
-     * Sets game settings to the properties
+     * Sets game settings to the properties.
      *
      * @param bombsCount   number of the bombs of the game
      * @param rows         number of the rows of the game field
@@ -45,7 +45,7 @@ public class GameProperties {
     }
 
     /**
-     * Returns the number of the bombs of the game
+     * Returns the number of the bombs of the game.
      *
      * @return number of the bombs
      */
@@ -55,7 +55,7 @@ public class GameProperties {
     }
 
     /**
-     * Returns the number of the rows of the game field
+     * Returns the number of the rows of the game field.
      *
      * @return number of the rows
      */
@@ -65,7 +65,7 @@ public class GameProperties {
     }
 
     /**
-     * Returns the number of the columns of the game field
+     * Returns the number of the columns of the game field.
      *
      * @return number of the columns
      */
@@ -75,7 +75,7 @@ public class GameProperties {
     }
 
     /**
-     * Returns the name of the game mode
+     * Returns the name of the game mode.
      *
      * @return name of the game mode
      */
