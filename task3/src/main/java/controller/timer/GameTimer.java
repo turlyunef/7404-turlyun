@@ -1,4 +1,9 @@
-package controller;
+package controller.timer;
+
+import controller.Observed;
+import controller.Observer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +12,11 @@ import java.util.List;
  * Game play timer. Executed in a separate thread.
  */
 public class GameTimer implements Runnable, Observed {
-    private Thread timerThread;
-    private boolean timerStoppedFlag = false;
-    private int gameTime = 0;
-    private final List<Observer> observers = new ArrayList<>();
+    private static final Logger log = LoggerFactory.getLogger(GameTimer.class);
+    private volatile Thread timerThread;
+    private volatile boolean timerStoppedFlag = false;
+    private volatile int gameTime = 0;
+    private volatile List<Observer> observers = new ArrayList<>();
 
     /**
      * Runs timer.
@@ -23,7 +29,7 @@ public class GameTimer implements Runnable, Observed {
                 Thread.sleep(1000);
                 this.gameTime++;
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.debug("Game timer was Interrupted.");
             }
         }
     }
@@ -31,7 +37,7 @@ public class GameTimer implements Runnable, Observed {
     /**
      * Creates a new timer if it is not created or restores its work.
      */
-    void runTimer() {
+    public void runTimer() {
         if (this.timerThread == null) {
             this.timerThread = new Thread(this);
             this.timerThread.start();
@@ -42,17 +48,21 @@ public class GameTimer implements Runnable, Observed {
     /**
      * Stops the timer.
      */
-    void stopTimer() {
+    public void stopTimer() {
         this.timerStoppedFlag = true;
     }
 
     /**
      * Restarts the timer.
      */
-    void restartTimer() {
+    public void restartTimer() {
         this.gameTime = 0;
         this.timerStoppedFlag = true;
-        this.timerThread = null;
+        if (this.timerThread != null) {
+            this.timerThread.interrupt();
+            this.timerThread = null;
+            System.out.println(this.timerThread);
+        }
         notifyObservers(this.gameTime, "timerPanel");
     }
 
@@ -61,7 +71,7 @@ public class GameTimer implements Runnable, Observed {
      *
      * @return current game time
      */
-    int getTime() {
+    public int getTime() {
 
         return this.gameTime;
     }

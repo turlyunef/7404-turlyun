@@ -7,6 +7,7 @@ import controller.restart.button.RestartButtonController;
 import controller.scoreboard.BombsCounterScoreboard;
 import controller.scoreboard.TimerScoreboard;
 import controller.statistic.Winner;
+import controller.timer.GameTimer;
 import model.game.DifficultyLevel;
 import model.game.GameProperties;
 import model.game.GameState;
@@ -83,7 +84,7 @@ public class GameFrame {
      *
      * @param usedPanel panel to which this scoreboard is added
      * @see TimerScoreboard
-     * @see controller.GameTimer
+     * @see GameTimer
      */
     private void createTimer(JPanel usedPanel) {
         TimerScoreboard timerScoreboard = new TimerScoreboard(SCOREBOARDS_DIGITS_COUNT);

@@ -7,6 +7,7 @@ import controller.cell.GameField;
 import controller.restart.button.RestartButtonController;
 import controller.statistic.Winner;
 import controller.statistic.WinnersManager;
+import controller.timer.GameTimer;
 import model.game.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
