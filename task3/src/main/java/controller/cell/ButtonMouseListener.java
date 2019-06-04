@@ -1,8 +1,10 @@
 package controller.cell;
 
 import controller.Controllers;
-import controller.Observed;
+import controller.Observable;
 import controller.Observer;
+import controller.event.Event;
+import controller.event.MouseActionEvent;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 /**
  * The class of listener cell button playing field.
  */
-public class ButtonMouseListener implements MouseListener, Observed {
+public class ButtonMouseListener implements MouseListener, Observable {
     private final Controllers controllers;
     private final int rowIndex;
     private final int colIndex;
@@ -43,7 +45,7 @@ public class ButtonMouseListener implements MouseListener, Observed {
      */
     @Override
     public void mousePressed(MouseEvent e) {
-        notifyObservers();
+        notifyObservers(new MouseActionEvent());
         if (e.getButton() == MouseEvent.BUTTON3) {
             this.controllers.pressedButton3(this.rowIndex, this.colIndex);
         }
@@ -54,7 +56,7 @@ public class ButtonMouseListener implements MouseListener, Observed {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
-        notifyObservers();
+        notifyObservers(new MouseActionEvent());
         if (e.getButton() == MouseEvent.BUTTON1) {
             this.controllers.releasedButton1(this.rowIndex, this.colIndex);
         }
@@ -99,17 +101,9 @@ public class ButtonMouseListener implements MouseListener, Observed {
      * {@inheritDoc}
      */
     @Override
-    public void notifyObservers() {
+    public void notifyObservers(Event event) {
         for (Observer o : this.observers) {
-            o.handleEvent();
+            o.handleEvent(event);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyObservers(int number, String observerName) {
-        /*NOP*/
     }
 }

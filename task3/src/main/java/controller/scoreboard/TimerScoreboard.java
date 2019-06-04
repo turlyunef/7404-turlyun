@@ -1,6 +1,8 @@
 package controller.scoreboard;
 
 import controller.Observer;
+import controller.event.Event;
+import controller.event.TimerChangeEvent;
 
 /**
  * Game time scoreboard.
@@ -14,17 +16,9 @@ public class TimerScoreboard extends Scoreboard implements Observer {
      * {@inheritDoc}
      */
     @Override
-    public void handleEvent() {
-        /*NOP*/
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void handleEvent(int number, String observerName) {
-        if (observerName.equals("timerPanel")) {
-            setNumber(number);
+    public void handleEvent(Event event) {
+        if (event instanceof TimerChangeEvent) {
+            setNumber(((TimerChangeEvent) event).getGameTime());
         }
     }
 }

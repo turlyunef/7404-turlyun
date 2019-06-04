@@ -1,7 +1,9 @@
 package controller.timer;
 
-import controller.Observed;
+import controller.Observable;
 import controller.Observer;
+import controller.event.Event;
+import controller.event.TimerChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Game play timer. Executed in a separate thread.
  */
-public class GameTimer implements Runnable, Observed {
+public class GameTimer implements Runnable, Observable {
     private static final Logger log = LoggerFactory.getLogger(GameTimer.class);
     private volatile Thread timerThread;
     private volatile boolean timerStoppedFlag = false;
@@ -25,11 +27,15 @@ public class GameTimer implements Runnable, Observed {
     public void run() {
         while (!this.timerStoppedFlag) {
             try {
-                notifyObservers(this.gameTime, "timerPanel");
+                updateTimerScoreboard();
                 Thread.sleep(1000);
-                this.gameTime++;
+
             } catch (InterruptedException e) {
                 log.debug("Game timer was Interrupted.");
+            }
+            if (!this.timerStoppedFlag) {
+                this.gameTime++;
+                updateTimerScoreboard();
             }
         }
     }
@@ -63,7 +69,14 @@ public class GameTimer implements Runnable, Observed {
             this.timerThread = null;
             System.out.println(this.timerThread);
         }
-        notifyObservers(this.gameTime, "timerPanel");
+        updateTimerScoreboard();
+    }
+
+    /**
+     * Updates the timer scoreboards value based on actual game time.
+     */
+    private void updateTimerScoreboard() {
+        notifyObservers(new TimerChangeEvent(this.gameTime));
     }
 
     /**
@@ -96,19 +109,9 @@ public class GameTimer implements Runnable, Observed {
      * {@inheritDoc}
      */
     @Override
-    public void notifyObservers() {
+    public void notifyObservers(Event event) {
         for (Observer o : this.observers) {
-            o.handleEvent();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyObservers(int number, String observerName) {
-        for (Observer o : this.observers) {
-            o.handleEvent(number, observerName);
+            o.handleEvent(event);
         }
     }
 }

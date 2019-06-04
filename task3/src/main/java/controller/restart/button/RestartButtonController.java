@@ -1,6 +1,8 @@
 package controller.restart.button;
 
 import controller.Observer;
+import controller.event.Event;
+import controller.event.MouseActionEvent;
 import model.game.GameState;
 
 import javax.swing.*;
@@ -62,9 +64,11 @@ public class RestartButtonController implements Observer {
      * Sets the icon on the restart button by the observed's call.
      */
     @Override
-    public void handleEvent() {
-        if (this.gameState.equals(GameState.PLAY)) {
-            changeButtonIcon();
+    public void handleEvent(Event event) {
+        if (event instanceof MouseActionEvent) {
+            if (this.gameState.equals(GameState.PLAY)) {
+                changeButtonIcon();
+            }
         }
     }
 
@@ -77,14 +81,6 @@ public class RestartButtonController implements Observer {
         } else {
             setPlayedButton();
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void handleEvent(int number, String observerName) {
-        /*NOP*/
     }
 
     /**

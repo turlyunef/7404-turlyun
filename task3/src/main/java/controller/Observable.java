@@ -1,6 +1,8 @@
 package controller;
 
-public interface Observed {
+import controller.event.Event;
+
+public interface Observable {
 
     /**
      * Adds the observer object to the observers list for this object.
@@ -18,15 +20,8 @@ public interface Observed {
 
     /**
      * Notify all observer objects from the observers list for this object.
-     */
-    void notifyObservers();
-
-    /**
-     * Pass the number to all observer objects from the observers list for this object,
-     * tagged with which observer the number is intended.
      *
-     * @param number       transmitted number for observer
-     * @param observerName tag with which observer the number is intended
+     * @param event event of any changes
      */
-    void notifyObservers(int number, String observerName);
+    void notifyObservers(Event event);
 }

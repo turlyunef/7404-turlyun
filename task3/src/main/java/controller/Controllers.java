@@ -4,6 +4,8 @@ import controller.cell.AbstractButtonCellController;
 import controller.cell.ButtonCellController;
 import controller.cell.ButtonGameField;
 import controller.cell.GameField;
+import controller.event.BombsCounterChangeEvent;
+import controller.event.Event;
 import controller.restart.button.RestartButtonController;
 import controller.statistic.Winner;
 import controller.statistic.WinnersManager;
@@ -18,7 +20,7 @@ import java.util.List;
 /**
  * The class contains connections between game controllers and the model.
  */
-public class Controllers implements Observed {
+public class Controllers implements Observable {
     private static final Logger log = LoggerFactory.getLogger(Controllers.class);
     private IModel gameModel;
     private GameField gameField;
@@ -165,23 +167,9 @@ public class Controllers implements Observed {
      * Notify all observer objects from the observers list for this controller.
      */
     @Override
-    public void notifyObservers() {
+    public void notifyObservers(Event event) {
         for (Observer o : this.observers) {
-            o.handleEvent();
-        }
-    }
-
-    /**
-     * Pass the number to all observer objects from the observers list for this controller
-     * tagged with which observer the number is intended.
-     *
-     * @param number       transmitted number for observer
-     * @param observerName tag with which observer the number is intended
-     */
-    @Override
-    public void notifyObservers(int number, String observerName) {
-        for (Observer o : this.observers) {
-            o.handleEvent(number, observerName);
+            o.handleEvent(event);
         }
     }
 
@@ -190,7 +178,7 @@ public class Controllers implements Observed {
      */
     private void setBombsCountToBombsScoreboard() {
         int bombsCount = this.gameProperties.getBombsCount() - this.gameModel.getFlagCount();
-        notifyObservers(bombsCount, "bombsCounterPanel");
+        notifyObservers(new BombsCounterChangeEvent(bombsCount));
     }
 
     /**
