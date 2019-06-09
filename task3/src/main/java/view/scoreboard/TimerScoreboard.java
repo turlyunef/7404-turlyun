@@ -1,6 +1,6 @@
-package controller.scoreboard;
+package view.scoreboard;
 
-import controller.Observer;
+import view.Observer;
 import controller.event.Event;
 import controller.event.TimerChangeEvent;
 

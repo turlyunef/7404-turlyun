@@ -1,4 +1,4 @@
-package controller.scoreboard;
+package view.scoreboard;
 
 import javax.swing.*;
 import java.awt.*;

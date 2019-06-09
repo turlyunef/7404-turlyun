@@ -7,7 +7,10 @@ import model.game.field.cell.CellStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 /**
  * Playing field class.
@@ -17,6 +20,7 @@ public class GameField implements IField {
     private final int rowsCount;
     private final int colCount;
     private final Cell[][] cells;
+    private List<Cell> bombs = new ArrayList<>();
 
     /**
      * Creates a playing field based on game properties.
@@ -38,8 +42,6 @@ public class GameField implements IField {
     @Override
     public Cell openCell(int rowIndex, int colIndex) {
 
-        this.cells[rowIndex][colIndex].setStatus(CellStatus.OPEN);
-
         return this.cells[rowIndex][colIndex];
     }
 
@@ -48,7 +50,6 @@ public class GameField implements IField {
      */
     @Override
     public CellStatus getCellStatus(int rowIndex, int colIndex) {
-
         return this.cells[rowIndex][colIndex].getStatus();
     }
 
@@ -58,6 +59,69 @@ public class GameField implements IField {
     @Override
     public void setCellStatus(int rowIndex, int colIndex, CellStatus cellStatus) {
         this.cells[rowIndex][colIndex].setStatus(cellStatus);
+        if (cellStatus.equals(CellStatus.CLOSE)) {
+            changeDefusedBombsCountersInCellsAround(rowIndex, colIndex, -1);
+        } else if (cellStatus.equals(CellStatus.FLAG)) {
+            changeDefusedBombsCountersInCellsAround(rowIndex, colIndex, 1);
+        }
+    }
+
+    /**
+     * TODO
+     *
+     * @return
+     */
+    @Override
+    public List<Cell> getBombs() {
+
+        return bombs;
+    }
+
+    /**
+     * Changes the number of cleared bombs in cells around the given cell.
+     *
+     * @param rowIndex index on the rows of the given cell
+     * @param colIndex index on the columns of the given cell
+     * @param value    value by which the number of defused bombs changes
+     */
+    @Override
+    public void changeDefusedBombsCountersInCellsAround(int rowIndex, int colIndex, int value) {
+        for (int i = rowIndex - 1; i <= rowIndex + 1; i++) {
+            for (int j = colIndex - 1; j <= colIndex + 1; j++) {
+                if (isCellExist(i, j)) {
+                    this.cells[i][j].changeFlaggedBombsCounter(value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if all cells are cleared around a given cell.
+     *
+     * @param rowIndex index on the rows of the given cell
+     * @param colIndex index on the columns of the given cell
+     * @return true if all the cells around a given cell are cleared
+     */
+    @Override
+    public boolean cellsAroundIsDemined(int rowIndex, int colIndex) {
+
+        return this.cells[rowIndex][colIndex].getFlaggedBombsCounter() >=
+                this.cells[rowIndex][colIndex].getBombsAroundCellCount();
+    }
+
+    /**
+     * Checks if a given cell is within the playing field.
+     *
+     * @param rowIndex index on the rows of the given cell
+     * @param colIndex index on the columns of the given cell
+     * @return true if the cell comes within the playing field
+     */
+    @Override
+    public boolean isCellExist(int rowIndex, int colIndex) {
+
+        return !((rowIndex < 0) | (colIndex < 0) |
+                (rowIndex >= this.cells.length) |
+                (colIndex >= this.cells[0].length));
     }
 
     /**
@@ -72,7 +136,8 @@ public class GameField implements IField {
             int randomRowIndex = random.nextInt(this.rowsCount);
             int randomColIndex = random.nextInt(this.colCount);
             if (this.cells[randomRowIndex][randomColIndex] == null) {
-                this.cells[randomRowIndex][randomColIndex] = new Cell(CellContent.BOMB);
+                this.cells[randomRowIndex][randomColIndex] = new Cell(CellContent.BOMB, randomRowIndex, randomColIndex);
+                this.bombs.add(this.cells[randomRowIndex][randomColIndex]);
             } else {
                 continue;
             }
@@ -88,7 +153,7 @@ public class GameField implements IField {
         for (int i = 0; i < this.rowsCount; i++) {
             for (int j = 0; j < colCount; j++) {
                 if (cells[i][j] == null) {
-                    cells[i][j] = new Cell(CellContent.EMPTY);
+                    cells[i][j] = new Cell(CellContent.EMPTY, i, j);
                 }
             }
         }

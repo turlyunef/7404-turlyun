@@ -3,14 +3,15 @@ package view;
 import controller.Controllers;
 import controller.cell.ButtonCellController;
 import controller.cell.ButtonMouseListener;
-import controller.restart.button.RestartButtonController;
-import controller.scoreboard.BombsCounterScoreboard;
-import controller.scoreboard.TimerScoreboard;
+import view.restart.button.RestartButtonController;
+import view.scoreboard.BombsCounterScoreboard;
+import view.scoreboard.TimerScoreboard;
 import controller.statistic.Winner;
 import controller.timer.GameTimer;
 import model.game.DifficultyLevel;
 import model.game.GameProperties;
 import model.game.GameState;
+import view.statistics.StatisticsFrame;
 
 import javax.swing.*;
 import java.awt.*;

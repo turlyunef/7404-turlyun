@@ -3,6 +3,8 @@ package model.game;
 import model.game.field.cell.Cell;
 import model.game.field.cell.CellStatus;
 
+import java.util.List;
+
 /**
  * Game model interface.
  */
@@ -20,9 +22,18 @@ public interface IModel {
      *
      * @param rowIndex index on the rows of this cell
      * @param colIndex index on the columns of this cell
-     * @return cell of the playing field
+     * @return TODO
      */
-    Cell getCell(int rowIndex, int colIndex);
+    List<Cell> getOpenedCellsByOpenCell(int rowIndex, int colIndex);
+
+    /**
+     * Returns cells around a given.
+     *
+     * @param rowIndex index on the rows of this cell
+     * @param colIndex index on the columns of this cell
+     * @return TODO
+     */
+    List<Cell> getOpenedCellsByOpenCellsAround(int rowIndex, int colIndex);
 
     /**
      * Changes the status of a cell when a user performs actions with a cell.
@@ -34,9 +45,15 @@ public interface IModel {
     CellStatus changeCellStatus(int rowIndex, int colIndex);
 
     /**
-     * Returns the number of flags set by the user on the playing field
+     * Returns the number of flags set by the user on the playing field.
      *
      * @return number of flags
      */
     int getFlagCount();
+
+    /**
+     * TODO
+     * @return
+     */
+    List<Cell> getAllBombs();
 }

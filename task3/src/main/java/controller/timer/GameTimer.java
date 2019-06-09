@@ -1,7 +1,7 @@
 package controller.timer;
 
 import controller.Observable;
-import controller.Observer;
+import view.Observer;
 import controller.event.Event;
 import controller.event.TimerChangeEvent;
 import org.slf4j.Logger;

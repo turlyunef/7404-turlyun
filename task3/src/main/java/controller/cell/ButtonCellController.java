@@ -3,7 +3,7 @@ package controller.cell;
 import model.game.field.cell.CellStatus;
 
 import javax.swing.*;
-
+//TODO перенести во вьювер
 public class ButtonCellController extends AbstractButtonCellController {
     private static final String EXPLODED_MINE_ICON_PATH = "/icons/mined.png";
     private static final String MINE_ICON_PATH = "/icons/mine.png";

@@ -1,9 +1,12 @@
 package model.game;
 
-import model.game.field.cell.Cell;
-import model.game.field.IField;
 import model.game.field.GameField;
+import model.game.field.IField;
+import model.game.field.cell.Cell;
 import model.game.field.cell.CellStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main class of the game model.
@@ -14,6 +17,7 @@ public class GameModel implements IModel {
     private final GameProperties gameProperties;
     private int flagCount = 0;
     private GameState gameState = GameState.PLAY;
+    private List<Cell> openingCells;
 
     /**
      * Constructor based on game properties.
@@ -43,14 +47,66 @@ public class GameModel implements IModel {
      * {@inheritDoc}
      */
     @Override
-    public Cell getCell(int rowIndex, int colIndex) {
-        Cell cell = this.field.openCell(rowIndex, colIndex);
-        if (cell.isBomb()) {
-            this.gameState = GameState.LOSE;
-        }
-        checkWin();
+    public List<Cell> getOpenedCellsByOpenCell(int rowIndex, int colIndex) {
+        this.openingCells = new ArrayList<>();
+        openCell(rowIndex, colIndex);
 
-        return cell;
+        return this.openingCells;
+    }
+
+    /**
+     * TODO
+     *
+     * @param rowIndex
+     * @param colIndex
+     */
+    private void openCell(int rowIndex, int colIndex) {
+        Cell cell = this.field.openCell(rowIndex, colIndex);
+        if (cell.getStatus() == CellStatus.CLOSE) {
+            this.openingCells.add(cell);
+            if (cell.isBomb()) {
+                this.gameState = GameState.LOSE;
+                cell.setStatus(CellStatus.EXPLODED);
+//                this.openingCells.add(cell);
+            } else {
+                cell.setStatus(CellStatus.OPEN);
+//                this.openingCells.add(cell);
+                checkWin();
+                if (cell.getBombsAroundCellCount() == 0) {
+                    openCellsAround(rowIndex, colIndex);
+
+                }
+            }
+        }
+    }
+
+    /**
+     * TODO
+     *
+     * @param rowIndex
+     * @param colIndex
+     */
+    private void openCellsAround(int rowIndex, int colIndex) {
+        if (this.field.cellsAroundIsDemined(rowIndex, colIndex)) {
+            for (int i = rowIndex - 1; i <= rowIndex + 1; i++) {
+                for (int j = colIndex - 1; j <= colIndex + 1; j++) {
+                    if (this.field.isCellExist(i, j)) {
+                        openCell(i, j);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Cell> getOpenedCellsByOpenCellsAround(int rowIndex, int colIndex) {
+        this.openingCells = new ArrayList<>();
+        openCellsAround(rowIndex, colIndex);
+
+        return this.openingCells;
     }
 
     /**
@@ -72,6 +128,7 @@ public class GameModel implements IModel {
             }
         }
         checkWin();
+
         return this.field.getCellStatus(rowIndex, colIndex);
     }
 
@@ -85,7 +142,21 @@ public class GameModel implements IModel {
     }
 
     /**
-     * Changes the game status if the user correctly set the flags and opened all the cells
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Cell> getAllBombs() {
+
+        if (gameState.equals(GameState.LOSE)) {
+
+            return this.field.getBombs();
+        }
+
+        return null;
+    }
+
+    /**
+     * Changes the game status if the user correctly set the flags and opened all the cells.
      */
     private void checkWin() {
         if (this.flagCount == this.gameProperties.getBombsCount()) {

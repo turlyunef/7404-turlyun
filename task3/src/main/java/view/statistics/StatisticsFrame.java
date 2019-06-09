@@ -1,4 +1,4 @@
-package view;
+package view.statistics;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,14 +6,14 @@ import java.awt.*;
 /**
  * Game statistics display window
  */
-class StatisticsFrame {
+public class StatisticsFrame {
 
     /**
      * Initializes the statistics window.
      *
      * @param data information displayed in the window
      */
-    void initFrame(String data) {
+    public void initFrame(String data) {
         JFrame statisticsFrame = new JFrame();
         statisticsFrame.setTitle("Statistics");
         statisticsFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

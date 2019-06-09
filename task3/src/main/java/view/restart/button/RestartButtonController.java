@@ -1,6 +1,6 @@
-package controller.restart.button;
+package view.restart.button;
 
-import controller.Observer;
+import view.Observer;
 import controller.event.Event;
 import controller.event.MouseActionEvent;
 import model.game.GameState;

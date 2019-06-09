@@ -1,6 +1,7 @@
 package controller;
 
 import controller.event.Event;
+import view.Observer;
 
 public interface Observable {
 

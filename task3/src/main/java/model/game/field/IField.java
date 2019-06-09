@@ -3,6 +3,8 @@ package model.game.field;
 import model.game.field.cell.Cell;
 import model.game.field.cell.CellStatus;
 
+import java.util.List;
+
 /**
  * Playing field interface.
  */
@@ -34,4 +36,13 @@ public interface IField {
      * @param cellStatus cell status
      */
     void setCellStatus(int rowIndex, int colIndex, CellStatus cellStatus);
+
+
+    List<Cell> getBombs();
+
+    void changeDefusedBombsCountersInCellsAround(int rowIndex, int colIndex, int value);
+
+    boolean cellsAroundIsDemined(int rowIndex, int colIndex);
+
+    boolean isCellExist(int rowIndex, int colIndex);
 }

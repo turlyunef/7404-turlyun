@@ -2,7 +2,7 @@ package controller.cell;
 
 import controller.Controllers;
 import controller.Observable;
-import controller.Observer;
+import view.Observer;
 import controller.event.Event;
 import controller.event.MouseActionEvent;
 
