@@ -7,7 +7,7 @@ public class TimerChangeEvent implements Event {
     private final int gameTime;
 
     /**
-     * Timer value change event creation constructor.
+     * The constructor of the timer value change event.
      *
      * @param gameTime value of the timer
      */
@@ -21,6 +21,7 @@ public class TimerChangeEvent implements Event {
      * @return value of the timer
      */
     public int getGameTime() {
-        return gameTime;
+
+        return this.gameTime;
     }
 }

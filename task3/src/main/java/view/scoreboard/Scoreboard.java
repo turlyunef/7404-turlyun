@@ -105,7 +105,7 @@ class Scoreboard extends JPanel {
      *
      * @param number number that must be set on the scoreboard
      */
-    public void setNumber(int number) {
+    void setNumber(int number) {
         divideByDigits(number);
         initScoreboard();
     }

@@ -1,19 +1,17 @@
 package controller;
 
-import controller.cell.AbstractButtonCellController;
-import controller.cell.ButtonCellController;
-import controller.cell.ButtonGameField;
-import controller.cell.GameField;
 import controller.event.BombsCounterChangeEvent;
 import controller.event.Event;
-import view.Observer;
-import view.restart.button.RestartButtonController;
-import controller.statistic.Winner;
-import controller.statistic.WinnersManager;
+import controller.field.ButtonGameFieldController;
+import controller.field.GameFieldController;
+import model.game.statistic.Winner;
 import controller.timer.GameTimer;
 import model.game.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import view.CellButton;
+import view.Observer;
+import view.restart.button.RestartButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +21,11 @@ import java.util.List;
  */
 public class Controllers implements Observable {
     private static final Logger log = LoggerFactory.getLogger(Controllers.class);
-    private IModel gameModel;
-    private GameField gameField;
-    private RestartButtonController restartButtonController;
-    private GameProperties gameProperties;
-    private final WinnersManager winnersManager = new WinnersManager();
     private final List<Observer> observers = new ArrayList<>();
+    private final Model gameModel = new GameModel();
+    private GameFieldController gameFieldController;
+    private RestartButton restartButton;
+    private GameProperties gameProperties;
     private final GameTimer gameTimer = new GameTimer();
 
     /**
@@ -52,12 +49,12 @@ public class Controllers implements Observable {
     /**
      * Sets the restart button controller.
      *
-     * @param restartButtonController restart button controller
-     * @see RestartButtonController
+     * @param restartButton restart button controller
+     * @see RestartButton
      */
-    public void setRestartButtonController(RestartButtonController restartButtonController) {
-        this.restartButtonController = restartButtonController;
-        restartButtonController.setPlayedButton();
+    public void setRestartButton(RestartButton restartButton) {
+        this.restartButton = restartButton;
+        restartButton.setPlayedButton();
     }
 
     /**
@@ -66,6 +63,7 @@ public class Controllers implements Observable {
     public void createGame() {
         createCellsFieldControllers();
         setBombsCountToBombsScoreboard();
+        this.gameTimer.setGameModel(gameModel);
         this.gameTimer.restartTimer();
     }
 
@@ -73,21 +71,21 @@ public class Controllers implements Observable {
      * Creates controllers of the game field cells with reference to the game model.
      */
     private void createCellsFieldControllers() {
-        AbstractButtonCellController[][] controllers =
-                new ButtonCellController[this.gameProperties.getRows()][this.gameProperties.getCols()];
-        this.gameModel = createNewModel(this.gameProperties);
-        this.gameField = new ButtonGameField(gameModel, controllers);
+        CellButton[][] controllers =
+                new CellButton[this.gameProperties.getRows()][this.gameProperties.getCols()];
+        restartGameModel(this.gameProperties);
+        this.gameFieldController = new ButtonGameFieldController(gameModel, controllers);
     }
 
     /**
      * Sets a specific controller for a cell to the game board object.
      *
-     * @param buttonCellController controller for a cell
-     * @param rowIndex             index on the rows of this cell
-     * @param colIndex             index on the columns of this cell
+     * @param cellButton controller for a cell
+     * @param rowIndex   index on the rows of this cell
+     * @param colIndex   index on the columns of this cell
      */
-    public void setCellButtonController(ButtonCellController buttonCellController, int rowIndex, int colIndex) {
-        this.gameField.setController(buttonCellController, rowIndex, colIndex);
+    public void setCellButtonController(CellButton cellButton, int rowIndex, int colIndex) {
+        this.gameFieldController.setController(cellButton, rowIndex, colIndex);
     }
 
     /**
@@ -99,7 +97,7 @@ public class Controllers implements Observable {
     public void releasedButton1(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
             this.gameTimer.runTimer();
-            this.gameField.tryOpenCell(rowIndex, colIndex);
+            this.gameFieldController.tryOpenCell(rowIndex, colIndex);
             checkGameState();
         }
     }
@@ -112,7 +110,7 @@ public class Controllers implements Observable {
      */
     public void releasedButton2(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
-            this.gameField.openCellsAround(rowIndex, colIndex);
+            this.gameFieldController.openCellsAround(rowIndex, colIndex);
             checkGameState();
         }
     }
@@ -126,7 +124,7 @@ public class Controllers implements Observable {
     public void pressedButton3(int rowIndex, int colIndex) {
         if (checkGameNotEnded()) {
             this.gameTimer.runTimer();
-            this.gameField.changeCellStatus(rowIndex, colIndex);
+            this.gameFieldController.changeCellStatus(rowIndex, colIndex);
             checkGameState();
             setBombsCountToBombsScoreboard();
         }
@@ -139,7 +137,7 @@ public class Controllers implements Observable {
      */
     public List<Winner> getWinners() {
 
-        return this.winnersManager.getWinners();
+        return this.gameModel.getWinners();
     }
 
     /**
@@ -185,18 +183,18 @@ public class Controllers implements Observable {
     /**
      * Checks if the current game is over.
      *
-     * @return true if the current game is over
+     * @return true if the current game is over else false
      */
     private boolean checkGameNotEnded() {
 
-        return this.gameField.getGameState().equals(GameState.PLAY);
+        return this.gameModel.getGameState().equals(GameState.PLAY);
     }
 
     /**
      * Checks current game state.
      */
     private void checkGameState() {
-        switch (this.gameField.getGameState()) {
+        switch (this.gameModel.getGameState()) {
             case LOSE: {
                 setLost();
                 log.debug("Game over, set lost");
@@ -218,8 +216,8 @@ public class Controllers implements Observable {
      * Sets the end of the game by losing.
      */
     private void setLost() {
-        this.restartButtonController.setLostButton();
-        this.restartButtonController.setGameState(GameState.LOSE);
+        this.restartButton.setLostButton();
+        this.restartButton.setGameState(GameState.LOSE);
         this.gameTimer.stopTimer();
     }
 
@@ -227,31 +225,26 @@ public class Controllers implements Observable {
      * Sets the end of the game by winning.
      */
     private void setWin() {
-        this.restartButtonController.setWinButton();
-        this.restartButtonController.setGameState(GameState.WIN);
-        this.winnersManager.addWinner(this.gameProperties, this.gameTimer.getTime());
+        this.restartButton.setWinButton();
+        this.restartButton.setGameState(GameState.WIN);
         this.gameTimer.stopTimer();
     }
 
     /**
-     * Creates a new main model by game properties
+     * Restarts the main game model by game properties.
      *
      * @param gameProperties game properties containing number of bombs of the game, number of rows and columns game field
-     * @return new main model
      */
-    private IModel createNewModel(GameProperties gameProperties) {
-        IModel gameModel = null;
+    private void restartGameModel(GameProperties gameProperties) {
         try {
-            gameModel = new GameModel(gameProperties);
+            gameModel.restartGameField(gameProperties);
         } catch (TableGenerationException e) {
             gameProperties = new GameProperties();
             try {
-                gameModel = new GameModel(gameProperties);
+                gameModel.restartGameField(gameProperties);
             } catch (TableGenerationException ex) {
                 ex.printStackTrace();
             }
         }
-
-        return gameModel;
     }
 }

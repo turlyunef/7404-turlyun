@@ -1,4 +1,4 @@
-package controller.statistic;
+package model.game.statistic;
 
 import model.game.GameProperties;
 
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The winners manager.
  */
-public class WinnersManager {
+public class WinnersRepository {
     private final List<Winner> winners = new ArrayList<>();
 
     /**
@@ -17,8 +17,8 @@ public class WinnersManager {
      * @param gameProperties game properties containing number of bombs of the game, number of rows and columns game field
      * @param time           game time
      */
-    public void addWinner(GameProperties gameProperties, int time) {
-        winners.add(new Winner(gameProperties.getGameModeName(), time));
+    public void addWinner(GameProperties gameProperties, float time) {
+        this.winners.add(new Winner(gameProperties.getGameModeName(), time));
     }
 
     /**
@@ -28,6 +28,6 @@ public class WinnersManager {
      */
     public List<Winner> getWinners() {
 
-        return winners;
+        return this.winners;
     }
 }

@@ -4,11 +4,11 @@ package model.game;
  * Game properties containing number of bombs of the game, number of rows and columns game field and the name of the game mode.
  */
 public class GameProperties {
+    private static final DifficultyLevel DEFAULT_DIFFICULT_LEVEL = DifficultyLevel.BEGINNER;
     private int bombsCount;
     private int rows;
     private int cols;
     private String gameModeName;
-    private static final DifficultyLevel DEFAULT_DIFFICULT_LEVEL = DifficultyLevel.BEGINNER;
 
     /**
      * Constructor to create a game properties with the default settings.
@@ -45,13 +45,13 @@ public class GameProperties {
     }
 
     /**
-     * Returns the number of the bombs of the game.
+     * Returns the number of the bombs on the game field.
      *
      * @return number of the bombs
      */
     public int getBombsCount() {
 
-        return bombsCount;
+        return this.bombsCount;
     }
 
     /**
@@ -61,7 +61,7 @@ public class GameProperties {
      */
     public int getRows() {
 
-        return rows;
+        return this.rows;
     }
 
     /**
@@ -71,7 +71,7 @@ public class GameProperties {
      */
     public int getCols() {
 
-        return cols;
+        return this.cols;
     }
 
     /**
@@ -81,6 +81,6 @@ public class GameProperties {
      */
     public String getGameModeName() {
 
-        return gameModeName;
+        return this.gameModeName;
     }
 }

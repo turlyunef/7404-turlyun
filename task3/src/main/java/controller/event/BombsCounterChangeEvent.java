@@ -1,15 +1,15 @@
 package controller.event;
 
 /**
- * Bomb counter change event.
+ * Event changes counter bombs.
  */
 public class BombsCounterChangeEvent implements Event {
     private final int bombsCounter;
 
     /**
-     * Bomb counter change event creation constructor.
+     * The constructor of the event changes counter bombs.
      *
-     * @param bombsCounter number of a bombs
+     * @param bombsCounter number of a bombs in cells around
      */
     public BombsCounterChangeEvent(int bombsCounter) {
         this.bombsCounter = bombsCounter;
@@ -21,6 +21,7 @@ public class BombsCounterChangeEvent implements Event {
      * @return number of a bombs
      */
     public int getBombsCounter() {
+
         return bombsCounter;
     }
 }

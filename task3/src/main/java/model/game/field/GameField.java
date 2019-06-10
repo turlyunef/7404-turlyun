@@ -10,17 +10,16 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Stream;
 
 /**
  * Playing field class.
  */
-public class GameField implements IField {
+public class GameField implements Field {
     private static final Logger log = LoggerFactory.getLogger(GameField.class);
     private final int rowsCount;
     private final int colCount;
     private final Cell[][] cells;
-    private List<Cell> bombs = new ArrayList<>();
+    private final List<Cell> bombs = new ArrayList<>();
 
     /**
      * Creates a playing field based on game properties.
@@ -40,7 +39,7 @@ public class GameField implements IField {
      * {@inheritDoc}
      */
     @Override
-    public Cell openCell(int rowIndex, int colIndex) {
+    public Cell getCell(int rowIndex, int colIndex) {
 
         return this.cells[rowIndex][colIndex];
     }
@@ -50,6 +49,7 @@ public class GameField implements IField {
      */
     @Override
     public CellStatus getCellStatus(int rowIndex, int colIndex) {
+
         return this.cells[rowIndex][colIndex].getStatus();
     }
 
@@ -60,32 +60,20 @@ public class GameField implements IField {
     public void setCellStatus(int rowIndex, int colIndex, CellStatus cellStatus) {
         this.cells[rowIndex][colIndex].setStatus(cellStatus);
         if (cellStatus.equals(CellStatus.CLOSE)) {
-            changeDefusedBombsCountersInCellsAround(rowIndex, colIndex, -1);
+            changeFlaggedBombsCountersInCellsAround(rowIndex, colIndex, -1);
         } else if (cellStatus.equals(CellStatus.FLAG)) {
-            changeDefusedBombsCountersInCellsAround(rowIndex, colIndex, 1);
+            changeFlaggedBombsCountersInCellsAround(rowIndex, colIndex, 1);
         }
     }
 
     /**
-     * TODO
+     * Changes the counter of the bombs counter in the cell.
      *
-     * @return
+     * @param rowIndex index on the rows of this cell
+     * @param colIndex index on the columns of this cell
+     * @param value    value to which the counter changes
      */
-    @Override
-    public List<Cell> getBombs() {
-
-        return bombs;
-    }
-
-    /**
-     * Changes the number of cleared bombs in cells around the given cell.
-     *
-     * @param rowIndex index on the rows of the given cell
-     * @param colIndex index on the columns of the given cell
-     * @param value    value by which the number of defused bombs changes
-     */
-    @Override
-    public void changeDefusedBombsCountersInCellsAround(int rowIndex, int colIndex, int value) {
+    private void changeFlaggedBombsCountersInCellsAround(int rowIndex, int colIndex, int value) {
         for (int i = rowIndex - 1; i <= rowIndex + 1; i++) {
             for (int j = colIndex - 1; j <= colIndex + 1; j++) {
                 if (isCellExist(i, j)) {
@@ -96,36 +84,54 @@ public class GameField implements IField {
     }
 
     /**
-     * Checks if all cells are cleared around a given cell.
-     *
-     * @param rowIndex index on the rows of the given cell
-     * @param colIndex index on the columns of the given cell
-     * @return true if all the cells around a given cell are cleared
+     * {@inheritDoc}
      */
     @Override
-    public boolean cellsAroundIsDemined(int rowIndex, int colIndex) {
+    public List<Cell> getBombs() {
+
+        return this.bombs;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Cell> getAllFlaggedCells() {
+        List<Cell> flaggedCells = new ArrayList<>();
+        for (Cell[] rows : cells) {
+            for (Cell cell : rows) {
+                if (cell.getStatus().equals(CellStatus.FLAG)) {
+                    flaggedCells.add(cell);
+                }
+            }
+        }
+
+        return flaggedCells;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean cellsAroundIsFlagged(int rowIndex, int colIndex) {
 
         return this.cells[rowIndex][colIndex].getFlaggedBombsCounter() >=
                 this.cells[rowIndex][colIndex].getBombsAroundCellCount();
     }
 
     /**
-     * Checks if a given cell is within the playing field.
-     *
-     * @param rowIndex index on the rows of the given cell
-     * @param colIndex index on the columns of the given cell
-     * @return true if the cell comes within the playing field
+     * {@inheritDoc}
      */
     @Override
     public boolean isCellExist(int rowIndex, int colIndex) {
 
-        return !((rowIndex < 0) | (colIndex < 0) |
-                (rowIndex >= this.cells.length) |
+        return !((rowIndex < 0) || (colIndex < 0) ||
+                (rowIndex >= this.cells.length) ||
                 (colIndex >= this.cells[0].length));
     }
 
     /**
-     * Creates a cell with a bomb in random order.
+     * Creates a field with a bomb in random order.
      *
      * @param bombsCount number of bombs
      */
@@ -147,7 +153,7 @@ public class GameField implements IField {
     }
 
     /**
-     * Creates a cell with empty content if it is not created with a bomb before.
+     * Creates a field with empty content if it does not created with a bomb before.
      */
     private void createCells() {
         for (int i = 0; i < this.rowsCount; i++) {
@@ -177,7 +183,7 @@ public class GameField implements IField {
      *
      * @param rowIndex index on the rows of this cell
      * @param colIndex index on the columns of this cell
-     * @return number of bombs around the cell
+     * @return number of bombs around the field
      */
     private int countBombsAroundCell(int rowIndex, int colIndex) {
         int bombsAroundCellCounter = 0;
@@ -195,7 +201,7 @@ public class GameField implements IField {
     /**
      * Counts the number of bombs around the cell in its row.
      *
-     * @param rowIndex           index on the rows for counting
+     * @param rowIndex           index of the counting row
      * @param actualCellColIndex index on the columns of this cell
      * @return number of bombs around the cell in its row
      */

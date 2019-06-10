@@ -1,8 +1,8 @@
 package view.scoreboard;
 
-import view.Observer;
 import controller.event.Event;
 import controller.event.TimerChangeEvent;
+import view.Observer;
 
 /**
  * Game time scoreboard.

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Game statistics display window
+ * Game statistics display window.
  */
 public class StatisticsFrame {
 

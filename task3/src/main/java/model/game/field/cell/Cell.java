@@ -5,18 +5,18 @@ package model.game.field.cell;
  */
 public class Cell {
     private final CellContent content;
+    private final int rowIndex;
+    private final int colIndex;
     private CellStatus status = CellStatus.CLOSE;
-    private int bombsAroundCellCount;
     private int flaggedBombsCounter = 0;
-    private int rowIndex;
-    private int colIndex;
+    private int bombsAroundCellCount;
 
     /**
-     * Cell creation constructor assigning its contents.
+     * Cell creation constructor assigning its contents and coordinates.
      *
-     * @param cellContent inner cell content
-     * @param rowIndex
-     * @param colIndex TODO
+     * @param cellContent inner field content
+     * @param rowIndex    index on the rows of the cell
+     * @param colIndex    index on the columns of the cell
      */
     public Cell(CellContent cellContent, int rowIndex, int colIndex) {
         this.content = cellContent;
@@ -25,19 +25,23 @@ public class Cell {
     }
 
     /**
-     * TODO
-     * @return
+     * Gets index on the rows of the cell.
+     *
+     * @return row index of the cell
      */
     public int getRowIndex() {
-        return rowIndex;
+
+        return this.rowIndex;
     }
 
     /**
-     * TODO
-     * @return
+     * Gets index on the columns of the cell.
+     *
+     * @return column index of the cell
      */
     public int getColIndex() {
-        return colIndex;
+
+        return this.colIndex;
     }
 
     /**
@@ -91,7 +95,7 @@ public class Cell {
     /**
      * Determines whether the given cell is a bomb.
      *
-     * @return true if this cell is a bomb
+     * @return true if this field is a bomb else false
      */
     public boolean isBomb() {
 
@@ -99,7 +103,7 @@ public class Cell {
     }
 
     /**
-     * Returns the number of flags set in the field around this cell.
+     * Returns the number of flags set in the cells around this cell.
      *
      * @return number of flags around this cell.
      */

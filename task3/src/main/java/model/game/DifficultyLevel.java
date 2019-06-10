@@ -1,7 +1,7 @@
 package model.game;
 
 /**
- * Level of difficulty class, that contains parameters of the game mode.
+ * The class of the difficulty level, that contains parameters of the game mode.
  */
 public enum DifficultyLevel {
     BEGINNER("Beginner", 10, 9, 9),
@@ -35,7 +35,7 @@ public enum DifficultyLevel {
      */
     public String getDisplayName() {
 
-        return displayName;
+        return this.displayName;
     }
 
     /**
@@ -45,7 +45,7 @@ public enum DifficultyLevel {
      */
     public int getBombsCount() {
 
-        return bombsCount;
+        return this.bombsCount;
     }
 
     /**
@@ -55,7 +55,7 @@ public enum DifficultyLevel {
      */
     public int getRows() {
 
-        return rows;
+        return this.rows;
     }
 
     /**
@@ -65,6 +65,6 @@ public enum DifficultyLevel {
      */
     public int getCols() {
 
-        return cols;
+        return this.cols;
     }
 }

@@ -1,8 +1,8 @@
 package view.scoreboard;
 
-import view.Observer;
 import controller.event.BombsCounterChangeEvent;
 import controller.event.Event;
+import view.Observer;
 
 /**
  * The class of the board displaying the number of bombs not cleared by the flag by the user.

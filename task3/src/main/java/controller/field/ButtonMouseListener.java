@@ -1,23 +1,24 @@
-package controller.cell;
+package controller.field;
 
 import controller.Controllers;
 import controller.Observable;
-import view.Observer;
 import controller.event.Event;
 import controller.event.MouseActionEvent;
+import view.Observer;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The class of listener cell button playing field.
+ * The class of button listener playing field.
  */
 public class ButtonMouseListener implements MouseListener, Observable {
     private final Controllers controllers;
     private final int rowIndex;
     private final int colIndex;
-    private final ArrayList<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
 
     /**
      * Creates button mouse listener.

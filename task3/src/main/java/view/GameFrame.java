@@ -1,16 +1,15 @@
 package view;
 
 import controller.Controllers;
-import controller.cell.ButtonCellController;
-import controller.cell.ButtonMouseListener;
-import view.restart.button.RestartButtonController;
-import view.scoreboard.BombsCounterScoreboard;
-import view.scoreboard.TimerScoreboard;
-import controller.statistic.Winner;
-import controller.timer.GameTimer;
+import controller.field.ButtonMouseListener;
+import controller.field.GameFieldController;
+import model.game.statistic.Winner;
 import model.game.DifficultyLevel;
 import model.game.GameProperties;
 import model.game.GameState;
+import view.restart.button.RestartButton;
+import view.scoreboard.BombsCounterScoreboard;
+import view.scoreboard.TimerScoreboard;
 import view.statistics.StatisticsFrame;
 
 import javax.swing.*;
@@ -18,25 +17,22 @@ import java.awt.*;
 
 /**
  * Viewer class.
- * Defines the game window consisting of the playing field, the reset button, the counter of non-mine bombs, the timer.
- * In the menu, user cans select game modes, see the statistics of wins.
+ * Defines the game window consisting of the playing field, the reset button, the counter of non-mine bombs and the timer.
+ * In the menu, user can select game modes, see the statistics of wins.
  * The restart button displays the state of the game: play, lose or win with the corresponding icon.
- * This class configures the connection of controllers and viewers.
+ * This class configures all connections of controllers and viewers.
  */
 public class GameFrame {
-    private static final int GAME_CELL_IMAGE_HEIGHT = 40;
-    private static final int GAME_CELL_IMAGE_WIDTH = 40;
     private static final int RESTART_BUTTON_IMAGE_HEIGHT = 50;
     private static final int RESTART_BUTTON_IMAGE_WIDTH = 50;
     private static final int SCOREBOARDS_DIGITS_COUNT = 3;
-
+    private final GameProperties gameProperties = new GameProperties();
+    private final StatisticsFrame statisticsFrame = new StatisticsFrame();
     private JPanel mainPanel;
     private JPanel gameField;
     private JFrame gameFrame;
-    private final GameProperties gameProperties = new GameProperties();
-    private RestartButtonController restartButtonController;
+    private RestartButton restartButton;
     private Controllers controllers;
-    private final StatisticsFrame statisticsFrame = new StatisticsFrame();
 
     /**
      * Initializes the main game window.
@@ -85,7 +81,6 @@ public class GameFrame {
      *
      * @param usedPanel panel to which this scoreboard is added
      * @see TimerScoreboard
-     * @see GameTimer
      */
     private void createTimer(JPanel usedPanel) {
         TimerScoreboard timerScoreboard = new TimerScoreboard(SCOREBOARDS_DIGITS_COUNT);
@@ -101,39 +96,37 @@ public class GameFrame {
      * The button displays the current state of the game: play, lose or win.
      *
      * @param usedPanel panel to which this button is added
-     * @see RestartButtonController
+     * @see RestartButton
      */
     private void createRestartButton(JPanel usedPanel) {
         JButton restartButton = new JButton();
         Dimension buttonPreferredSize = new Dimension(RESTART_BUTTON_IMAGE_WIDTH, RESTART_BUTTON_IMAGE_HEIGHT);
         restartButton.setPreferredSize(buttonPreferredSize);
         restartButton.addActionListener(e -> restartGame());
-        this.restartButtonController = new RestartButtonController(restartButton);
+        this.restartButton = new RestartButton(restartButton);
         JPanel restartButtonPanel = new JPanel();
         restartButtonPanel.add(restartButton);
         usedPanel.add(restartButtonPanel);
-        this.controllers.setRestartButtonController(this.restartButtonController);
+        this.controllers.setRestartButton(this.restartButton);
     }
 
     /**
-     * Creates a new game
+     * Creates a new game.
      *
      * @param usedPanel panel to which this game field is added
-     * @see controller.cell.GameField
+     * @see GameFieldController
      */
     private void createGame(JPanel usedPanel) {
         this.controllers.createGame();
         this.gameField = new JPanel();
         int rows = this.gameProperties.getRows();
         int cols = this.gameProperties.getCols();
-
         this.gameField.setLayout(new GridLayout(rows, cols));
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 ButtonMouseListener buttonMouseListener = createButtonMouseListener(this.controllers, i, j);
-                JButton cellButton = createCellButton(buttonMouseListener);
-                ButtonCellController buttonCellController = new ButtonCellController(cellButton);
-                this.controllers.setCellButtonController(buttonCellController, i, j);
+                CellButton cellButton = new CellButton(buttonMouseListener);
+                this.controllers.setCellButtonController(cellButton, i, j);
                 this.gameField.add(cellButton);
             }
         }
@@ -141,63 +134,37 @@ public class GameFrame {
     }
 
     /**
-     * Restarts the game
+     * Restarts the game.
      *
-     * @see RestartButtonController
+     * @see RestartButton
      */
     private void restartGame() {
         this.mainPanel.remove(this.gameField);
-        this.restartButtonController.setGameState(GameState.PLAY);
-        this.restartButtonController.setPlayedButton();
+        this.restartButton.setGameState(GameState.PLAY);
+        this.restartButton.setPlayedButton();
         this.controllers.setGameProperties(this.gameProperties);
         createGame(this.mainPanel);
         this.gameFrame.pack();
     }
 
     /**
-     * Creates a button that implements the cell of the playing field
-     *
-     * @param buttonMouseListener mouse listener of the cell of the playing field
-     * @return button of the cell of the playing field
-     */
-    private JButton createCellButton(ButtonMouseListener buttonMouseListener) {
-        JButton cellButton = new JButton();
-        cellButton.addMouseListener(buttonMouseListener);
-        Dimension buttonPreferredSize = new Dimension(GAME_CELL_IMAGE_WIDTH, GAME_CELL_IMAGE_HEIGHT);
-        cellButton.setPreferredSize(buttonPreferredSize);
-        closeButton(cellButton);
-
-        return cellButton;
-    }
-
-    /**
-     * Creates button mouse listener of the cell of the playing field.
-     * Puts a link to all controllers and restart button controller in a cell
+     * Creates button mouse listener of the cell.
+     * Puts a link to all controllers and restart button controller in a field.
      *
      * @param controllers a link to all controllers
      * @param rowIndex    index on the rows of this button
      * @param colIndex    index on the columns of this button
-     * @return button mouse listener of the cell of the playing field
+     * @return button mouse listener of the cell
      */
     private ButtonMouseListener createButtonMouseListener(Controllers controllers, int rowIndex, int colIndex) {
         ButtonMouseListener buttonMouseListener = new ButtonMouseListener(controllers, rowIndex, colIndex);
-        buttonMouseListener.addObserver(this.restartButtonController);
+        buttonMouseListener.addObserver(this.restartButton);
 
         return buttonMouseListener;
     }
 
     /**
-     * Sets up the button of the cell as closed
-     *
-     * @param button close button
-     */
-    private void closeButton(JButton button) {//TODO: убрать метод после рефакторинга Cell
-        Icon closedIcon = new ImageIcon(this.getClass().getResource("/icons/closed.png"));
-        button.setIcon(closedIcon);
-    }
-
-    /**
-     * Creates main menu
+     * Creates main menu.
      *
      * @param gameFrame frame to which this menu is added
      */
@@ -219,7 +186,7 @@ public class GameFrame {
     }
 
     /**
-     * Creates a submenu for creating a new game with the given parameters
+     * Creates a submenu for creating a new game with the given parameters.
      *
      * @param nameSubmenu     display name of the submenu
      * @param menu            menu to which this submenu is added
@@ -236,7 +203,7 @@ public class GameFrame {
     }
 
     /**
-     * Creates a submenu for viewing statistics
+     * Creates a submenu for viewing statistics.
      *
      * @param menu menu to which this submenu is added
      */
