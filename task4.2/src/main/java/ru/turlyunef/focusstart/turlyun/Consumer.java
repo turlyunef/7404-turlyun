@@ -22,7 +22,8 @@ class Consumer implements Runnable {
     private void consumeResource() {
         Resource resource = Stock.getResource();
         if (resource != null) {
-            logger.info(String.format("Consumer with id = %d successfully get from the stock resource with id %d", this.id, resource.getId()));
+            logger.info(String.format("Consumer with id = %d successfully get from the stock resource with id %d.", this.id, resource.getId()));
+            logger.info(String.format("Resource with id = %d was successfully consumed.", resource.getId()));
         } else {
             logger.info(String.format("Consumer with id = %d don't get from the stock resource, wait...", this.id));
         }

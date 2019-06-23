@@ -21,8 +21,9 @@ class Producer implements Runnable {
 
     private void produceResource() {
         Resource resource = new Resource();
+        logger.info(String.format("Resource with id = %s was successfully created.", resource.getId()));
         if (Stock.putResource(resource)) {
-            logger.info(String.format("Producer with id = %s successfully put in the stock resource with id = %d", this.id, resource.getId()));
+            logger.info(String.format("Producer with id = %s successfully put in the stock resource with id = %d.", this.id, resource.getId()));
         } else {
             logger.info(String.format("Producer with id = %s don't put in the stock resource with id %d, wait...", this.id, resource.getId()));
         }
