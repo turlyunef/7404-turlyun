@@ -17,7 +17,7 @@ class Stock {
      * @param resource resource that is added to the queue
      * @return true, if adding happened successfully, otherwise false
      */
-    static boolean putResource(Resource resource) {
+    boolean putResource(Resource resource) {
         if (resources.size() < STOCK_CAPACITY) {
             resources.add(resource);
 
@@ -25,6 +25,7 @@ class Stock {
         }
 
         return false;
+
     }
 
     /**
@@ -32,7 +33,7 @@ class Stock {
      *
      * @return resource
      */
-    static Resource getResource() {
+    Resource getResource() {
 
         return resources.poll();
     }
