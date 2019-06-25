@@ -12,16 +12,12 @@ class Consumer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
     private static final int CONSUME_TIME = 1000;
     private final int id;
-    private final Stock stock;
-    private final Object lock;
 
     /**
      * Constructor registries consumer id.
      */
-    Consumer(Stock stock, Object lock) {
-        this.stock = stock;
+    Consumer() {
         this.id = Recorder.getConsumerId();
-        this.lock = lock;
     }
 
     /**
@@ -38,21 +34,10 @@ class Consumer implements Runnable {
      * Consumes resource from stock.
      */
     private void getResource() {
-        synchronized (lock) {
-            Resource resource = stock.getResource();
-            if (resource != null) {
-                logger.info(String.format("Consumer with id = %d successfully get from the stock resource with id %d.", this.id, resource.getId()));
-                consumeResource(resource);
-                lock.notifyAll();
-            } else {
-                logger.info(String.format("Consumer with id = %d don't get from the stock resource, wait...", this.id));
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
+        Resource resource = Stock.getResource();
+        if (resource != null) {
+            logger.info(String.format("Consumer with id = %d successfully get from the stock resource with id %d.", this.id, resource.getId()));
+            consumeResource(resource);
         }
     }
 
@@ -62,13 +47,10 @@ class Consumer implements Runnable {
     private void consumeResource(Resource resource) {
         try {
             Thread.sleep(CONSUME_TIME);
-            logger.info(String.format("Resource with id = %d was successfully consumed.", resource.getId()));
+            logger.info(String.format("Resource with id = %d was successfully consumed by the consumer with id = %d", resource.getId(), this.id));
         } catch (InterruptedException e) {
-            logger.info(String.format("Consumer with id = %d was interrupted cause %s", this.id, e.getCause()));
+            logger.info(String.format("Work of consumer with id = %d was interrupted cause %s", this.id, e.getCause()));
             Thread.currentThread().interrupt();
-
         }
     }
-
-
 }

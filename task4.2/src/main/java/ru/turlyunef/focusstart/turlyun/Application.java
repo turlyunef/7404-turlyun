@@ -13,8 +13,6 @@ import java.util.concurrent.Executors;
 public class Application {
     private static final int PRODUCERS_COUNT = 3;
     private static final int CONSUMERS_COUNT = 1;
-    private static Stock stock = new Stock();
-    private static Object lock = new Object();
 
     /**
      * Launches production and resource consumption.
@@ -22,7 +20,6 @@ public class Application {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-
         createProducers();
         createConsumers();
     }
@@ -33,7 +30,7 @@ public class Application {
     private static void createConsumers() {
         ExecutorService consumers = Executors.newFixedThreadPool(CONSUMERS_COUNT);
         for (int i = 0; i < CONSUMERS_COUNT; i++) {
-            consumers.submit(new Consumer(stock, lock));
+            consumers.submit(new Consumer());
         }
     }
 
@@ -43,7 +40,7 @@ public class Application {
     private static void createProducers() {
         ExecutorService producers = Executors.newFixedThreadPool(PRODUCERS_COUNT);
         for (int i = 0; i < PRODUCERS_COUNT; i++) {
-            producers.submit(new Producer(stock, lock));
+            producers.submit(new Producer());
         }
     }
 }

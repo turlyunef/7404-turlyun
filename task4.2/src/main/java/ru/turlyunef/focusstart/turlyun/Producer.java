@@ -13,16 +13,12 @@ class Producer implements Runnable {
     private static final int PRODUCE_TIME = 1000;
     private final int id;
     private Resource resource;
-    private Stock stock;
-    private final Object lock;
 
     /**
      * Constructor registries producer id.
      */
-    Producer(Stock stock, Object lock) {
+    Producer() {
         this.id = Recorder.getProducerId();
-        this.stock = stock;
-        this.lock = lock;
     }
 
     /**
@@ -40,20 +36,10 @@ class Producer implements Runnable {
      * Puts resource to the stock.
      */
     private void putResourceToStock() {
-        synchronized (lock) {
-            logger.info(String.format("!Resource with id = %s was successfully created.", resource.getId()));
-            if (stock.putResource(resource)) {
-                logger.info(String.format("!Producer with id = %s successfully put in the stock resource with id = %d.", this.id, resource.getId()));
-                lock.notifyAll();
-                createResource();
-            } else {
-                logger.info(String.format("!Producer with id = %s don't put in the stock resource with id %d, wait...", this.id, resource.getId()));
-                try {
-                    lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+        logger.info(String.format("Resource with id = %s was successfully created by the producer with id = %d.", resource.getId(), this.id));
+        if (Stock.putResource(resource)) {
+            logger.info(String.format("Producer with id = %s successfully put in the stock resource with id = %d.", this.id, resource.getId()));
+            createResource();
         }
     }
 
@@ -65,7 +51,7 @@ class Producer implements Runnable {
             Thread.sleep(PRODUCE_TIME);
             this.resource = new Resource();
         } catch (InterruptedException e) {
-            logger.info(String.format("!Producer with id = %d was interrupted cause %s", this.id, e.getCause()));
+            logger.info(String.format("Work of producer with id = %d was interrupted cause %s", this.id, e.getCause()));
             Thread.currentThread().interrupt();
         }
     }
