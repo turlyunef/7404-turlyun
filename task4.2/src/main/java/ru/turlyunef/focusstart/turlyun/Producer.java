@@ -12,7 +12,6 @@ class Producer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(Producer.class);
     private static final int PRODUCE_TIME = 1000;
     private final int id;
-    private Resource resource;
 
     /**
      * Constructor registries producer id.
@@ -26,7 +25,6 @@ class Producer implements Runnable {
      */
     @Override
     public void run() {
-        createResource();
         while (!Thread.interrupted()) {
             putResourceToStock();
         }
@@ -36,23 +34,24 @@ class Producer implements Runnable {
      * Puts resource to the stock.
      */
     private void putResourceToStock() {
-        logger.info(String.format("Resource with id = %s was successfully created by the producer with id = %d.", resource.getId(), this.id));
-        if (Stock.putResource(resource)) {
+        try {
+            Resource resource = createResource();
+            Stock.putResource(resource);
             logger.info(String.format("Producer with id = %s successfully put in the stock resource with id = %d.", this.id, resource.getId()));
-            createResource();
+        } catch (InterruptedException e) {
+            logger.info(String.format("Work of producer with id = %d was interrupted cause %s", this.id, e.getCause()));
+            Thread.currentThread().interrupt();
         }
     }
 
     /**
      * Creates resource.
      */
-    private void createResource() {
-        try {
-            Thread.sleep(PRODUCE_TIME);
-            this.resource = new Resource();
-        } catch (InterruptedException e) {
-            logger.info(String.format("Work of producer with id = %d was interrupted cause %s", this.id, e.getCause()));
-            Thread.currentThread().interrupt();
-        }
+    private Resource createResource() throws InterruptedException {
+        Thread.sleep(PRODUCE_TIME);
+        Resource resource = new Resource();
+        logger.info(String.format("Resource with id = %s was successfully created by the producer with id = %d.", resource.getId(), this.id));
+
+        return resource;
     }
 }

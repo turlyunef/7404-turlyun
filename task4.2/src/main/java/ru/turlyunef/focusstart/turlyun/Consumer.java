@@ -34,23 +34,21 @@ class Consumer implements Runnable {
      * Consumes resource from stock.
      */
     private void getResource() {
-        Resource resource = Stock.getResource();
-        if (resource != null) {
+        try {
+            Resource resource = Stock.getResource();
             logger.info(String.format("Consumer with id = %d successfully get from the stock resource with id %d.", this.id, resource.getId()));
             consumeResource(resource);
+        } catch (InterruptedException e) {
+            logger.info(String.format("Work of consumer with id = %d was interrupted cause %s", this.id, e.getCause()));
+            Thread.currentThread().interrupt();
         }
     }
 
     /**
      * Consumes resource.
      */
-    private void consumeResource(Resource resource) {
-        try {
-            Thread.sleep(CONSUME_TIME);
-            logger.info(String.format("Resource with id = %d was successfully consumed by the consumer with id = %d", resource.getId(), this.id));
-        } catch (InterruptedException e) {
-            logger.info(String.format("Work of consumer with id = %d was interrupted cause %s", this.id, e.getCause()));
-            Thread.currentThread().interrupt();
-        }
+    private void consumeResource(Resource resource) throws InterruptedException {
+        Thread.sleep(CONSUME_TIME);
+        logger.info(String.format("Resource with id = %d was successfully consumed by the consumer with id = %d", resource.getId(), this.id));
     }
 }
