@@ -5,9 +5,9 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class FieldFocusAdapter extends FocusAdapter {
-    private JTextComponent component;
-    private String hintString;
+class FieldFocusAdapter extends FocusAdapter {
+    private final JTextComponent component;
+    private final String hintString;
 
     FieldFocusAdapter(JTextComponent component, String hintString) {
         this.component = component;

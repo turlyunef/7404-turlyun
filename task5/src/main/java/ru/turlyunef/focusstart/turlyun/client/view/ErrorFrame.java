@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 
 class ErrorFrame extends JFrame {
     private static final String ACCEPT_BUTTON_TITLE = "Ok";
-    private final String errorMessage;
     private static final String FRAME_TITLE = "Error!";
+    private final String errorMessage;
 
     ErrorFrame(String errorMessage) throws HeadlessException {
         this.errorMessage = errorMessage;
@@ -35,12 +35,7 @@ class ErrorFrame extends JFrame {
 
     private void createAcceptButton(JPanel panel) {
         JButton connectButton = new JButton(ACCEPT_BUTTON_TITLE);
-        connectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doAction();
-            }
-        });
+        connectButton.addActionListener(e -> doAction());
         panel.add(connectButton);
     }
 

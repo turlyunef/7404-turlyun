@@ -31,7 +31,7 @@ public class ConnectFrame extends JFrame implements Observer {
     private JTextField serverHostField;
     private JTextField serverPortField;
     private JLabel statusLabel;
-    private Controllers controllers;
+    private final Controllers controllers;
     private JButton connectButton;
     private ConnectStatus connectStatus = ConnectStatus.DISCONNECTED;
 
@@ -104,20 +104,24 @@ public class ConnectFrame extends JFrame implements Observer {
 
     private void createConnectButton(JPanel panel) {
         connectButton = new JButton(CONNECT_BUTTON_TITLE_BEFORE_CONNECT);
-        connectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doAction();
-            }
-        });
+        connectButton.addActionListener(e -> doAction());
         panel.add(connectButton);
     }
 
     private void doAction() {
-        if (connectStatus.equals(ConnectStatus.DISCONNECTED)) {
-            connectToServer();
-        } else {
-            createChatFrame();
+        switch (connectStatus) {
+            case DISCONNECTED: {
+                connectToServer();
+                break;
+            }
+            case WRONG_NAME: {
+                /*NOP*/
+                break;
+            }
+            case CONNECTED: {
+                createChatFrame();
+                break;
+            }
         }
     }
 
@@ -129,14 +133,12 @@ public class ConnectFrame extends JFrame implements Observer {
             } catch (NullPointerException e) {
                 throw new IncorrectConnectionSettings("Username missing.");
             }
-
             String serverHost;
             try {
                 serverHost = serverHostField.getText();
             } catch (NullPointerException e) {
                 throw new IncorrectConnectionSettings("Hostname missing.");
             }
-
             int serverPort;
             try {
                 serverPort = Integer.parseInt(serverPortField.getText());
@@ -147,9 +149,8 @@ public class ConnectFrame extends JFrame implements Observer {
             }
 
             connectionProperties.setServerProperties(new ServerProperties(serverHost, serverPort));
-            System.out.println(connectionProperties);
             controllers.connect(connectionProperties);
-        }catch (IncorrectConnectionSettings | IOException exc){
+        } catch (IncorrectConnectionSettings | IOException exc) {
             ErrorFrame errorFrame = new ErrorFrame(exc.getMessage());
             errorFrame.initFrame();
         }
@@ -170,9 +171,15 @@ public class ConnectFrame extends JFrame implements Observer {
     public void handleEvent(Event event) {
         if (event instanceof ConnectStatusChangeEvent) {
             this.connectStatus = ((ConnectStatusChangeEvent) event).getConnectStatus();
+
             if (connectStatus.equals(ConnectStatus.CONNECTED)) {
                 statusLabel.setText(CONNECTED_STATUS_STRING);
                 connectButton.setText(CONNECT_BUTTON_TITLE_AFTER_CONNECT);
+
+            } else if (connectStatus.equals(ConnectStatus.WRONG_NAME)) {
+                connectStatus = ConnectStatus.DISCONNECTED;
+                ErrorFrame errorFrame = new ErrorFrame("This name already in use, write another!");
+                errorFrame.initFrame();
             }
         }
     }

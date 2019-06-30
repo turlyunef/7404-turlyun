@@ -1,19 +1,19 @@
 package ru.turlyunef.focusstart.turlyun.client.model;
 
 public class ServerProperties {
-    private String serverHost;
-    private int serverPort;
+    private final String serverHost;
+    private final int serverPort;
 
     public ServerProperties(String serverHost, int serverPort) {
         this.serverHost = serverHost;
         this.serverPort = serverPort;
     }
 
-    public String getServerHost() {
+    String getServerHost() {
         return serverHost;
     }
 
-    public int getServerPort() {
+    int getServerPort() {
         return serverPort;
     }
 

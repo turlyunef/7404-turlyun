@@ -4,20 +4,20 @@ public class ConnectionProperties {
     private ServerProperties serverProperties;
     private String userName;
 
+    ServerProperties getServerProperties() {
+        return serverProperties;
+    }
+
     public void setServerProperties(ServerProperties serverProperties) {
         this.serverProperties = serverProperties;
     }
 
+    String getUserName() {
+        return userName;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public ServerProperties getServerProperties() {
-        return serverProperties;
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     @Override

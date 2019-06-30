@@ -1,43 +1,46 @@
 package ru.turlyunef.focusstart.turlyun.client.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import ru.turlyunef.focusstart.turlyun.client.controller.event.ConnectStatusChangeEvent;
 import ru.turlyunef.focusstart.turlyun.client.controller.event.Event;
 import ru.turlyunef.focusstart.turlyun.client.controller.event.SendMessageEvent;
+import ru.turlyunef.focusstart.turlyun.client.controller.event.UpdateUserNamesEvent;
 import ru.turlyunef.focusstart.turlyun.client.model.ClientModel;
 import ru.turlyunef.focusstart.turlyun.client.model.ConnectStatus;
 import ru.turlyunef.focusstart.turlyun.client.model.ConnectionProperties;
-import ru.turlyunef.focusstart.turlyun.client.model.Message;
 import ru.turlyunef.focusstart.turlyun.client.view.Observer;
+import ru.turlyunef.focusstart.turlyun.common.Message;
+import ru.turlyunef.focusstart.turlyun.common.MessageType;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Controllers implements Observable {
-    private List<Observer> observers = new ArrayList<>();
+    private static final String REPLACE_NAME = "You";
+    private final List<Observer> observers = new ArrayList<>();
 
-    private final ObjectWriter messageWriter;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private ClientModel clientModel;
-
-
-    public Controllers() {
-        objectMapper = new ObjectMapper();
-        messageWriter = objectMapper.writerFor(Message.class);
-    }
 
     public void connect(ConnectionProperties connectionProperties) throws IOException {
         clientModel = new ClientModel();
         clientModel.connectToServer(connectionProperties);
-        notifyObservers(new ConnectStatusChangeEvent(ConnectStatus.CONNECTED));
         startMessageListener();
     }
 
-    public void sendMessage(String messageText) throws JsonProcessingException {
-        Message message = new Message(messageText, clientModel.getUserName());
+    public void sendDataMessage(String messageText) throws JsonProcessingException {
+        Message message = new Message(MessageType.DATA, messageText, clientModel.getUserName());
+        String jsonMessage = objectMapper.writeValueAsString(message);
+        clientModel.writeMessage(jsonMessage);
+    }
+
+    public void sendServiceStatus(MessageType messageType) throws JsonProcessingException {
+        Message message = new Message(messageType, null, null);
         String jsonMessage = objectMapper.writeValueAsString(message);
         clientModel.writeMessage(jsonMessage);
     }
@@ -51,13 +54,7 @@ public class Controllers implements Observable {
                     if (clientModel.getReader().ready()) {
                         String jsonMessage = clientModel.getReader().readLine();
                         Message message = objectMapper.readValue(jsonMessage, Message.class);
-                        if (message.getUserName().equals(clientModel.getUserName())) {
-                            sendMessageAs("You", message.getMessageText());
-                        } else {
-                            sendMessageAs(message.getUserName(), message.getMessageText());
-                        }
-
-
+                        processMessage(message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -73,9 +70,48 @@ public class Controllers implements Observable {
         messageListenerThread.start();
     }
 
-    private void sendMessageAs(String name, String messageText) {
+    private void processMessage(Message message) throws IOException {
+        switch (message.getMessageType()) {
+            case DATA:
+            case USER_DISCONNECTED:
+            case NEW_USER_CONNECTED: {
+                displayMessage(message);
+                break;
+            }
+            case REQUEST_NAME: {
+                clientModel.sendNameToServer();
+                break;
+            }
+            case CONNECTED: {
+                notifyObservers(new ConnectStatusChangeEvent(ConnectStatus.CONNECTED));
+                break;
+            }
+
+            case WRONG_NAME: {
+                notifyObservers(new ConnectStatusChangeEvent(ConnectStatus.WRONG_NAME));
+                break;
+            }
+
+            case USERS_NAME_RESPONSE: {
+                List<String> names = objectMapper.readValue(message.getMessageText(), new TypeReference<List<String>>() {
+                });
+                notifyObservers(new UpdateUserNamesEvent(names));
+                break;
+            }
+        }
+    }
+
+    private void displayMessage(Message message) {
+        String name = message.getUserName();
+        String messageText = message.getMessageText();
+        DateFormat df = new SimpleDateFormat("dd.MM.yy k:mm:ss");
+        String sendDate = df.format(message.getSendDate());
+
+        if (name.equals(clientModel.getUserName())) {
+            name = REPLACE_NAME;
+        }
         notifyObservers(new SendMessageEvent(
-                name + ": " + messageText + "\n"));
+                sendDate + "\n" + name + ": " + messageText + "\n"));
     }
 
     @Override
