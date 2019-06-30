@@ -33,7 +33,7 @@ public class ClientModel {
     }
 
     public void sendNameToServer() throws JsonProcessingException {
-        Message message = new Message(MessageType.USER_NAME_RESPONSE, null, userName);
+        Message message = new Message(MessageType.CLIENT_NAME_RESPONSE, null, userName);
         String jsonMessage = objectMapper.writeValueAsString(message);
         writeMessage(jsonMessage);
     }

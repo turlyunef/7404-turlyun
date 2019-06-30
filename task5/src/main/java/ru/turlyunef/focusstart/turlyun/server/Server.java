@@ -66,7 +66,6 @@ class Server {
         });
         messageListenerThread.start();
         createCloserThread(messageListenerThread);
-
     }
 
     private void createCloserThread(Thread interruptedThread) {
@@ -85,19 +84,19 @@ class Server {
 
     private void processMessage(ChatClient client, Message message) throws JsonProcessingException {
         switch (message.getMessageType()) {
-            case DATA: {
+            case CLIENT_MESSAGE: {
                 sendAll(message);
                 break;
             }
-            case USER_NAME_RESPONSE: {
+            case CLIENT_NAME_RESPONSE: {
                 validateClientName(client, message.getUserName());
                 break;
             }
-            case REQUEST_USERS_NAME: {
+            case CLIENT_NAMES_REQUEST: {
                 sendAllUserNames();
                 break;
             }
-            case DISCONNECTED: {
+            case CLIENT_DISCONNECTED: {
                 clients.remove(client);
                 sendAllUserNames();
                 sendAllThatUserDisconnected(client);
@@ -114,12 +113,12 @@ class Server {
                     chatClient.setClientStatus(ClientStatus.VALIDATED);
                     logger.info(String.format("Client %s validated with name %s.",
                             client.getSocket().toString(), chatClient.getName()));
-                    sendServiceMessage(client, MessageType.CONNECTED);
+                    sendServiceMessage(client, MessageType.SUCCESS_CONNECT);
                     sendAllUserNames();
                     sendAllThatUserConnected(client);
                     break;
                 } else {
-                    sendServiceMessage(client, MessageType.WRONG_NAME);
+                    sendServiceMessage(client, MessageType.WRONG_CLIENT_NAME);
                     logger.info(String.format("Client %s did not validate with name %s, cause this name is used.",
                             client.getSocket().toString(), chatClient.getName()));
                 }
@@ -128,13 +127,13 @@ class Server {
     }
 
     private void sendAllThatUserConnected(ChatClient client) throws JsonProcessingException {
-        Message message = new Message(MessageType.NEW_USER_CONNECTED, "Connected", client.getName());
+        Message message = new Message(MessageType.NEW_CLIENT_CONNECTED, "Connected", client.getName());
         sendAll(message);
         logger.info(String.format("Client %s connected.", client.getName()));
     }
 
     private void sendAllThatUserDisconnected(ChatClient client) throws JsonProcessingException {
-        Message message = new Message(MessageType.USER_DISCONNECTED, "Disconnected", client.getName());
+        Message message = new Message(MessageType.CLIENT_DISCONNECTED, "Disconnected", client.getName());
         sendAll(message);
         logger.info(String.format("Client %s disconnected.", client.getName()));
     }
@@ -142,7 +141,7 @@ class Server {
     private void sendAllUserNames() throws JsonProcessingException {
         List<String> names = getClientNames();
         String jsonNames = objectMapper.writeValueAsString(names);
-        Message message = new Message(MessageType.USERS_NAME_RESPONSE, jsonNames, null);
+        Message message = new Message(MessageType.CLIENT_NAMES_RESPONSE, jsonNames, null);
         sendAll(message);
     }
 
@@ -201,7 +200,7 @@ class Server {
     }
 
     private void requestName(ChatClient client) throws JsonProcessingException {
-        Message message = new Message(MessageType.REQUEST_NAME, null, null);
+        Message message = new Message(MessageType.CLIENT_NAME_REQUEST, null, null);
         String jsonMessage = objectMapper.writeValueAsString(message);
         sendMessage(client, jsonMessage);
         client.setClientStatus(ClientStatus.REQUESTED_NAME);

@@ -34,7 +34,7 @@ public class Controllers implements Observable {
     }
 
     public void sendDataMessage(String messageText) throws JsonProcessingException {
-        Message message = new Message(MessageType.DATA, messageText, clientModel.getUserName());
+        Message message = new Message(MessageType.CLIENT_MESSAGE, messageText, clientModel.getUserName());
         String jsonMessage = objectMapper.writeValueAsString(message);
         clientModel.writeMessage(jsonMessage);
     }
@@ -72,27 +72,27 @@ public class Controllers implements Observable {
 
     private void processMessage(Message message) throws IOException {
         switch (message.getMessageType()) {
-            case DATA:
-            case USER_DISCONNECTED:
-            case NEW_USER_CONNECTED: {
+            case CLIENT_MESSAGE:
+            case CLIENT_DISCONNECTED:
+            case NEW_CLIENT_CONNECTED: {
                 displayMessage(message);
                 break;
             }
-            case REQUEST_NAME: {
+            case CLIENT_NAME_REQUEST: {
                 clientModel.sendNameToServer();
                 break;
             }
-            case CONNECTED: {
+            case SUCCESS_CONNECT: {
                 notifyObservers(new ConnectStatusChangeEvent(ConnectStatus.CONNECTED));
                 break;
             }
 
-            case WRONG_NAME: {
+            case WRONG_CLIENT_NAME: {
                 notifyObservers(new ConnectStatusChangeEvent(ConnectStatus.WRONG_NAME));
                 break;
             }
 
-            case USERS_NAME_RESPONSE: {
+            case CLIENT_NAMES_RESPONSE: {
                 List<String> names = objectMapper.readValue(message.getMessageText(), new TypeReference<List<String>>() {
                 });
                 notifyObservers(new UpdateUserNamesEvent(names));

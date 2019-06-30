@@ -69,7 +69,7 @@ public class ChatFrame extends JFrame implements Observer {
         controllers.addObserver(this);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
-                controllers.sendServiceStatus(MessageType.DISCONNECTED);
+                controllers.sendServiceStatus(MessageType.CLIENT_DISCONNECTED);
             } catch (JsonProcessingException e) {
                 ErrorFrame errorFrame = new ErrorFrame("Error closing client socket, cause" + e.getMessage());
                 errorFrame.initFrame();
@@ -115,7 +115,7 @@ public class ChatFrame extends JFrame implements Observer {
         JScrollPane scroll = new JScrollPane(users);
         panel.add(scroll);
         try {
-            controllers.sendServiceStatus(MessageType.REQUEST_USERS_NAME);
+            controllers.sendServiceStatus(MessageType.CLIENT_NAMES_REQUEST);
         } catch (JsonProcessingException e) {
             ErrorFrame errorFrame = new ErrorFrame(e.getMessage());
             errorFrame.initFrame();
