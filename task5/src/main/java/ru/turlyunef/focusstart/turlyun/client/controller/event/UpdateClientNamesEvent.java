@@ -2,10 +2,10 @@ package ru.turlyunef.focusstart.turlyun.client.controller.event;
 
 import java.util.List;
 
-public class UpdateUserNamesEvent implements Event {
+public class UpdateClientNamesEvent implements Event {
     private final List<String> names;
 
-    public UpdateUserNamesEvent(List<String> names) {
+    public UpdateClientNamesEvent(List<String> names) {
         this.names = names;
     }
 

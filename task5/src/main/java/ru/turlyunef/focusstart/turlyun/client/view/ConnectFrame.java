@@ -1,6 +1,6 @@
 package ru.turlyunef.focusstart.turlyun.client.view;
 
-import ru.turlyunef.focusstart.turlyun.client.controller.Controllers;
+import ru.turlyunef.focusstart.turlyun.client.controller.Controller;
 import ru.turlyunef.focusstart.turlyun.client.controller.event.ConnectStatusChangeEvent;
 import ru.turlyunef.focusstart.turlyun.client.controller.event.Event;
 import ru.turlyunef.focusstart.turlyun.client.model.ConnectStatus;
@@ -10,33 +10,33 @@ import ru.turlyunef.focusstart.turlyun.client.model.exception.IncorrectConnectio
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class ConnectFrame extends JFrame implements Observer {
     private static final String FRAME_TITLE = "Connect to server";
     private static final String HINT_STRING_IN_HOST_FIELD = "localhost";
     private static final String HINT_STRING_IN_PORT_FIELD = "1111";
-    private static final String HINT_STRING_IN_USER_NAME_FIELD = "Nickname";
-    private static final String USER_NAME_LABEL = "User name:";
+    private static final String HINT_STRING_IN_CLIENT_NAME_FIELD = "Nickname";
+    private static final String CLIENT_NAME_LABEL = "User name:";
     private static final String SERVER_PORT_FIELD_LABEL = "Server port:";
     private static final String SERVER_HOST_FIELD_LABEL = "Server host:";
     private static final String CONNECT_BUTTON_TITLE_BEFORE_CONNECT = "Connect";
     private static final String CONNECT_BUTTON_TITLE_AFTER_CONNECT = "Ok";
     private static final String CONNECTED_STATUS_STRING = "Connected to the server";
     private static final String DISCONNECTED_STATUS_STRING = "Disconnected";
-
-    private JTextField userNameField;
+    private final Controller controller;
+    private JTextField clientNameField;
     private JTextField serverHostField;
     private JTextField serverPortField;
     private JLabel statusLabel;
-    private final Controllers controllers;
     private JButton connectButton;
     private ConnectStatus connectStatus = ConnectStatus.DISCONNECTED;
+    private final ChatFrame chatFrame;
 
-    public ConnectFrame(Controllers controllers) {
-        this.controllers = controllers;
+    public ConnectFrame(Controller controller) {
+        this.controller = controller;
+        chatFrame = new ChatFrame(controller);
+        chatFrame.initFrame();
     }
 
     public void initFrame() {
@@ -55,7 +55,7 @@ public class ConnectFrame extends JFrame implements Observer {
         centerPanel.setLayout(new BorderLayout());
 
         createServerUrlFields(northPanel);
-        createUserNameField(northPanel);
+        createClientNameField(northPanel);
         createConnectButton(centerPanel);
         createConnectStatusField(southPanel);
 
@@ -68,7 +68,7 @@ public class ConnectFrame extends JFrame implements Observer {
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        controllers.addObserver(this);
+        controller.addObserver(this);
     }
 
     private void createServerUrlFields(JPanel panel) {
@@ -85,19 +85,19 @@ public class ConnectFrame extends JFrame implements Observer {
         panel.add(serverPortField);
     }
 
-    private void createUserNameField(JPanel panel) {
-        JLabel userNameLabel = new JLabel(USER_NAME_LABEL);
-        panel.add(userNameLabel);
+    private void createClientNameField(JPanel panel) {
+        JLabel clientNameLabel = new JLabel(CLIENT_NAME_LABEL);
+        panel.add(clientNameLabel);
 
-        userNameField = createJTextFieldWithHintString(HINT_STRING_IN_USER_NAME_FIELD);
-        panel.add(userNameField);
+        clientNameField = createJTextFieldWithHintString(HINT_STRING_IN_CLIENT_NAME_FIELD);
+        panel.add(clientNameField);
     }
 
     private JTextField createJTextFieldWithHintString(String hintString) {
         JTextField component = new JTextField(hintString);
         component.setForeground(Color.LIGHT_GRAY);
-        FieldFocusAdapter userNameFocusAdapter = new FieldFocusAdapter(component, hintString);
-        component.addFocusListener(userNameFocusAdapter);
+        FieldFocusAdapter clientNameFocusAdapter = new FieldFocusAdapter(component, hintString);
+        component.addFocusListener(clientNameFocusAdapter);
 
         return component;
     }
@@ -129,7 +129,7 @@ public class ConnectFrame extends JFrame implements Observer {
         ConnectionProperties connectionProperties = new ConnectionProperties();
         try {
             try {
-                connectionProperties.setUserName(userNameField.getText());
+                connectionProperties.setClientName(clientNameField.getText());
             } catch (NullPointerException e) {
                 throw new IncorrectConnectionSettings("Username missing.");
             }
@@ -149,7 +149,7 @@ public class ConnectFrame extends JFrame implements Observer {
             }
 
             connectionProperties.setServerProperties(new ServerProperties(serverHost, serverPort));
-            controllers.connect(connectionProperties);
+            controller.connect(connectionProperties);
         } catch (IncorrectConnectionSettings | IOException exc) {
             ErrorFrame errorFrame = new ErrorFrame(exc.getMessage());
             errorFrame.initFrame();
@@ -158,8 +158,8 @@ public class ConnectFrame extends JFrame implements Observer {
 
     private void createChatFrame() {
         this.setVisible(false);
-        ChatFrame chatFrame = new ChatFrame(controllers);
-        chatFrame.initFrame();
+        chatFrame.setVisible(true);
+
     }
 
     private void createConnectStatusField(JPanel panel) {

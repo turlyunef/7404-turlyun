@@ -7,26 +7,26 @@ import java.util.GregorianCalendar;
 public class Message {
     private MessageType messageType;
     private String messageText;
-    private String userName;
+    private String clientName;
     private Date sendDate;
 
     public Message() {
     }
 
-    public Message(MessageType messageType, String messageText, String userName) {
+    public Message(MessageType messageType, String messageText, String clientName) {
         this.messageType = messageType;
         Calendar calendar = new GregorianCalendar();
         this.sendDate = calendar.getTime();
         this.messageText = messageText;
-        this.userName = userName;
+        this.clientName = clientName;
     }
 
     public String getMessageText() {
         return messageText;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getClientName() {
+        return clientName;
     }
 
     public Date getSendDate() {
@@ -42,7 +42,7 @@ public class Message {
         return "Message{" +
                 "messageType=" + messageType +
                 ", messageText='" + messageText + '\'' +
-                ", userName='" + userName + '\'' +
+                ", clientName='" + clientName + '\'' +
                 ", sendDate=" + sendDate +
                 '}';
     }

@@ -1,11 +1,10 @@
 package ru.turlyunef.focusstart.turlyun.client.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import ru.turlyunef.focusstart.turlyun.client.controller.Controllers;
+import ru.turlyunef.focusstart.turlyun.client.controller.Controller;
 import ru.turlyunef.focusstart.turlyun.client.controller.event.Event;
 import ru.turlyunef.focusstart.turlyun.client.controller.event.SendMessageEvent;
-import ru.turlyunef.focusstart.turlyun.client.controller.event.UpdateUserNamesEvent;
-import ru.turlyunef.focusstart.turlyun.common.MessageType;
+import ru.turlyunef.focusstart.turlyun.client.controller.event.UpdateClientNamesEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,13 +16,13 @@ public class ChatFrame extends JFrame implements Observer {
     private static final int FRAME_HEIGHT = 400;
     private static final String FRAME_TITLE = "Chat";
     private static final String SEND_BUTTON_TITLE = "Send";
-    private final Controllers controllers;
+    private final Controller controller;
     private JTextArea textInput;
     private JTextArea chatHistory;
-    private JTextArea users;
+    private JTextArea clients;
 
-    ChatFrame(Controllers controllers) throws HeadlessException {
-        this.controllers = controllers;
+    ChatFrame(Controller controller) throws HeadlessException {
+        this.controller = controller;
     }
 
     void initFrame() {
@@ -55,7 +54,7 @@ public class ChatFrame extends JFrame implements Observer {
         createChatField(northPanel);
         createInputField(southPanel);
         createSendButton(southPanel);
-        createUsersScoreboard(eastPanel);
+        createClientsScoreboard(eastPanel);
 
         leftHorizontalPanel.add(northPanel, BorderLayout.NORTH);
         leftHorizontalPanel.add(southPanel, BorderLayout.SOUTH);
@@ -65,16 +64,7 @@ public class ChatFrame extends JFrame implements Observer {
         this.setResizable(false);
         this.pack();
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        controllers.addObserver(this);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                controllers.sendServiceStatus(MessageType.CLIENT_DISCONNECTED);
-            } catch (JsonProcessingException e) {
-                ErrorFrame errorFrame = new ErrorFrame("Error closing client socket, cause" + e.getMessage());
-                errorFrame.initFrame();
-            }
-        }));
+        controller.addObserver(this);
     }
 
     @Override
@@ -82,8 +72,8 @@ public class ChatFrame extends JFrame implements Observer {
         if (event instanceof SendMessageEvent) {
             addMessageToChatField(((SendMessageEvent) event).getMessageText());
         }
-        if (event instanceof UpdateUserNamesEvent) {
-            updateUserNamesInUserScoreboard(((UpdateUserNamesEvent) event).getNames());
+        if (event instanceof UpdateClientNamesEvent) {
+            updateClientNamesInClientScoreboard(((UpdateClientNamesEvent) event).getNames());
         }
     }
 
@@ -109,17 +99,11 @@ public class ChatFrame extends JFrame implements Observer {
         panel.add(scroll);
     }
 
-    private void createUsersScoreboard(JPanel panel) {
-        users = new JTextArea(15, 20);
-        users.setEditable(false);
-        JScrollPane scroll = new JScrollPane(users);
+    private void createClientsScoreboard(JPanel panel) {
+        clients = new JTextArea(15, 20);
+        clients.setEditable(false);
+        JScrollPane scroll = new JScrollPane(clients);
         panel.add(scroll);
-        try {
-            controllers.sendServiceStatus(MessageType.CLIENT_NAMES_REQUEST);
-        } catch (JsonProcessingException e) {
-            ErrorFrame errorFrame = new ErrorFrame(e.getMessage());
-            errorFrame.initFrame();
-        }
     }
 
     private void restartTextInputField() {
@@ -130,7 +114,7 @@ public class ChatFrame extends JFrame implements Observer {
     private void sendMessage() {
         if (!HINT_STRING_IN_INPUT_FIELD.equals(textInput.getText())) {
             try {
-                controllers.sendDataMessage(textInput.getText());
+                controller.sendDataMessage(textInput.getText());
                 restartTextInputField();
             } catch (JsonProcessingException e) {
                 ErrorFrame errorFrame = new ErrorFrame(e.getMessage());
@@ -143,10 +127,10 @@ public class ChatFrame extends JFrame implements Observer {
         chatHistory.append(messageText);
     }
 
-    private void updateUserNamesInUserScoreboard(List<String> names) {
-        users.setText("Online:\n\n");
-        for (String name : names) {
-            users.append(name + "\n");
+    private void updateClientNamesInClientScoreboard(List<String> clientNameList) {
+        clients.setText("Online:\n\n");
+        for (String name : clientNameList) {
+            clients.append(name + "\n");
         }
     }
 }

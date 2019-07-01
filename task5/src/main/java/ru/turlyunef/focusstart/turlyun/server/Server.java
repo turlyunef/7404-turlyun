@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.turlyunef.focusstart.turlyun.common.Message;
 import ru.turlyunef.focusstart.turlyun.common.MessageType;
+import ru.turlyunef.focusstart.turlyun.server.exception.CreateServerSocketException;
+import ru.turlyunef.focusstart.turlyun.server.exception.ReadPropertiesFileException;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -21,21 +23,23 @@ class Server {
     private final List<ChatClient> clients = new CopyOnWriteArrayList<>();
     private ServerSocket serverSocket;
 
-    void serverInit() {
+    void serverInit() throws ReadPropertiesFileException, CreateServerSocketException {
         Properties properties = new Properties();
         try (InputStream propertiesStream = Server.class.getClassLoader().getResourceAsStream("server.properties")) {
             if (propertiesStream != null) {
                 properties.load(propertiesStream);
             }
         } catch (IOException e) {
-            logger.error("Error reading server configuration file, cause " + e.getMessage());
+            throw new ReadPropertiesFileException("error occurs when reading from the input stream");
         }
         try {
             serverSocket = new ServerSocket(Integer.valueOf(properties.getProperty("server.port")));
             createMessageListenerThread();
             createClientsListener();
+        } catch (IllegalArgumentException e) {
+            throw new ReadPropertiesFileException("property \"server.port\" or file \"server.properties\" not found");
         } catch (IOException e) {
-            logger.error("Socket not open, cause " + e.getMessage());
+            throw new CreateServerSocketException("I/O error occurs when opening the socket");
         }
     }
 
@@ -54,7 +58,7 @@ class Server {
                         }
                     }
                 } catch (IOException e) {
-                    logger.error("Error reading message, cause " + e.getMessage());
+                    logger.warn("Error reading message, cause " + e.getMessage());
                 }
 
                 try {
@@ -82,63 +86,55 @@ class Server {
         }));
     }
 
-    private void processMessage(ChatClient client, Message message) throws JsonProcessingException {
+    private void processMessage(ChatClient client, Message message) throws IOException {
         switch (message.getMessageType()) {
             case CLIENT_MESSAGE: {
                 sendAll(message);
                 break;
             }
             case CLIENT_NAME_RESPONSE: {
-                validateClientName(client, message.getUserName());
-                break;
-            }
-            case CLIENT_NAMES_REQUEST: {
-                sendAllUserNames();
+                validateClientName(client, message.getClientName());
                 break;
             }
             case CLIENT_DISCONNECTED: {
                 clients.remove(client);
-                sendAllUserNames();
-                sendAllThatUserDisconnected(client);
+                sendAllClientNames();
+                sendAllThatClientDisconnected(client);
+                client.getSocket().close();
                 break;
             }
         }
     }
 
     private void validateClientName(ChatClient client, String clientName) throws JsonProcessingException {
-        for (ChatClient chatClient : clients) {
-            if (chatClient.getSocket().equals(client.getSocket())) {
-                if (checkName(clientName)) {
-                    chatClient.setName(clientName);
-                    chatClient.setClientStatus(ClientStatus.VALIDATED);
-                    logger.info(String.format("Client %s validated with name %s.",
-                            client.getSocket().toString(), chatClient.getName()));
-                    sendServiceMessage(client, MessageType.SUCCESS_CONNECT);
-                    sendAllUserNames();
-                    sendAllThatUserConnected(client);
-                    break;
-                } else {
-                    sendServiceMessage(client, MessageType.WRONG_CLIENT_NAME);
-                    logger.info(String.format("Client %s did not validate with name %s, cause this name is used.",
-                            client.getSocket().toString(), chatClient.getName()));
-                }
-            }
+        if (checkName(clientName)) {
+            client.setName(clientName);
+            client.setClientStatus(ClientStatus.VALIDATED);
+            logger.info(String.format("Client %s validated with name %s.",
+                    client.getSocket().toString(), client.getName()));
+            sendServiceMessage(client, MessageType.SUCCESS_CONNECT);
+            sendAllClientNames();
+            sendAllThatClientConnected(client);
+        } else {
+            sendServiceMessage(client, MessageType.WRONG_CLIENT_NAME);
+            logger.info(String.format("Client %s did not validate with name %s, cause this name is used.",
+                    client.getSocket().toString(), client.getName()));
         }
     }
 
-    private void sendAllThatUserConnected(ChatClient client) throws JsonProcessingException {
+    private void sendAllThatClientConnected(ChatClient client) throws JsonProcessingException {
         Message message = new Message(MessageType.NEW_CLIENT_CONNECTED, "Connected", client.getName());
         sendAll(message);
         logger.info(String.format("Client %s connected.", client.getName()));
     }
 
-    private void sendAllThatUserDisconnected(ChatClient client) throws JsonProcessingException {
+    private void sendAllThatClientDisconnected(ChatClient client) throws JsonProcessingException {
         Message message = new Message(MessageType.CLIENT_DISCONNECTED, "Disconnected", client.getName());
         sendAll(message);
         logger.info(String.format("Client %s disconnected.", client.getName()));
     }
 
-    private void sendAllUserNames() throws JsonProcessingException {
+    private void sendAllClientNames() throws JsonProcessingException {
         List<String> names = getClientNames();
         String jsonNames = objectMapper.writeValueAsString(names);
         Message message = new Message(MessageType.CLIENT_NAMES_RESPONSE, jsonNames, null);
@@ -163,9 +159,9 @@ class Server {
         logger.info(String.format("The server sent to the client with %s message %s.", client.getSocket(), messageType));
     }
 
-    private boolean checkName(String userName) {
+    private boolean checkName(String clientName) {
         for (ChatClient client : clients) {
-            if ((client.getName() != null) && (client.getName().equals(userName))) {
+            if ((client.getName() != null) && (client.getName().equals(clientName))) {
 
                 return false;
             }
@@ -184,24 +180,29 @@ class Server {
         logger.info(String.format("The server sent all clients message: %s", message.toString()));
     }
 
-    private void createClientsListener() throws IOException {
+    private void createClientsListener() {
         //noinspection InfiniteLoopStatement
         while (true) {
-            Socket clientSocket = serverSocket.accept();
-            ChatClient client = new ChatClient();
-
-            client.setSocket(clientSocket);
-            client.setWriter(new PrintWriter(clientSocket.getOutputStream()));
-            client.setReader(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
-
-            clients.add(client);
-            requestName(client);
+            try {
+                Socket clientSocket = serverSocket.accept();
+                ChatClient client = new ChatClient();
+                client.setSocket(clientSocket);
+                client.setWriter(new PrintWriter(clientSocket.getOutputStream()));
+                client.setReader(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
+                requestName(client);
+                clients.add(client);
+            } catch (JsonProcessingException e) {
+                logger.warn("Request client name was failed. Error occurred when parsing JSON content");
+            } catch (IOException e) {
+                logger.warn("I/O error occurs when waiting for a client connection");
+            }
         }
     }
 
     private void requestName(ChatClient client) throws JsonProcessingException {
         Message message = new Message(MessageType.CLIENT_NAME_REQUEST, null, null);
-        String jsonMessage = objectMapper.writeValueAsString(message);
+        String jsonMessage;
+        jsonMessage = objectMapper.writeValueAsString(message);
         sendMessage(client, jsonMessage);
         client.setClientStatus(ClientStatus.REQUESTED_NAME);
     }

@@ -15,10 +15,10 @@ public class ClientModel {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private PrintWriter writer;
     private BufferedReader reader;
-    private String userName;
+    private String clientName;
 
-    public String getUserName() {
-        return userName;
+    public String getClientName() {
+        return clientName;
     }
 
     public BufferedReader getReader() {
@@ -29,11 +29,11 @@ public class ClientModel {
         Socket socket = new Socket(properties.getServerProperties().getServerHost(), properties.getServerProperties().getServerPort());
         writer = new PrintWriter(socket.getOutputStream());
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        userName = properties.getUserName();
+        clientName = properties.getClientName();
     }
 
     public void sendNameToServer() throws JsonProcessingException {
-        Message message = new Message(MessageType.CLIENT_NAME_RESPONSE, null, userName);
+        Message message = new Message(MessageType.CLIENT_NAME_RESPONSE, null, clientName);
         String jsonMessage = objectMapper.writeValueAsString(message);
         writeMessage(jsonMessage);
     }

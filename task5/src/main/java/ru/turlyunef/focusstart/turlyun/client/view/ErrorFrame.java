@@ -2,19 +2,17 @@ package ru.turlyunef.focusstart.turlyun.client.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-class ErrorFrame extends JFrame {
+public class ErrorFrame extends JFrame {
     private static final String ACCEPT_BUTTON_TITLE = "Ok";
     private static final String FRAME_TITLE = "Error!";
     private final String errorMessage;
 
-    ErrorFrame(String errorMessage) throws HeadlessException {
+    public ErrorFrame(String errorMessage) throws HeadlessException {
         this.errorMessage = errorMessage;
     }
 
-    void initFrame() {
+    public void initFrame() {
         this.setTitle(FRAME_TITLE);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JPanel mainPanel = new JPanel();

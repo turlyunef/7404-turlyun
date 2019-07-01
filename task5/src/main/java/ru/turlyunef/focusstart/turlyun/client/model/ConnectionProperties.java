@@ -2,7 +2,7 @@ package ru.turlyunef.focusstart.turlyun.client.model;
 
 public class ConnectionProperties {
     private ServerProperties serverProperties;
-    private String userName;
+    private String clientName;
 
     ServerProperties getServerProperties() {
         return serverProperties;
@@ -12,19 +12,19 @@ public class ConnectionProperties {
         this.serverProperties = serverProperties;
     }
 
-    String getUserName() {
-        return userName;
+    String getClientName() {
+        return clientName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     @Override
     public String toString() {
         return "ConnectionProperties{" +
                 "serverProperties=" + serverProperties +
-                ", userName='" + userName + '\'' +
+                ", clientName='" + clientName + '\'' +
                 '}';
     }
 }
